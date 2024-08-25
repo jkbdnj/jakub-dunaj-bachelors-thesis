@@ -3,7 +3,7 @@ name: Compile LaTeX to PDF
 on:
   push:
     paths:
-      - 'thesis_document/*.tex'
+      - 'thesis_document/jakub_dunaj_bachelors_thesis.tex'
 
 jobs:
   build_latex:
@@ -15,7 +15,7 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: thesis_document/*.tex
+          root_file: jakub_dunaj_bachelors_thesis.tex
           working_directory: thesis_document
 
       - name: Upload PDF
