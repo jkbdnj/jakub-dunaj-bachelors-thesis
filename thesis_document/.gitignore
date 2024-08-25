@@ -1,0 +1,16 @@
+# LaTeX-specific temporary files
+*.aux
+*.log
+*.toc
+*.lof
+*.lot
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+*.pdf
+*.bcf
+*.run.xml
+*.xmpdata

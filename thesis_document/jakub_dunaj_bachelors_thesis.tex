@@ -1,0 +1,121 @@
+%%%%%% LaTeX template file for the Bachelor's thesis
+%%%%%% Faculty of Civil and Environmental Engineering, TU Wien
+%%%%%% The file BachelorBUI.cls must be in the same folder
+%%
+%% created by Christian Schranz and Sebastian Pech
+%% CEE Computer Lab & Digital Building Process
+%% date: 2022-10-01
+%% tested for pdflatex
+%%
+\documentclass{BachelorBUI}
+%%
+%% Packages already loaded in the above document class
+%%
+%% fontenc[T1], lmodern, microtype, babel[english,ngerman], graphicx,
+%% geometry with all margins or areaset (choose what you like)
+%% mathtools, amssymb, xfrac, siunitx, booktabs,
+%% url, xcolor[table], textcomp, marvosym, pifonts, pdfpages, ragged2e,
+%% tabularx, longtable, threeparttable, csquotes, eurosym, enumitem,
+%% multirow, setspace, listings, scrlayer-scrpage with header/footline
+%% pdfx (including hyperref)
+%%
+\usepackage[utf8]{inputenc}
+\RequirePackage[babel,english=american]{csquotes} %% context sensitive quotations
+\raggedbottom
+\lstset{
+ language={Matlab},
+}
+\sisetup{output-decimal-marker = {,},
+range-phrase = --,
+group-separator = {~},
+per-mode = symbol,
+list-final-separator={ and }}
+\graphicspath{{images/}}
+\newcommand{\eg}{\mbox{e.\,g.}\xspace}
+\newcommand{\Name}[1]{\textsc{#1}}
+\newcommand{\vKTxv}{\mathbf{v}_1^T\tilde{\mathbf{K}}_{T},_{\xi}\mathbf{v}_1}
+\newcommand{\vKTxxv}{\mathbf{v}_1^T\tilde{\mathbf{K}}_{T},_{\xi\xi}\mathbf{v}_1}
+%% biblatex and biber for the bibliography
+%% set different citation variants via options:
+%% style=numeric-comp ... [1]
+%% style=authoryear ... Mang 1998 / use \textcite{} ... Mang (1998)
+%%
+\usepackage[style=authoryear,backend=biber,maxcitenames=2]{biblatex}
+\ExecuteBibliographyOptions{%
+ giveninits=true,maxbibnames=99}%
+\DefineBibliographyStrings{english}{%
+andothers={et\;al\adddot},
+urlseen = {Accessed on}
+}
+\addbibresource{references.bib}
+\usepackage{acro}
+\acsetup{list/display=used}
+\input{acronyms}
+% URL hyphenation rules:
+\setcounter{biburllcpenalty}{9000}% Lowercase
+\setcounter{biburlucpenalty}{9000}% Uppercase
+% (see https://texwelt.de/fragen/7008/zeilenumbruche-in-bibliografielinks )
+%% Now enter a title
+\title{Web-based Application for Plant Disease Classification using Convolutional Neural Networks}
+\authorname{Jakub Dunaj} %% Enter your name here
+\email{e12121285@student.tuwien.ac.at} %% Enter your email address here
+\MatrNr{12121285} %% Enter your student ID number here
+\thesislanguage{en-US} %% Language of the thesis (de-AT, de-DE, en-GB, en-US)
+\keywords{bachelor thesis\sep template\sep LaTeX}
+%% Package pdfx currently incorrectly implemented ... therefore pdfx commented out and hyperref loaded instead
+%\usepackage[a-2u,pdf15]{pdfx}
+% here the document begins
+\begin{document}
+\selectlanguage{english}
+%% ========== Key Words ==========   
+%%
+%% Enter some keywords with the \Keywords command and
+%% separate them with the \sep command%%
+\begin{filecontents}[overwrite]{\jobname.xmpdata}
+\makeatletter
+\Title{\@title}
+\Author{\@authorname}
+\Language{\@thesislanguage}
+\Keywords{\@keywords}
+\Publisher{TU Wien}
+\makeatother
+\end{filecontents}
+%%%%%%%%%
+%% Title
+%%%%%%%%%
+%
+\maketitle
+
+% Abstract
+\begin{abstract}
+
+Here comes the abstract.
+
+\end{abstract}
+% Table of contents
+\tableofcontents
+\section{Introduction}
+\section{Literature Review}
+To conduct a comprehensive and quality-focused search for scientific literature on the topic of my bachelor's thesis, I utilized two reputable scientific databases: Scopus and IEEE Explore. 
+I employed a key-based approach to filter out the most relevant literature, using the following carefully created search queries: 
+\begin{itemize}
+    \item \textit{( "crop disease" OR "plant disease" ) AND ( "detection" OR "classification" OR "identification") AND ( "deep learning" )}, 
+    \item \textit{( "crop disease" OR "plant disease" ) AND ( "detection" OR "classification" OR "identification") AND ( "deep learning" )  AND ("survey" OR "review")}, 
+    \item \textit{( "CNN" ) AND ( "deep learning" ) AND ( "crop disease" OR "plant disease" )},
+    \item \textit{( "CNN" ) AND ( "deep learning" ) AND ( "crop disease" OR "plant disease" ) AND ( "review" OR "survey" )},
+    \item \textit{( "CNN" ) AND ( "deep learning" ) AND ( "review" OR "survey" )}.
+\end{itemize}
+When creating these search queries, I deliberately avoided using too many restrictions or very generic keywords or phrases. I have designed the search queries to be specific enough to filter out the irrelevant literature while remaining general enough to keep potentially relevant results. After this initial filtering, I further refined the results based on the publication date and the number of citations. Despite using these methods, many search results failed to meet the criteria for a high-quality scientific papers. This became frequently apparent in the faulty usage of English and poor quality of text, pictures, tables, and figures. To overcome this problem, my additional criteria for result selection included the quality of the journal or conference and the reputation of the authors' affiliated institutions. I used this selection process not only for the overall search results returned by the database, but also to a subset of the search results that were filtered by the publication year. My aim was not only to capture the most current knowledge in the researched field, but also to document its successive advances. In addition, I employed the "snowballing" method, using references from already identified papers to discover additional relevant literature. This consistent and rigorous methodology yielded the most relevant, current, and influential papers on crop and plant disease detection using deep learning methods. In summary, my selection process considered not only the citation counts but also the reputations of authors and their affiliated institutions. Consequently, I sometimes selected papers with lower citation counts if they were produced by highly reputable authors or institutions. In the following paragraphs, I will present and review the selected scientific papers to provide a comprehensive and quality-focused overview of the evolution, current advances, and future perspectives in crop and plant disease detection using convolutional neural networks as a deep learning method.
+
+\textcite{Sladojevic:2016} introduced a new approach to detecting plant diseases from leaf images, leveraging the advances in convolutional neural networks and their image classification capabilities. \textcite{Sladojevic:2016} developed a model capable of classifying 13 different plant-disease pairs, one class of healthy leaves and one of leaves without background. The authors created an initial dataset of 13 classes representing different plant-disease combinations by collecting leaf images from the internet. They then added two more classes to the dataset: one containing only images of healthy plant leaves, and another containing images of plant leaves without background. This initial dataset was then preprocessed by cropping the plant leaf images and resizing the images to reduce the training time. This preprocessed dataset was then augmented in order to create large enough dataset. The authors of the paper applied different transformations techniques including affine transformations, perspective transformations, and image rotations. This augmentation phase introduced more variance into the dataset to reduce the overfitting during the training phase. Using the described methods, the authors were able to create a database consisting of 30,880 plant leaf images in the training subset and of 2,589 images in the testing subset. The authors utilized the transfer learning method. To modify the CaffeNet architecture, which was pre-trained on the ImageNet dataset, for the classification of the 15 classes in the created dataset, the authors modified the network's final layer. The trained model achieved the precision between 91\% and 98\% for the different classes. The final overall accuracy was reported to be 96.3\%.
+
+\textcite{Mohanty:2016} utilized the public PlantVillage dataset, initially presented in (\cite{Hughes:2015}), to train two different convolutional neural network architectures, GoogLeNet and AlexNet. The authors trained both architectures under various settings and compared the performances of the trained models based on their ability to detect different plant-disease pairs or healthy leaves. The dataset consisted of 54,306 leaf images of healthy and diseased plants. In total, there were 38 classes created from 14 plants and 26 different diseases in the dataset. The classes corresponded to a plant-disease pair or were dedicated solely to healthy leaves of particular plant species. The healthy or diseased leaf images in the dataset were taken under controlled conditions with neutral background. Across all the experiments the authors conducted, three different versions of the whole dataset were used to train the convolutional neural networks. The authors used the dataset in its original colored version, in its gray-scaled version, and in its segmented version. The segmented version of the original dataset was created by removing all the extra background information in the leaf images that may introduce some bias in the dataset was removed. During the segmentation process the color shift in the leaf images were fixed removing another potential bias in the dataset. Each of these dataset variations was then split into five different dataset configurations used for training and testing of the architectures: 80\% of the dataset used for training and 20\% used for testing, 60\% of the dataset used for training and 40\% used for testing, 50\% of the dataset used for training and 50\% used for testing, 40\% of the dataset used for training and 60\% used for testing, 20\% of the dataset used for training and 80\% used for testing. Furthermore, the authors trained both of the architectures on these datasets from scratch in one case and by adapting these architectures that were already pre-trained on the ImageNet dataset using transfer learning in the other case. In total, these various conditions - two different CNN architectures, three different versions of the PlantVillage dataset, five different splits of each of these dataset versions into train and test subsets, and two different train approaches - resulted in 60 different experiments. The hyper-parameter configurations of the training process were kept the same for all of the conducted experiments. The overall accuracy across all of the experiment configurations ranged from 85.53\% to 99.34\%. In the first case of the 85.53\% overall accuracy the AlexNet architecture was trained from scratch on the gray-scale version of the dataset and 80\% of the dataset images were used for training and the remaining 20\% of the dataset were used for the testing of the trained model. In the other case of 99.34\% overall accuracy the GoogLeNet architecture was trained on the original colored version dataset using transfer learning. 80\% of this original dataset were used for training of the model and the remaining 20\% were used for testing. The authors of the paper noticed that with the increase in the train set to test set ration the trained models consistently perform better. The authors also noticed that the models trained on the original colored dataset outperformed the models that were trained using the same configuration but different dataset variation. The exact same behavior was observed by the authors when comparing the models that were trained using the transfer learning to the models trained from scratch. The models trained using transfer learning outperformed those trained from scratch when all other parameters were kept constant. The authors of the paper also identified some limitations to these experiment settings. When the trained models are tested on a datasets of images that are different from those that were used for training, the overall accuracy was reduced to only 31\%. Other limitations of the dataset were also identified. The images were homogeneous, with plant leaves facing upward on a neutral background. Such a dataset does not reproduce real-world conditions and limits the applicability of models trained on it.
+
+\textcite{Ferentinos:2018} trained five different CNN architectures - AlexNet, AlexNetOWTBn, GoogLeNet, Overfeat, and VGG - on an extended PlantVillage dataset. This extended dataset consisted of 87,306 leaf images of healthy and diseased plants. The 58 classes comprised in this dataset were as in (\cite{Mohanty:2016}) defined as a plant-disease pair or were dedicated solely to healthy leaves of a specific plant species.More than one third of the images in the dataset were captured under real-world conditions in a field. In comparison to the leaf images taken under controlled laboratory conditions, these were more complex in terms of irrelevant objects, other plant parts present, multiple leaves present, different background textures, and lighting conditions. The author then divided the initial database into a subset of training images and testing images in a ratio of 80\% to 20\%. The ration of the images taken in controlled environment and the images taken under real-world conditions was kept the same in both subsets as it was in the original dataset. Another approach to developing the training and testing subsets was the preprocessing of the original dataset by rescaling and cropping the images. The ratio of 80\% to 20\% in terms of training and testing subsets was kept the same. All five architectures were trained using datasets created using both of the approaches. The last approach to crating the training and testing subsets was based solely by focusing on the classes that contained images that were taken under laboratory conditions and  under real-world conditions in a field. From the 58 classes only 12 contained images of both types. Using these 12 classes one model had been trained on only the images taken under laboratory conditions and tested on images taken under real-world conditions. For a second model a reversed strategy was implied. 
+
+
+
+
+
+
+\end{document}

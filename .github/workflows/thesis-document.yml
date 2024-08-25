@@ -1,0 +1,25 @@
+name: Compile LaTeX to PDF
+
+on:
+  push:
+    paths:
+      - 'thesis_document/*.tex'
+
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: thesis_document/*.tex
+          working_directory: thesis_document
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v2
+        with:
+          name: Thesis
+          path: thesis_document/lates_thesis_version.pdf
