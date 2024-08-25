@@ -18,8 +18,10 @@ jobs:
           root_file: jakub_dunaj_bachelors_thesis.tex
           working_directory: thesis_document
 
-      - name: Upload PDF
+      - name: Upload compiled PDF
         uses: actions/upload-artifact@v2
         with:
-          name: Thesis
-          path: thesis_document/lates_thesis_version.pdf
+          name: CompiledThesisPDF
+          path: thesis_document/jakub_dunaj_bachelors_thesis.pdf
+
+
