@@ -61,9 +61,11 @@ automark
 
 \pagestyle{scrheadings}
 \clearpairofpagestyles
-\ihead{\@title}
+\ihead{\headmark}
 \ohead{\thepage}
 
+\automark[section]{section}
+\automark*[subsection]{}
 
 \RequirePackage{setspace}
 
