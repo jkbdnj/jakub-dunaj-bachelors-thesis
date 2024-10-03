@@ -9,6 +9,22 @@ twoside,
 captions=tableheading
 }
 
+\RedeclareSectionCommand[
+  beforeskip=1em, 
+  afterskip=0.5em, 
+  indent=0em, 
+  runin=false, 
+  afterindent=false
+]{paragraph}
+
+\RedeclareSectionCommand[
+  beforeskip=1em, 
+  afterskip=0.5em, 
+  indent=2em, 
+  runin=false, 
+  afterindent=false
+]{subparagraph}
+
 \addtokomafont{captionlabel}{\bfseries}
 
 \RequirePackage[T1]{fontenc}
