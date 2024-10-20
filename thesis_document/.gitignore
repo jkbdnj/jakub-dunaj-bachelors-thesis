@@ -14,4 +14,4 @@
 *.bcf
 *.run.xml
 *.xmpdata
-*.bbl-SAVE-ERROR
+*-SAVE-ERROR
