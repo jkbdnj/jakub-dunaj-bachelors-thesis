@@ -25,12 +25,44 @@ captions=tableheading
   afterindent=false
 ]{subparagraph}
 
+% \RedeclareSectionCommand[
+%     beforeskip=1em,     
+%     afterskip=0.5em,    
+%     indent=0em,        
+%     runin=false,        
+%     afterindent=false,  
+%     font=\normalfont\bfseries 
+% ]{paragraph}
+
+% \RedeclareSectionCommand[
+%     beforeskip=1em,     
+%     afterskip=0.5em,    
+%     indent=2em,         
+%     runin=false,        
+%     afterindent=false,  
+%     font=\normalfont\itshape
+% ]{subparagraph}
+
+% % For paragraphs
+% \RedeclareSectionCommand[
+%     beforeskip=-3.25ex plus -1ex minus -0.2ex,
+%     afterskip=1.5ex plus 0.2ex,
+%     font=\normalfont\normalsize\bfseries
+% ]{paragraph}
+
+% % For subparagraphs
+% \RedeclareSectionCommand[
+%     beforeskip=-3.25ex plus -1ex minus -0.2ex,
+%     afterskip=1.5ex plus 0.2ex,
+%     font=\normalfont\normalsize\bfseries
+% ]{subparagraph}
+
 \addtokomafont{captionlabel}{\bfseries}
 
 \RequirePackage[T1]{fontenc}
 \RequirePackage{lmodern}
 \RequirePackage[babel]{microtype}     % improves the micro-typographic layout
-\RequirePackage[english,ngerman]{babel} %% englisch and austrian language
+\RequirePackage[english]{babel} %
 
 
 \input{glyphtounicode.tex}    %Part of modern distribution
@@ -125,12 +157,8 @@ automark
 \RequirePackage{listings} %% syntax highlighting - for program code
 \RequirePackage{scrhack} %% solve some problems with float of listings
 
-% Eigene Sprachabhängige Begriffe
-\renewcaptionname{ngerman}{\tablename}{Tab.}
-\renewcaptionname{ngerman}{\figurename}{Abb.}
-\renewcaptionname{ngerman}{\bibname}{Literaturverzeichnis}
-\renewcaptionname{ngerman}{\abstractname}{Kurzfassung}
-
+\renewcaptionname{english}{\bibname}{References}
+\renewcaptionname{english}{\abstractname}{Abstract}
 \renewcaptionname{english}{\tablename}{Tab.}
 \renewcaptionname{english}{\figurename}{Fig.}
 
