@@ -1,0 +1,47 @@
+#rules: https://docs.astral.sh/ruff/rules/
+
+line-length = 100
+indent-width = 4
+target-version = "py313"
+
+[lint]
+select = [
+  "F",
+  "E",
+  "W",
+  "I",
+  "B",
+  "C4",
+  "D",
+  "N",
+  "BLE",
+  "FBT",
+  "A",
+  "COM",
+  "EM",
+  "LOG",
+  "G",
+  "PIE",
+  "T20",
+  "Q",
+  "PT",
+  "RSE",
+  "RET",
+  "SLF",
+  "SIM",
+  "TID",
+  "TCH",
+  "ARG",
+  "PL",
+]
+fixable = ["ALL"]
+ignore = ["COM812"]
+
+[lint.pydocstyle]
+convention = "google"
+
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
