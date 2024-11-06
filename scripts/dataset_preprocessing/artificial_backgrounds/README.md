@@ -4,7 +4,7 @@
 - `3_artificial_background.jpg`: Flobbadob ([Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Paeonia_ludlowii_foliage_canopy_viewed_from_beneath.jpg)), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode)
 - `4_artificial_background.jpg`: Athul R T ([Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Tea_leaves_from_Malakkappara.jpg)), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode)
 - `5_artificial_background.jpg`: W.carter ([Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Wheat_field_in_Röe,_Lysekil,_Sweden.jpg)), [CC0 1.0 Public Domain](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
-- `6_artificial_background.jpg`: Vengolis ([Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Passiflora_foetida_6616.jpg)), [CC0 1.0 Public Domain](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
+- `6_artificial_background.jpg`: Vengolis ([Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Passiflora_foetida_6616.jpg)), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode)
 - `7_artificial_background.jpg`: W.carter ([Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Anemone_hepatica_in_Tofta,_Gotland_8.jpg)), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode)
 - `8_artificial_background.jpg`: W.carter ([Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Anemone_hepatica_in_Tofta,_Gotland_9.jpg)), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode)
 - `9_artificial_background.jpg`: Hari Samynaath ([Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Plant_leaves_(India,_2016).jpg)), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode)
