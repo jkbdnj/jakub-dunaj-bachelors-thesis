@@ -48,7 +48,7 @@ def add_artificial_background():
     background_images = []
     for image_path in artificial_backgrounds_folder.glob("*.jpg"):
         with Image.open(image_path) as background_image:
-            # resizing the background image to 256 * 256 pixels using the
+            # resizing the background image to 256 * 256 pixels using the bilinear interpolation
             resized_background_image = background_image.resize((256, 256), Image.BILINEAR)
             background_images.append(numpy.array(resized_background_image))
 
