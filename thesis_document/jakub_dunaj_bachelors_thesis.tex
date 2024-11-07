@@ -465,7 +465,10 @@ urlseen = {Accessed on}
 
 \section{Design}
     \subsection{Dataset}
-    % There are not many free datasets available on the Internet. Only Mohanty and Barbedo. As of today barbedo barbedo's dataset is small
+    % There are not many free datasets available on the Internet. Only Mohanty and Barbedo. As of today barbedo barbedo's dataset is relatively small small
+    % using color and segmented versions of the Mohanty dataset based on the PlantVillage dataset and then crating a dataset with artificial background from the segmented dataset
+    % dividing the dataset into training/validation and testing dataset using hold-out method and then dividing the trainig/validation dataset into training and validation datasets using the 10-fold cross validation technique
+    % using augmentation: 
     \subsection{CNN Model} % EfficientB0 (from pretrained models in Keras)
     % A good rule of thumb is that the total number of training data points should be at least 2 to 3 times larger than the number of parameters in the neural network, although the precise number of data instances depends on the specific model at hand. In general, models with a larger number of parameters are said to have high capacity, and they require a larger amount of data in order to gain generalization power to unseen test data. The notion of overfitting is often understood in the trade-off between bias and variance in machine learning. (\cite{Aggarwal:2018})
                 % when talking about the CNN model and the way to train it, I have to be talking about solver type, base learning rate, learning rate policy, Nesterov momentum, weight decay, gamma and batch size: \textcite{Mohanty:2016} \cite{Ferentinos:2018}
