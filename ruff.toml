@@ -36,7 +36,7 @@ select = [
   "PL",
 ]
 fixable = ["ALL"]
-ignore = ["COM812"]
+ignore = ["COM812", "PLR0912"]
 
 [lint.pydocstyle]
 convention = "google"
