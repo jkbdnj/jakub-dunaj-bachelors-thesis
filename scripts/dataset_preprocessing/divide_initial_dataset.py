@@ -1,4 +1,9 @@
-"""Script dividing the initial dataset into training and testing subsets."""
+"""Script dividing the initial dataset into training and testing subsets.
+
+This script strictly adheres to the structure of the initial dataset. Based on the train-test ration
+set up in the script, the script divides every class in each of the three dataset subsets based on
+this ratio.
+"""
 
 import logging
 import random
@@ -11,24 +16,24 @@ logger = logging.getLogger(__name__)
 FORMAT = "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
 logging.basicConfig(filename="divide_initial_dataset.log", format=FORMAT, level=logging.INFO)
 
-# variable defining the train-test ratio of the initial dataset
+# constant defining the train-test ratio of the initial dataset
 TRAIN_TEST_RATIO = 0.8
 
 
 def divide_initial_dataset(train_test_ratio: float):
-    """This function divides the initial dataset into training and testing subsets."""
-    color_path = Path(
-        "/Users/kubkodunaj/Desktop/jakub-dunaj-bachelors-thesis/datasets/initial_dataset/color"
-    )
-    segmented_path = Path(
-        "/Users/kubkodunaj/Desktop/jakub-dunaj-bachelors-thesis/datasets/initial_dataset/segmented"
-    )
-    artificial_path = Path(
-        "/Users/kubkodunaj/Desktop/jakub-dunaj-bachelors-thesis/datasets/initial_dataset/artificial_background"
-    )
-    final_dataset_path = Path(
-        "/Users/kubkodunaj/Desktop/jakub-dunaj-bachelors-thesis/datasets/final_dataset"
-    )
+    """This function divides the initial dataset into training and testing subsets.
+
+    It takes images from each class of the three datasets and divides them into training and testing
+    subsets based on teh train-test ration provided as function parameter.
+
+    Args:
+        train_test_ratio (float): The parameter expressing what part of the class will be used
+        for training and what part for testing.
+    """
+    color_path = Path("PATH_TO/initial_dataset/color")
+    segmented_path = Path("PATH_TO/initial_dataset/segmented")
+    artificial_path = Path("PATH_TO/initial_dataset/artificial_background")
+    final_dataset_path = Path("PATH_TO/final_dataset")
 
     subset_paths = [color_path, segmented_path, artificial_path]
     subset_paths_exist = [folder.exists() for folder in subset_paths]
@@ -46,7 +51,7 @@ def divide_initial_dataset(train_test_ratio: float):
 
     if final_dataset_path.exists():
         error_message = f"Final dataset folder at {final_dataset_path} already exists!"
-        logger.info(error_message)
+        logger.error(error_message)
         return 1
 
     final_dataset_path.mkdir()
@@ -62,9 +67,12 @@ def divide_initial_dataset(train_test_ratio: float):
         (final_test_path / image_class).mkdir()
 
     for image_class in image_classes:
+        # crating the paths a class in all three dataset subsets
         segmented_class_path = segmented_path / image_class
         color_class_path = color_path / image_class
         artificial_class_path = artificial_path / image_class
+
+        # verifying if the class is present in all three subsets
         class_paths = [segmented_class_path, color_class_path, artificial_class_path]
         class_paths_exist = [class_path.exists() for class_path in class_paths]
         for class_path, exists in zip(class_paths, class_paths_exist, strict=False):
@@ -80,20 +88,38 @@ def divide_initial_dataset(train_test_ratio: float):
         if False in class_paths_exist:
             return 1
 
+        # dividing images of a class in all three datasets
         for class_path in class_paths:
+            info_message = (
+                f"Dividing images in class {class_path.name} of {class_path.parent.name} subset."
+            )
+            logger.info(info_message)
+
             image_paths = list(class_path.glob("*.[jJ][pP][gG]"))
+
+            # randomly reordering the paths prior to the division
             random.shuffle(image_paths)
+
+            # division index if the list with paths
             division_index = int(len(image_paths) * train_test_ratio)
 
+            # training subset
             for image_path in image_paths[:division_index]:
                 with Image.open(image_path) as image:
                     image.save(final_train_path / class_path.name / image_path.name)
 
+            # testing subset
             for image_path in image_paths[division_index:]:
                 with Image.open(image_path) as image:
                     image.save(final_test_path / class_path.name / image_path.name)
 
-    logger.info("Dataset division process successful!")
+            info_message = (
+                f"Done dividing images in class {class_path.name} of "
+                f"{class_path.parent.name} subset."
+            )
+            logger.info(info_message)
+
+    logger.info("Dataset division process into training and testing subsets successful!")
     return 0
 
 
