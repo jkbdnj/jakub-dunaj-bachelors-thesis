@@ -21,7 +21,7 @@ TRAIN_TEST_RATIO = 0.8
 
 
 def divide_initial_dataset(train_test_ratio: float):
-    """This function divides the initial dataset into training and testing subsets.
+    """Function dividing the initial dataset into training and testing subsets.
 
     It takes images from each class of the three datasets and divides them into training and testing
     subsets based on teh train-test ration provided as function parameter.

@@ -17,7 +17,7 @@ logging.basicConfig(filename="add_artificial_background.log", format=FORMAT, lev
 
 
 def add_artificial_background():
-    """This function adds artificial backgrounds to segmented leaf images.
+    """Function adding artificial backgrounds to segmented leaf images.
 
     The function loads images form the segmented subset of the initial dataset and adds
     artificial background from the folder holding artificial background images. The
