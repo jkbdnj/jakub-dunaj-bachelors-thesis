@@ -27,7 +27,7 @@ def divide_initial_dataset(train_test_ratio: float):
     subsets based on teh train-test ration provided as function parameter.
 
     Args:
-        train_test_ratio (float): The parameter expressing what part of the class will be used
+        train_test_ratio (float): The parameter expressing what part of the dataset will be used
         for training and what part for testing.
     """
     color_path = Path("PATH_TO/initial_dataset/color")
