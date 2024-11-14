@@ -1,5 +1,6 @@
 # Operating system-specific files
 **/.DS_Store
-initial_dataset/
+datasets/
 **/*.log
 **/.ruff_cache
+**/__pycache__
