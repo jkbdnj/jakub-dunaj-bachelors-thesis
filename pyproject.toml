@@ -1,10 +1,13 @@
 #rules: https://docs.astral.sh/ruff/rules/
 
+[tool.ruff]
+fix=true
+unsafe-fixes = true
 line-length = 100
 indent-width = 4
 target-version = "py313"
 
-[lint]
+[tool.ruff.lint]
 select = [
   "F",
   "E",
@@ -38,11 +41,17 @@ select = [
 fixable = ["ALL"]
 ignore = ["COM812", "PLR0912"]
 
-[lint.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "google"
 
-[format]
+[tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
+
+[tool.docformatter]
+wrap-summaries = 100
+wrap-descriptions = 100
+in-place = true
+blank = true
