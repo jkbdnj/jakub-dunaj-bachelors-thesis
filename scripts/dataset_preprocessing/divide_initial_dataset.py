@@ -21,7 +21,7 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-# constant defining the train-test ratio of the initial dataset
+# constant defining the train-test ratio of the initial dataset if the module is called as a script
 TRAIN_TEST_RATIO = 0.8
 
 

@@ -1,6 +1,10 @@
 """Script training a EfficientNetB0 CNN model for plant disease classification from leaf images."""
 
-from cli import parse
+import sys
+from pathlib import Path
+
+from cli import parse_args
+from exceptions import DatasetException
 from tensorflow import keras
 
 # script_name = __file__.stem
@@ -9,17 +13,15 @@ from tensorflow import keras
 # logging.basicConfig(filename=__file__.name + ".log", format=FORMAT, level=logging.INFO)
 
 
-def load_dataset(
-    train_dataset_path: str,
-    test_dataset_path: str,
-):
+def load_dataset(train_dataset_path: Path, test_dataset_path: Path, batch_size):
     """Function loading train and test datasets.
 
     This function loads the training and testing datasets from the final dataset.
 
     Args:
-        train_dataset_path (str): The path to the train subset of the final dataset.
-        test_dataset_path (str):  The path to the train subset of the final dataset.
+        train_dataset_path (str): The path to the train dataset.
+        test_dataset_path (str):  The path to the test dataset.
+        batch_size: The batch size.
 
     """
     train_dataset = keras.utils.image_dataset_from_directory(
@@ -27,7 +29,7 @@ def load_dataset(
         labels="inferred",
         label_mode="int",
         color_mode="rgb",
-        batch_size=32,
+        batch_size=batch_size,
         image_size=(224, 224),
         interpolation="bilinear",
     )
@@ -37,16 +39,20 @@ def load_dataset(
         labels="inferred",
         label_mode="int",
         color_mode="rgb",
-        batch_size=32,
+        batch_size=batch_size,
         image_size=(224, 224),
         interpolation="bilinear",
     )
+
+    if set(train_dataset.class_names) != set(test_dataset.class_names):
+        error_message = "Train and tests datasets differ in the class names!"
+        raise DatasetException(error_message)
 
     return train_dataset, test_dataset
 
 
 def load_model():
-    """Function to load the EfficientNetB0 pre-trained model.
+    """Function loading the EfficientNetB0 pre-trained model.
 
     This function loads the EfficientNetB0 pre-trained model on
 
@@ -76,7 +82,7 @@ def load_model():
     model = keras.Model(
         inputs=inputs,
         outputs=outputs,
-        name="plant_disease_analyzer",
+        name="plant_disease_classifier",
     )
 
     # compiling the model
@@ -89,8 +95,6 @@ def load_model():
     return model
 
 
-# extending the dataset to 600 000 images would require substantial computational resources adding
-# random augmentation to an image would add variability to the dataset surely prevent overfitting
 def modify_layers_for_transfer_learning(model, *, is_fine_tuning: bool):
     """Function modifying the layers of a model for transfer learning.
 
@@ -100,7 +104,7 @@ def modify_layers_for_transfer_learning(model, *, is_fine_tuning: bool):
     non-trainable. The last dense classifier layer is always trainable.
 
     Args:
-        model: Model whose layers except the classifier will be set non-trainable.
+        model: Model to be modified for transfer learning with/without the fine-tuning step.
         is_fine_tuning (bool): Bool variable defining if the fine-tuning step will be applied.
 
     """
@@ -114,15 +118,13 @@ def modify_layers_for_transfer_learning(model, *, is_fine_tuning: bool):
 
     if is_fine_tuning:
         model.compile(
-            optimizer="adam",
-            loss="sparse_categorical_crossentropy",
-            metrics=["accuracy"],
+            optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
         )
 
     return model
 
 
-def train_model():
+def train_model(args):
     """Function training the model.
 
     This function performs the training of the CNN model. It loads the train and test datasets.
@@ -131,27 +133,35 @@ def train_model():
     fine-tuning step and trains it. For both training stages, transfer learning without and with
     fine-tuning, it reports the accuracy and loss for each epoch.
 
+    Args:
+        args: Object holding the parsed arguments.
+
     """
-    train_dataset, test_dataset = load_dataset()
+    train_dataset, test_dataset = load_dataset(
+        args.train_dataset_path, args.test_dataset_path, args.batch_size
+    )
     model = load_model()
+
+    # transfer learning without the fine-tuning step
     model = modify_layers_for_transfer_learning(model, is_fine_tuning=False)
-    model.fit(
-        x=train_dataset,
-        epochs=15,
-        validation_data=test_dataset,
-    )
-    model = modify_layers_for_transfer_learning(model, is_fine_tuning=True)
-    model.fit(
-        x=train_dataset,
-        epochs=15,
-        validation_data=test_dataset,
-    )
-    return model
+    model.fit(x=test_dataset, epochs=args.epochs, validation_data=train_dataset)
+
+    # transfer learning with the fine-tuning step
+    # model = modify_layers_for_transfer_learning(model, is_fine_tuning=True)
+    # history = model.fit(x=train_dataset, epochs=args.epochs, validation_data=test_dataset)
+
+    return 0
+
+
+def plot_and_save_history():
+    """Function plotting and saving a history to the output path."""
+    return 0
 
 
 def main():
     """Main function."""
-    parse()
+    args = parse_args()
+    sys.exit(train_model(args))
 
 
 if __name__ == "__main__":

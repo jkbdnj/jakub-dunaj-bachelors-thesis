@@ -3,3 +3,4 @@
 datasets/
 **/*.log
 **/.ruff_cache
+**/__pycache__
