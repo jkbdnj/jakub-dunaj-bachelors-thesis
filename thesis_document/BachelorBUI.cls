@@ -10,36 +10,36 @@ captions=tableheading
 }
 
 \RedeclareSectionCommand[
-  beforeskip=1em, 
-  afterskip=0.5em, 
-  indent=0em, 
-  runin=false, 
+  beforeskip=1em,
+  afterskip=0.5em,
+  indent=0em,
+  runin=false,
   afterindent=false
 ]{paragraph}
 
 \RedeclareSectionCommand[
-  beforeskip=1em, 
-  afterskip=0.5em, 
-  indent=2em, 
-  runin=false, 
+  beforeskip=1em,
+  afterskip=0.5em,
+  indent=2em,
+  runin=false,
   afterindent=false
 ]{subparagraph}
 
 % \RedeclareSectionCommand[
-%     beforeskip=1em,     
-%     afterskip=0.5em,    
-%     indent=0em,        
-%     runin=false,        
-%     afterindent=false,  
-%     font=\normalfont\bfseries 
+%     beforeskip=1em,
+%     afterskip=0.5em,
+%     indent=0em,
+%     runin=false,
+%     afterindent=false,
+%     font=\normalfont\bfseries
 % ]{paragraph}
 
 % \RedeclareSectionCommand[
-%     beforeskip=1em,     
-%     afterskip=0.5em,    
-%     indent=2em,         
-%     runin=false,        
-%     afterindent=false,  
+%     beforeskip=1em,
+%     afterskip=0.5em,
+%     indent=2em,
+%     runin=false,
+%     afterindent=false,
 %     font=\normalfont\itshape
 % ]{subparagraph}
 
@@ -97,7 +97,7 @@ captions=tableheading
 \widowpenalty10000
 \displaywidowpenalty=10000
 
-\RequirePackage{graphicx} 
+\RequirePackage{graphicx}
 %Erweiterung graphic paket, optionale Parameter für \includegraphics
 % Seitenrand neu definieren
 \RequirePackage[left=2.5cm,right=2.5cm,top=1.5cm,bottom=2.5cm,includehead]{geometry}
@@ -131,7 +131,7 @@ automark
 \RequirePackage{xfrac}  %% diagonals fractions - e.g. numbers
 \RequirePackage{siunitx} %% SI Units
 
-\RequirePackage{booktabs} %% for better looking tables 
+\RequirePackage{booktabs} %% for better looking tables
 
 \RequirePackage[newcommands]{ragged2e}
 \RequirePackage{tabularx}
@@ -140,7 +140,7 @@ automark
 \RequirePackage{multirow}
 
 \PassOptionsToPackage{table}{xcolor}
-% \RequirePackage{xcolor} %% improvement to the color package, included by pdfx 
+% \RequirePackage{xcolor} %% improvement to the color package, included by pdfx
 % muss jetzt vor pdfx geladen werden
 \RequirePackage{url} %% links inside the document as well as to websites
 
@@ -211,7 +211,7 @@ automark
 	numberstyle=\tiny,
 	frame=tb,
 	moredelim=**[is][\color{blue}]{@}{@}
-} 
+}
 \lstset{literate=%
    {Ö}{{\"O}}1
    {Ä}{{\"A}}1

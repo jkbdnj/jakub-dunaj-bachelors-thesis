@@ -3,6 +3,7 @@
 This script strictly adheres to the structure of the initial dataset. Based on the train-test ration
 set up in the script, the script divides every class in each of the three dataset subsets based on
 this ratio.
+
 """
 
 import logging
@@ -14,13 +15,19 @@ from PIL import Image
 
 logger = logging.getLogger(__name__)
 FORMAT = "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
-logging.basicConfig(filename="divide_initial_dataset.log", format=FORMAT, level=logging.INFO)
+logging.basicConfig(
+    filename="divide_initial_dataset.log",
+    format=FORMAT,
+    level=logging.INFO,
+)
 
 # constant defining the train-test ratio of the initial dataset
 TRAIN_TEST_RATIO = 0.8
 
 
-def divide_initial_dataset(train_test_ratio: float):
+def divide_initial_dataset(
+    train_test_ratio: float,
+):
     """Function dividing the initial dataset into training and testing subsets.
 
     It takes images from each class of the three datasets and divides them into training and testing
@@ -29,16 +36,25 @@ def divide_initial_dataset(train_test_ratio: float):
     Args:
         train_test_ratio (float): The parameter expressing what part of the dataset will be used
         for training and what part for testing.
+
     """
     color_path = Path("PATH_TO/initial_dataset/color")
     segmented_path = Path("PATH_TO/initial_dataset/segmented")
     artificial_path = Path("PATH_TO/initial_dataset/artificial_background")
     final_dataset_path = Path("PATH_TO/final_dataset")
 
-    subset_paths = [color_path, segmented_path, artificial_path]
+    subset_paths = [
+        color_path,
+        segmented_path,
+        artificial_path,
+    ]
     subset_paths_exist = [folder.exists() for folder in subset_paths]
 
-    for subset_path, exists in zip(subset_paths, subset_paths_exist, strict=False):
+    for subset_path, exists in zip(
+        subset_paths,
+        subset_paths_exist,
+        strict=False,
+    ):
         if not exists or subset_path.parent.name != "initial_dataset":
             error_message = f"No such subset of initial_dataset at {subset_path} found!"
             logger.error(error_message)
@@ -73,9 +89,17 @@ def divide_initial_dataset(train_test_ratio: float):
         artificial_class_path = artificial_path / image_class
 
         # verifying if the class is present in all three subsets
-        class_paths = [segmented_class_path, color_class_path, artificial_class_path]
+        class_paths = [
+            segmented_class_path,
+            color_class_path,
+            artificial_class_path,
+        ]
         class_paths_exist = [class_path.exists() for class_path in class_paths]
-        for class_path, exists in zip(class_paths, class_paths_exist, strict=False):
+        for class_path, exists in zip(
+            class_paths,
+            class_paths_exist,
+            strict=False,
+        ):
             if not exists:
                 error_message = (
                     f"No class {class_path.name} of {class_path.parent.name} subset found!"

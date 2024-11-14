@@ -2,6 +2,7 @@
 
 This script strictly adheres to the layout of the initial dataset. It takes segmented leaf images
 from the initial dataset and creates a new subset of images with added artificial backgrounds.
+
 """
 
 import logging
@@ -19,10 +20,11 @@ logging.basicConfig(filename="add_artificial_background.log", format=FORMAT, lev
 def add_artificial_background():
     """Function adding artificial backgrounds to segmented leaf images.
 
-    The function loads images form the segmented subset of the initial dataset and adds
-    artificial background from the folder holding artificial background images. The
-    folder structure of the segmented subset is copied and the images with added artificial
-    backgrounds are saved to a defined destination.
+    The function loads images form the segmented subset of the initial dataset and adds artificial
+    background from the folder holding artificial background images. The folder structure of the
+    segmented subset is copied and the images with added artificial backgrounds are saved to a
+    defined destination.
+
     """
     artificial_backgrounds_path = Path(
         "/Users/kubkodunaj/Desktop/jakub-dunaj-bachelors-thesis/scripts/dataset_preprocessing/artificial_backgrounds"

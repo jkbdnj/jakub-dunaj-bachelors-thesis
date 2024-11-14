@@ -1,14 +1,29 @@
 """Script training a EfficientNetB0 CNN model for plant disease classification from leaf images."""
 
-import sys
-
+from cli import parse
 from tensorflow import keras
 
+# script_name = __file__.stem
+# logger = logging.getLogger(script_name)
+# FORMAT = "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
+# logging.basicConfig(filename=__file__.name + ".log", format=FORMAT, level=logging.INFO)
 
-def load_dataset():
-    """Function loading train and test datasets."""
+
+def load_dataset(
+    train_dataset_path: str,
+    test_dataset_path: str,
+):
+    """Function loading train and test datasets.
+
+    This function loads the training and testing datasets from the final dataset.
+
+    Args:
+        train_dataset_path (str): The path to the train subset of the final dataset.
+        test_dataset_path (str):  The path to the train subset of the final dataset.
+
+    """
     train_dataset = keras.utils.image_dataset_from_directory(
-        "/Users/kubkodunaj/Desktop/jakub-dunaj-bachelors-thesis/datasets/final_dataset/train",
+        train_dataset_path,
         labels="inferred",
         label_mode="int",
         color_mode="rgb",
@@ -18,7 +33,7 @@ def load_dataset():
     )
 
     test_dataset = keras.utils.image_dataset_from_directory(
-        "/Users/kubkodunaj/Desktop/jakub-dunaj-bachelors-thesis/datasets/final_dataset/test",
+        test_dataset_path,
         labels="inferred",
         label_mode="int",
         color_mode="rgb",
@@ -31,7 +46,11 @@ def load_dataset():
 
 
 def load_model():
-    """Function to load the EfficientNetB0 pre-trained model."""
+    """Function to load the EfficientNetB0 pre-trained model.
+
+    This function loads the EfficientNetB0 pre-trained model on
+
+    """
     # loading the model without the output layer (classifier)
     # setting include_top to false removes the avg pooling, dropout, and dense layers of the model
     model_base = keras.applications.EfficientNetB0(
@@ -54,14 +73,24 @@ def load_model():
     outputs = keras.layers.Dense(38, activation="softmax")(x)
 
     # assembling the model
-    model = keras.Model(inputs=inputs, outputs=outputs, name="plant_disease_analyzer")
+    model = keras.Model(
+        inputs=inputs,
+        outputs=outputs,
+        name="plant_disease_analyzer",
+    )
 
     # compiling the model
-    model.compile(optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+    model.compile(
+        optimizer="adam",
+        loss="sparse_categorical_crossentropy",
+        metrics=["accuracy"],
+    )
 
     return model
 
 
+# extending the dataset to 600 000 images would require substantial computational resources adding
+# random augmentation to an image would add variability to the dataset surely prevent overfitting
 def modify_layers_for_transfer_learning(model, *, is_fine_tuning: bool):
     """Function modifying the layers of a model for transfer learning.
 
@@ -73,6 +102,7 @@ def modify_layers_for_transfer_learning(model, *, is_fine_tuning: bool):
     Args:
         model: Model whose layers except the classifier will be set non-trainable.
         is_fine_tuning (bool): Bool variable defining if the fine-tuning step will be applied.
+
     """
     # makes the dense classifier layer explicitly trainable
     model.layers[-1].trainable = True
@@ -84,7 +114,9 @@ def modify_layers_for_transfer_learning(model, *, is_fine_tuning: bool):
 
     if is_fine_tuning:
         model.compile(
-            optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
+            optimizer="adam",
+            loss="sparse_categorical_crossentropy",
+            metrics=["accuracy"],
         )
 
     return model
@@ -98,15 +130,29 @@ def train_model():
     using transfer learning without the fine-tuning step. Further, it modifies the model for the
     fine-tuning step and trains it. For both training stages, transfer learning without and with
     fine-tuning, it reports the accuracy and loss for each epoch.
+
     """
     train_dataset, test_dataset = load_dataset()
     model = load_model()
     model = modify_layers_for_transfer_learning(model, is_fine_tuning=False)
-    model.fit(x=train_dataset, epochs=15, validation_data=test_dataset)
+    model.fit(
+        x=train_dataset,
+        epochs=15,
+        validation_data=test_dataset,
+    )
     model = modify_layers_for_transfer_learning(model, is_fine_tuning=True)
-    model.fit(x=train_dataset, epochs=15, validation_data=test_dataset)
-    return 0
+    model.fit(
+        x=train_dataset,
+        epochs=15,
+        validation_data=test_dataset,
+    )
+    return model
+
+
+def main():
+    """Main function."""
+    parse()
 
 
 if __name__ == "__main__":
-    sys.exit(train_model())
+    main()
