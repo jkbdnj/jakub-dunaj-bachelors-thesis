@@ -15,7 +15,7 @@ logging.basicConfig(filename="dataset_preprocessing.log", format=FORMAT, level=l
 ARTIFICIAL_BACKGROUNDS_PATH = Path("PATH_TO/scripts/dataset_preprocessing/artificial_backgrounds")
 
 # constant for the path to the segmented subset of the initial dataset
-SEGMENTED_PATH = Path("PATH_TO/initial_dataset/segmented")
+SEGMENTED_PATH = Path("PATH_TO/datasets/initial_dataset/segmented")
 
 # constant for the path where the augmented images are saved
 DESTINATION_PATH = SEGMENTED_PATH.parent / "artificial_background"
@@ -24,13 +24,13 @@ DESTINATION_PATH = SEGMENTED_PATH.parent / "artificial_background"
 TRAIN_TEST_RATIO = 0.8
 
 # constant for the path to the color subset of the initial dataset
-COLOR_PATH = Path("PATH_TO/initial_dataset/color")
+COLOR_PATH = Path("PATH_TO/datasets/initial_dataset/color")
 
 # constant for the path to the artificial background subset of the initial dataset
-ARTIFICIAL_PATH = Path("PATH_TO/initial_dataset/artificial_background")
+ARTIFICIAL_PATH = Path("PATH_TO/datasets/initial_dataset/artificial_background")
 
 # constant for the path where the final dataset used for the training process is saved
-FINAL_DATASET_PATH = Path("PATH_TO/final_dataset")
+FINAL_DATASET_PATH = Path("PATH_TO/datasets/final_dataset")
 
 
 def main():
@@ -44,14 +44,18 @@ def main():
     result_augmentation = add_artificial_background(
         ARTIFICIAL_BACKGROUNDS_PATH, SEGMENTED_PATH, DESTINATION_PATH
     )
-    logger.info("Dataset augmentation done.")
-    logger.info("Running dataset division.")
-    result_division = divide_initial_dataset(
-        TRAIN_TEST_RATIO, COLOR_PATH, SEGMENTED_PATH, ARTIFICIAL_PATH, DESTINATION_PATH
-    )
-    logger.info("Dataset division done.")
+    info_message = f"Dataset augmentation done with return code {result_augmentation}."
+    logger.info(info_message)
+    if not result_augmentation:
+        logger.info("Running dataset division.")
+        result_division = divide_initial_dataset(
+            TRAIN_TEST_RATIO, COLOR_PATH, SEGMENTED_PATH, ARTIFICIAL_PATH, FINAL_DATASET_PATH
+        )
+        info_message = f"Dataset division done with return code {result_division}."
+        logger.info(info_message)
 
-    return result_augmentation or result_division
+        return result_division
+    return result_augmentation
 
 
 if __name__ == "__main__":

@@ -56,7 +56,7 @@ def add_artificial_background(
     paths_exist = [path.exists() for path in paths]
 
     for path, exists in zip(paths, paths_exist, strict=False):
-        if not exists or path.parent.name != "initial_dataset":
+        if not exists:
             error_message = f"No such folder at path {path} found!"
             logger.error(error_message)
         else:
@@ -68,7 +68,7 @@ def add_artificial_background(
 
     if destination_path.exists():
         error_message = f"Destination folder at path {destination_path} already exists!"
-        logger.info(error_message)
+        logger.error(error_message)
         return 1
 
     destination_path.mkdir()
