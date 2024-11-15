@@ -75,7 +75,7 @@ def divide_initial_dataset(
         return 1
 
     if final_dataset_path.exists():
-        error_message = f"Final dataset folder at {final_dataset_path} already exists!"
+        error_message = f"Final dataset folder at path {final_dataset_path} already exists!"
         logger.error(error_message)
         return 1
 

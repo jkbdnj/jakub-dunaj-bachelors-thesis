@@ -21,8 +21,19 @@ else:
         filename="artificial_background_adder.log", format=FORMAT, level=logging.INFO
     )
 
+# constant for the path to the folder with artificial background images
+ARTIFICIAL_BACKGROUNDS_PATH = Path("PATH_TO/scripts/dataset_preprocessing/artificial_backgrounds")
 
-def add_artificial_background():
+# constant for the path to the segmented subset of the initial dataset
+SEGMENTED_PATH = Path("PATH_TO/initial_dataset/segmented")
+
+# constant for the path where the augmented images are saved
+DESTINATION_PATH = Path(SEGMENTED_PATH.parent / "artificial_background")
+
+
+def add_artificial_background(
+    artificial_backgrounds_path: Path, segmented_path: Path, destination_path: Path
+):
     """Function adding artificial backgrounds to segmented leaf images.
 
     The function loads images form the segmented subset of the initial dataset and adds artificial
@@ -30,18 +41,14 @@ def add_artificial_background():
     segmented subset is copied and the images with added artificial backgrounds are saved to a
     defined destination.
 
-    """
-    artificial_backgrounds_path = Path(
-        "/Users/kubkodunaj/Desktop/jakub-dunaj-bachelors-thesis/scripts/dataset_preprocessing/artificial_backgrounds"
-    )
-    segmented_subset_path = Path(
-        "/Users/kubkodunaj/Desktop/jakub-dunaj-bachelors-thesis/datasets/initial_dataset/segmented"
-    )
-    destination_path = Path(
-        "/Users/kubkodunaj/Desktop/jakub-dunaj-bachelors-thesis/datasets/initial_dataset/artificial_background"
-    )
+    Args:
+        artificial_backgrounds_path (Path): The path to the folder with artificial
+        background images.
+        segmented_path (Path): The path to the segmented subset of the initial dataset.
+        destination_path (Path): The path where the augmented images are saved.
 
-    paths = [artificial_backgrounds_path, segmented_subset_path]
+    """
+    paths = [artificial_backgrounds_path, segmented_path]
     paths_exist = [path.exists() for path in paths]
 
     for path, exists in zip(paths, paths_exist, strict=False):
@@ -71,9 +78,9 @@ def add_artificial_background():
             )
             background_images.append(numpy.array(resized_background_image))
 
-    for class_path in segmented_subset_path.iterdir():
+    for class_path in segmented_path.iterdir():
         if class_path.is_dir():
-            info_message = f"Augmenting images from class {class_path}."
+            info_message = f"Augmenting images in class {class_path.name}."
             logger.info(info_message)
 
             # creating a folder with the same name in the destination
@@ -115,7 +122,7 @@ def add_artificial_background():
                 i = (i + 1) % len(background_images)
 
             info_message = (
-                f"Done adding artificial background images from class at path {class_path}."
+                f"Done adding artificial background images to images in class {class_path.name}."
             )
             logger.info(info_message)
 
@@ -124,4 +131,6 @@ def add_artificial_background():
 
 
 if __name__ == "__main__":
-    sys.exit(add_artificial_background())
+    sys.exit(
+        add_artificial_background(ARTIFICIAL_BACKGROUNDS_PATH, SEGMENTED_PATH, DESTINATION_PATH)
+    )
