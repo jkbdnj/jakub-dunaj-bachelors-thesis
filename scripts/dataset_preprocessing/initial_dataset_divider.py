@@ -14,6 +14,8 @@ from pathlib import Path
 
 from PIL import Image
 
+file_name = Path(__file__).name
+
 if __name__ != "__main__":
     logger = logging.getLogger("wrapper." + __name__)
 else:
@@ -60,6 +62,8 @@ def divide_initial_dataset(
         training and testing subsets.
 
     """
+    info_message = f"Running divide_initial_dataset(...) function at {file_name}"
+    logger.info(info_message)
     subset_paths = [color_path, segmented_path, artificial_path]
     subset_paths_exist = [folder.exists() for folder in subset_paths]
 
@@ -157,6 +161,8 @@ def divide_initial_dataset(
 
 
 if __name__ == "__main__":
+    info_message = f"Running {file_name} directly as script."
+    logger.info(info_message)
     sys.exit(
         divide_initial_dataset(
             TRAIN_TEST_RATIO, COLOR_PATH, SEGMENTED_PATH, ARTIFICIAL_PATH, FINAL_DATASET_PATH

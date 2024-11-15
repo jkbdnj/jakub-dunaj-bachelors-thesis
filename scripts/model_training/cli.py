@@ -1,4 +1,4 @@
-"""Simple class holding command line utilities."""
+"""File holding simple command line utilities."""
 
 from argparse import ArgumentParser, ArgumentTypeError
 from pathlib import Path

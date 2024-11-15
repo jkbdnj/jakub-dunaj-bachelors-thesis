@@ -12,6 +12,8 @@ from pathlib import Path
 import numpy
 from PIL import Image
 
+file_name = Path(__file__).name
+
 if __name__ != "__main__":
     logger = logging.getLogger("wrapper." + __name__)
 else:
@@ -48,6 +50,8 @@ def add_artificial_background(
         destination_path (Path): The path where the augmented images are saved.
 
     """
+    info_message = f"Running add_artificial_background(...) function at {file_name}"
+    logger.info(info_message)
     paths = [artificial_backgrounds_path, segmented_path]
     paths_exist = [path.exists() for path in paths]
 
@@ -131,6 +135,8 @@ def add_artificial_background(
 
 
 if __name__ == "__main__":
+    info_message = f"Running {file_name} directly as script."
+    logger.info(info_message)
     sys.exit(
         add_artificial_background(ARTIFICIAL_BACKGROUNDS_PATH, SEGMENTED_PATH, DESTINATION_PATH)
     )
