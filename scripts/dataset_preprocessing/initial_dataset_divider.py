@@ -14,9 +14,13 @@ from pathlib import Path
 
 from PIL import Image
 
-logger = logging.getLogger(__name__)
-FORMAT = "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
-logging.basicConfig(filename="divide_initial_dataset.log", format=FORMAT, level=logging.INFO)
+if __name__ != "__main__":
+    logger = logging.getLogger("wrapper." + __name__)
+else:
+    logger = logging.getLogger(__name__)
+    FORMAT = "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
+    logging.basicConfig(filename="initial_dataset_divider.log", format=FORMAT, level=logging.INFO)
+
 
 # constant defining the train-test ratio of the initial dataset if the module is called as a script
 TRAIN_TEST_RATIO = 0.8
@@ -117,7 +121,7 @@ def divide_initial_dataset(
         if False in class_paths_exist:
             return 1
 
-        # dividing images of a class in all three datasets
+        # dividing images of a class from all three datasets
         for class_path in class_paths:
             info_message = (
                 f"Dividing images in class {class_path.name} of {class_path.parent.name} subset."

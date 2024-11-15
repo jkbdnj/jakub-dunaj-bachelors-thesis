@@ -12,9 +12,14 @@ from pathlib import Path
 import numpy
 from PIL import Image
 
-logger = logging.getLogger(__name__)
-FORMAT = "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
-logging.basicConfig(filename="add_artificial_background.log", format=FORMAT, level=logging.INFO)
+if __name__ != "__main__":
+    logger = logging.getLogger("wrapper." + __name__)
+else:
+    logger = logging.getLogger(__name__)
+    FORMAT = "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
+    logging.basicConfig(
+        filename="artificial_background_adder.log", format=FORMAT, level=logging.INFO
+    )
 
 
 def add_artificial_background():
