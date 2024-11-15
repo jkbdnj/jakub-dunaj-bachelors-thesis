@@ -1,9 +1,12 @@
 """File holding simple command line utilities."""
 
+import logging
 from argparse import ArgumentParser, ArgumentTypeError
 from pathlib import Path
 
 from rich_argparse import RichHelpFormatter
+
+logger = logging.getLogger("root." + __name__)
 
 
 def validate_dataset_path(arg_value: str, arg: str) -> Path:

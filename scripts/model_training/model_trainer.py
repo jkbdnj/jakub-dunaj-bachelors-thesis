@@ -1,5 +1,6 @@
 """Script training a EfficientNetB0 CNN model for plant disease classification from leaf images."""
 
+import logging
 import sys
 from pathlib import Path
 
@@ -7,10 +8,7 @@ from cli import parse_args
 from exceptions import DatasetException
 from tensorflow import keras
 
-# script_name = __file__.stem
-# logger = logging.getLogger(script_name)
-# FORMAT = "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
-# logging.basicConfig(filename=__file__.name + ".log", format=FORMAT, level=logging.INFO)
+logger = logging.getLogger("root." + __name__)
 
 
 def load_dataset(train_dataset_path: Path, test_dataset_path: Path, batch_size):
