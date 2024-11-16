@@ -3,14 +3,62 @@
 import logging
 from pathlib import Path
 
+import tensorflow as tf
 from cli import parse_args
 from exceptions import DatasetError
-from tensorflow import keras
+from keras.applications import EfficientNetB0
+from keras.layers import (
+    Dense,
+    Dropout,
+    GlobalAveragePooling2D,
+    Input,
+    Pipeline,
+    RandomBrightness,
+    RandomContrast,
+    RandomFlip,
+    RandomRotation,
+)
+from keras.utils import image_dataset_from_directory
+from tf import keras
 
 logger = logging.getLogger("root." + __name__)
 
 
-def load_dataset(train_dataset_path: Path, test_dataset_path: Path, batch_size):
+def apply_augmenting_pipeline(dataset: tf.data.Dataset) -> tf.data.Dataset:
+    """Function applying augmentation operations to dataset images.
+
+    This function uses an augmentation pipeline with 4 augmentation layers. These layers are:
+    RandomFlip, RandomRotation, RandomContrast, and RandomBrightness. Each layer applies an
+    augmentation operation. The randomness lies in the range of possible operation configurations
+    (e.g. the range of brightness increase or decrease).
+
+    Setting the fill_mode as constant inn RandomRotation adds will fill the missing information
+    with 0s. This adds the least artificial information that might otherwise add unwanted distortion
+    to the dataset. Setting the factor to 0.2 in RandomContrast will change the contrast of a pixel
+    only slightly. The same goes for RandomBrightness.
+
+    Args:
+        dataset (tf.data.Dataset): Dataset that will be augmented using the augmentation pipeline.
+
+    Returns:
+        tf.data.Dataset: Augmented dataset by the defined augmentation pipeline.
+
+    """
+    augmentation_pipeline = Pipeline(
+        [
+            RandomFlip(mode="horizontal_and_vertical"),
+            RandomRotation(fill_mode="constant"),
+            RandomContrast(factor=0.2),
+            RandomBrightness(factor=0.2),
+        ]
+    )
+
+    return dataset.map(augmentation_pipeline, num_parallel_calls=tf.Data.AUTOTUNE)
+
+
+def load_dataset(
+    train_dataset_path: Path, test_dataset_path: Path, batch_size: int
+) -> tuple[tf.data.Dataset, tf.data.Dataset]:
     """Function loading train and test datasets.
 
     This function loads the training and testing datasets from the final dataset.
@@ -20,8 +68,11 @@ def load_dataset(train_dataset_path: Path, test_dataset_path: Path, batch_size):
         test_dataset_path (str):  The path to the test dataset.
         batch_size: The batch size.
 
+    Returns:
+        tuple[tf.data.Dataset, tf.data.Dataset]: Tuple with train and test datasets.
+
     """
-    train_dataset = keras.utils.image_dataset_from_directory(
+    train_dataset = image_dataset_from_directory(
         train_dataset_path,
         labels="inferred",
         label_mode="int",
@@ -31,7 +82,7 @@ def load_dataset(train_dataset_path: Path, test_dataset_path: Path, batch_size):
         interpolation="bilinear",
     )
 
-    test_dataset = keras.utils.image_dataset_from_directory(
+    test_dataset = image_dataset_from_directory(
         test_dataset_path,
         labels="inferred",
         label_mode="int",
@@ -56,24 +107,24 @@ def load_model():
     """
     # loading the model without the output layer (classifier)
     # setting include_top to false removes the avg pooling, dropout, and dense layers of the model
-    model_base = keras.applications.EfficientNetB0(
+    model_base = EfficientNetB0(
         include_top=False,
         weights="imagenet",
     )
 
     # defining the input tensor
-    inputs = keras.layers.Input(shape=(224, 224, 3))
+    inputs = Input(shape=(224, 224, 3))
     x = model_base(inputs)
 
     # defining a global average pooling layer
     # it pools average value from each feature map of the model base output
-    x = keras.layers.GlobalAveragePooling2D()(x)
+    x = GlobalAveragePooling2D()(x)
 
     # defining a regularization dropout layer with dropout rate of 0.2 (as original architecture)
-    x = keras.layers.Dropout(0.2)(x)
+    x = Dropout(0.2)(x)
 
     # creating new output layer with 38 output units (specific to the problem setting)
-    outputs = keras.layers.Dense(38, activation="softmax")(x)
+    outputs = Dense(38, activation="softmax")(x)
 
     # assembling the model
     model = keras.Model(
@@ -150,9 +201,9 @@ def train_model(args):
     return 0
 
 
-def plot_and_save_history():
+def plot_and_save_history(output_path: Path):
     """Function plotting and saving a history to the output path."""
-    return 0
+    return output_path
 
 
 def main():

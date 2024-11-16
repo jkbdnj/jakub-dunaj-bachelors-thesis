@@ -82,7 +82,7 @@ def validate_output_path(output_path: Path | None) -> Path:
     if output_path is None:
         # creates a default path
         output_path = Path("./results")
-        output_path.mkdir()
+        output_path.mkdir(exist_ok=True)
         return output_path
 
     # creates folder results at the output path if it does not exists
