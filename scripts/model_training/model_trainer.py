@@ -1,11 +1,10 @@
 """Script training a EfficientNetB0 CNN model for plant disease classification from leaf images."""
 
 import logging
-import sys
 from pathlib import Path
 
 from cli import parse_args
-from exceptions import DatasetException
+from exceptions import DatasetError
 from tensorflow import keras
 
 logger = logging.getLogger("root." + __name__)
@@ -44,7 +43,7 @@ def load_dataset(train_dataset_path: Path, test_dataset_path: Path, batch_size):
 
     if set(train_dataset.class_names) != set(test_dataset.class_names):
         error_message = "Train and tests datasets differ in the class names!"
-        raise DatasetException(error_message)
+        raise DatasetError(error_message)
 
     return train_dataset, test_dataset
 
@@ -158,8 +157,8 @@ def plot_and_save_history():
 
 def main():
     """Main function."""
-    args = parse_args()
-    sys.exit(train_model(args))
+    parse_args()
+    # sys.exit(train_model(args))
 
 
 if __name__ == "__main__":
