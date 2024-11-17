@@ -142,9 +142,11 @@ class CLI:
             type=lambda arg_value: self.__validate_dataset_path(arg_value, "train_dataset_path"),
         )
         parser.add_argument(
-            "test_dataset_path",
-            help="path to the test dataset",
-            type=lambda arg_value: self.__validate_dataset_path(arg_value, "test_dataset_path"),
+            "validation_dataset_path",
+            help="path to the validation dataset",
+            type=lambda arg_value: self.__validate_dataset_path(
+                arg_value, "validation_dataset_path"
+            ),
         )
         parser.add_argument(
             "-b",
