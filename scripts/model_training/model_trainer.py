@@ -5,6 +5,7 @@ classification from leaf images.
 
 """
 
+import json
 import logging
 from pathlib import Path
 
@@ -260,35 +261,57 @@ class ModelTrainer:
 
         return model, training_history
 
-    def evaluate_model(self, model: keras.Model) -> keras.callbacks.History:
+    def evaluate_model(self, model: keras.Model) -> list[float]:
         """Public method evaluating the model.
 
         Args:
             model (keras.Model): Model to be trained.
 
         Returns:
-            keras.callbacks.History: The validation history.
+            list[float]: List with validation metrics.
 
         """
         return model.evaluate(x=self.validation_dataset)
 
 
-def plot_and_save_history(history: keras.callbacks.History, output_path: Path):
-    """Function plotting and saving a history to the output path."""
+def plot_and_save_history(history: keras.callbacks.History, output_path: Path) -> None:
+    """Function plotting and saving a history to the output path.
+
+    Args:
+        history (keras.callbacks.History): Object holding metrics form the training process.
+        output_path (Path): Output file path, where the plot is saved.
+
+    """
     figure, (ax1, ax2) = plt.subplots(1, 2)
+
+    # subplot for training and testing accuracy
     ax1.set(xlabel="epoch", ylabel="accuracy")
     ax1.set_title("Training and validation accuracy")
     ax1.plot(history.history["accuracy"], label="train accuracy")
-    ax1.plot(history.history["val_accuracy"], label="validation accuracy")
+    ax1.plot(history.history["val_accuracy"], label="test accuracy")
     ax1.legend()
+
+    # subplot for training and testing loss
     ax2.set(xlabel="epoch", ylabel="loss")
     ax2.set_title("Training and validation loss")
     ax2.plot(history.history["loss"], label="train loss")
-    ax2.plot(history.history["val_loss"], label="validation loss")
+    ax2.plot(history.history["val_loss"], label="test loss")
     ax2.legend()
 
     figure.savefig(output_path, format="png")
     plt.close(figure)
+
+
+def save_validation_metrics(output_path: Path, metrics: dir) -> None:
+    """Function saving the validation metrics.
+
+    Args:
+        output_path (Path): Output file path, where the plot is saved.
+        metrics (dir): Validation metrics as directory.
+
+    """
+    with output_path.open("a") as file:
+        json.dump(metrics, file, indent=4)
 
 
 def main():
@@ -304,27 +327,45 @@ def main():
     initial_model, initial_history = model_trainer.train_model(
         model, args.epochs, is_fine_tuning=False
     )
-    initial_validation = model_trainer.evaluate_model(initial_model)
+
+    # validating the initial model
+    validation_metrics = model_trainer.evaluate_model(initial_model)
+    validation_metrics = {
+        initial_model.metric_names[i]: validation_metrics[i] for i in range(len(validation_metrics))
+    }
+
+    # saving the validation metrics as json file
+    save_validation_metrics(
+        args.output / "initial_validation_metrics.json", {"initial_validation": validation_metrics}
+    )
 
     # saving the initial model to the output path
     initial_model.save(args.output / "initial_model.keras")
 
-    # plotting the initial metrics without the fine-tuning step
+    # plotting and saving the initial metrics without the fine-tuning step
     plot_and_save_history(initial_history, args.output / "initial_training_metrics.png")
-    plot_and_save_history(initial_validation, args.output / "initial_validation_metrics.png")
 
     # transfer learning with the fine-tuning step
     final_model, final_history = model_trainer.train_model(
         initial_model, args.epochs, is_fine_tuning=True
     )
-    final_validation = model_trainer.evaluate_model(final_model)
+
+    # validating the final model
+    validation_metrics = model_trainer.evaluate_model(final_model)
+    validation_metrics = {
+        initial_model.metric_names[i]: validation_metrics[i] for i in range(len(validation_metrics))
+    }
+
+    # saving the validation metrics as json file
+    save_validation_metrics(
+        args.output / "final_validation_metrics.json", {"final_validation": validation_metrics}
+    )
 
     # saving the final model to the output path
     final_model.save(args.output / "final_model.keras")
 
-    # plotting the final metrics with the fine-tuning step
+    # plotting and saving the final training metrics with the fine-tuning step
     plot_and_save_history(final_history, args.output / "final_training_metrics.png")
-    plot_and_save_history(final_validation, args.output / "final_validation_metrics.png")
 
 
 if __name__ == "__main__":
