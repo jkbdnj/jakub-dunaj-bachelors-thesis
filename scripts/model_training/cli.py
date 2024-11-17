@@ -6,7 +6,7 @@ from pathlib import Path
 
 from rich_argparse import RichHelpFormatter
 
-logger = logging.getLogger("root." + __name__)
+logger = logging.getLogger(__name__)
 
 
 class CLI:

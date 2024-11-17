@@ -10,6 +10,4 @@ command line interface.
 import logging
 
 # logger set-up
-logger = logging.getLogger("root")
-FORMAT = "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
-logging.basicConfig(filename="model_training.log", format=FORMAT, level=logging.INFO)
+logging.getLogger(__name__).addHandler(logging.NullHandler())

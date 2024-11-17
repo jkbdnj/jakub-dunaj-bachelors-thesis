@@ -21,7 +21,7 @@ from keras.layers import (
 from keras.utils import image_dataset_from_directory
 from tf import keras
 
-logger = logging.getLogger("root." + __name__)
+logger = logging.getLogger(__name__)
 
 
 class ModelTrainer:
