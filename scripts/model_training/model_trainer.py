@@ -314,7 +314,7 @@ def save_validation_metrics(output_path: Path, metrics: dir) -> None:
         metrics (dir): Validation metrics as directory.
 
     """
-    with output_path.open("a") as file:
+    with output_path.open("w") as file:
         fieldnames = ["metric", "value"]
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
