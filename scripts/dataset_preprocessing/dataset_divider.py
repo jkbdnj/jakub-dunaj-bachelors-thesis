@@ -11,6 +11,7 @@ import logging
 import random
 import sys
 from pathlib import Path
+from typing import Literal
 
 from PIL import Image
 
@@ -24,8 +25,8 @@ else:
     logging.basicConfig(filename="initial_dataset_divider.log", format=FORMAT, level=logging.INFO)
 
 
-# constant defining the train-test ratio of the initial dataset if the module is called as a script
-TRAIN_TEST_RATIO = 0.8
+# constant defining the train-validation ratio of the dataset if the module is called as a script
+TRAIN_VALIDATION_RATIO = 0.8
 
 # constant for the path to the color subset of the initial dataset
 COLOR_PATH = Path("PATH_TO/initial_dataset/color")
@@ -40,26 +41,29 @@ ARTIFICIAL_PATH = Path("PATH_TO/initial_dataset/artificial_background")
 FINAL_DATASET_PATH = Path("PATH_TO/final_dataset")
 
 
-def divide_initial_dataset(
-    train_test_ratio: float,
+def divide_dataset(
+    train_validation_ratio: float,
     color_path: Path,
     segmented_path: Path,
     artificial_path: Path,
     final_dataset_path: Path,
-):
+) -> Literal[0, 1]:
     """Function dividing the initial dataset into training and testing subsets.
 
     It takes images from each class of the three datasets and divides them into training and testing
     subsets based on teh train-test ration provided as function parameter.
 
     Args:
-        train_test_ratio (float): The parameter expressing what part of the dataset will be used for
-        training and what part for testing.
+        train_validation_ratio (float): The parameter expressing what part of the dataset will be
+        used for training and what part for validation.
         color_path (Path): The path to the color subset of the initial dataset.
         segmented_path (Path): The path to the segmented subset of the initial dataset.
         artificial_path (Path): The path to the artificial background subset of the initial dataset.
         final_dataset_path (Path): The destination path for the newly created dataset divided into
         training and testing subsets.
+
+    Returns:
+        Literal[0, 1]: Returns 0 on success, 1 on failure.
 
     """
     info_message = f"Running divide_initial_dataset(...) function at {file_name}"
@@ -85,15 +89,15 @@ def divide_initial_dataset(
 
     final_dataset_path.mkdir()
     final_train_path = final_dataset_path / "train"
-    final_test_path = final_dataset_path / "test"
+    final_validation_path = final_dataset_path / "validation"
     final_train_path.mkdir()
-    final_test_path.mkdir()
+    final_validation_path.mkdir()
 
     image_classes = [class_path.name for class_path in color_path.iterdir() if class_path.is_dir()]
 
     for image_class in image_classes:
         (final_train_path / image_class).mkdir()
-        (final_test_path / image_class).mkdir()
+        (final_validation_path / image_class).mkdir()
 
     for image_class in image_classes:
         # crating the paths a class in all three dataset subsets
@@ -138,17 +142,17 @@ def divide_initial_dataset(
             random.shuffle(image_paths)
 
             # division index if the list with paths
-            division_index = int(len(image_paths) * train_test_ratio)
+            division_index = int(len(image_paths) * train_validation_ratio)
 
             # training subset
             for image_path in image_paths[:division_index]:
                 with Image.open(image_path) as image:
                     image.save(final_train_path / class_path.name / image_path.name)
 
-            # testing subset
+            # validation subset
             for image_path in image_paths[division_index:]:
                 with Image.open(image_path) as image:
-                    image.save(final_test_path / class_path.name / image_path.name)
+                    image.save(final_validation_path / class_path.name / image_path.name)
 
             info_message = (
                 f"Done dividing images in class {class_path.name} of "
@@ -156,7 +160,7 @@ def divide_initial_dataset(
             )
             logger.info(info_message)
 
-    logger.info("Dataset division process into training and testing subsets successful!")
+    logger.info("Dataset division process into training and validation subsets successful!")
     return 0
 
 
@@ -164,7 +168,7 @@ if __name__ == "__main__":
     info_message = f"Running {file_name} directly as script."
     logger.info(info_message)
     sys.exit(
-        divide_initial_dataset(
-            TRAIN_TEST_RATIO, COLOR_PATH, SEGMENTED_PATH, ARTIFICIAL_PATH, FINAL_DATASET_PATH
+        divide_dataset(
+            TRAIN_VALIDATION_RATIO, COLOR_PATH, SEGMENTED_PATH, ARTIFICIAL_PATH, FINAL_DATASET_PATH
         )
     )

@@ -8,6 +8,7 @@ from the initial dataset and creates a new subset of images with added artificia
 import logging
 import sys
 from pathlib import Path
+from typing import Literal
 
 import numpy
 from PIL import Image
@@ -35,7 +36,7 @@ DESTINATION_PATH = Path(SEGMENTED_PATH.parent / "artificial_background")
 
 def add_artificial_background(
     artificial_backgrounds_path: Path, segmented_path: Path, destination_path: Path
-):
+) -> Literal[0, 1]:
     """Function adding artificial backgrounds to segmented leaf images.
 
     The function loads images form the segmented subset of the initial dataset and adds artificial
@@ -48,6 +49,9 @@ def add_artificial_background(
         background images.
         segmented_path (Path): The path to the segmented subset of the initial dataset.
         destination_path (Path): The path where the augmented images are saved.
+
+    Returns:
+        Literal[0, 1]: Returns 0 on success, 1 on failure.
 
     """
     info_message = f"Running add_artificial_background(...) function at {file_name}"

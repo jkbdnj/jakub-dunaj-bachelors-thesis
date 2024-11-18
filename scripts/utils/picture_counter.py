@@ -1,40 +1,32 @@
-"""Utility module to count images in the three dataset subsets."""
+"""Utility module counting images in a dataset with subsets that contain classes."""
 
 import json
 from pathlib import Path
 
-# constant for the path to the color subset of the initial dataset
-COLOR_PATH = Path("PATH_TO_SUBSET/color")
-
-# constant for the path to the segmented subset of the initial dataset
-SEGMENTED_PATH = Path("PATH_TO_SUBSET/segmented")
-
-# constant for the path to the artificial background subset of the initial dataset
-ARTIFICIAL_PATH = Path("PATH_TO_SUBSET/artificial_background")
-
-dataset_paths = [
-    COLOR_PATH,
-    SEGMENTED_PATH,
-    ARTIFICIAL_PATH,
-]
+DATASET_PATH = Path(
+    "/Users/kubkodunaj/Desktop/jakub-dunaj-bachelors-thesis/datasets/original_dataset"
+)
 
 dictionary = {}
-aggregated_dict = {}
-for dataset_path in dataset_paths:
-    subset_dict = {}
-    for class_path in dataset_path.iterdir():
-        if class_path.is_dir():
-            length = len(list(class_path.glob("*.[jJ][pP][gG]")))
-            subset_dict[class_path.name] = length
+aggregated_dictionary = {}
+for subset_path in DATASET_PATH.iterdir():
+    if subset_path.is_dir():
+        subset_dictionary = {}
+        for class_path in subset_path.iterdir():
+            if class_path.is_dir():
+                length = len(list(class_path.glob("*.[jJ][pP][gG]")))
+                subset_dictionary[class_path.name] = length
 
-            if class_path.name not in aggregated_dict:
-                aggregated_dict[class_path.name] = length
-            else:
-                aggregated_dict[class_path.name] += length
+                if class_path.name not in aggregated_dictionary:
+                    aggregated_dictionary[class_path.name] = length
+                else:
+                    aggregated_dictionary[class_path.name] += length
 
-    dictionary[dataset_path.name] = subset_dict
+        subset_dictionary["total"] = sum(subset_dictionary.values())
+        dictionary[subset_path.name] = subset_dictionary
 
-dictionary["aggregated"] = aggregated_dict
+aggregated_dictionary["total"] = sum(aggregated_dictionary.values())
+dictionary["aggregated"] = aggregated_dictionary
 
 with Path("./counts.json").open("w") as file:
-    json.dump(dictionary, file, indent=4)
+    json.dump({DATASET_PATH.name: dictionary}, file, indent=4)
