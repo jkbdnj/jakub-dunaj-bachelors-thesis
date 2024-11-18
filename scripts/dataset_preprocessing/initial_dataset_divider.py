@@ -1,8 +1,9 @@
 """Script dividing the initial dataset into training and testing subsets.
 
-This script strictly adheres to the structure of the initial dataset. Based on the train-test ration
-set up in the script, the script divides every class in each of the three dataset subsets based on
-this ratio.
+This script strictly adheres to the structure of the initial dataset. Based on the train-test ratio
+that is set up in the script, the script divides every class in each of the three dataset subsets
+based on this ratio and mixes the images of the same calls from the three different subsets into one
+single class in the final dataset.
 
 """
 
@@ -13,20 +14,38 @@ from pathlib import Path
 
 from PIL import Image
 
-logger = logging.getLogger(__name__)
-FORMAT = "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
-logging.basicConfig(
-    filename="divide_initial_dataset.log",
-    format=FORMAT,
-    level=logging.INFO,
-)
+file_name = Path(__file__).name
+
+if __name__ != "__main__":
+    logger = logging.getLogger("wrapper." + __name__)
+else:
+    logger = logging.getLogger(__name__)
+    FORMAT = "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
+    logging.basicConfig(filename="initial_dataset_divider.log", format=FORMAT, level=logging.INFO)
+
 
 # constant defining the train-test ratio of the initial dataset if the module is called as a script
 TRAIN_TEST_RATIO = 0.8
 
+# constant for the path to the color subset of the initial dataset
+COLOR_PATH = Path("PATH_TO/initial_dataset/color")
+
+# constant for the path to the segmented subset of the initial dataset
+SEGMENTED_PATH = Path("PATH_TO/initial_dataset/segmented")
+
+# constant for the path to the artificial background subset of the initial dataset
+ARTIFICIAL_PATH = Path("PATH_TO/initial_dataset/artificial_background")
+
+# constant for the path where the final dataset used for the training process is saved
+FINAL_DATASET_PATH = Path("PATH_TO/final_dataset")
+
 
 def divide_initial_dataset(
     train_test_ratio: float,
+    color_path: Path,
+    segmented_path: Path,
+    artificial_path: Path,
+    final_dataset_path: Path,
 ):
     """Function dividing the initial dataset into training and testing subsets.
 
@@ -34,27 +53,21 @@ def divide_initial_dataset(
     subsets based on teh train-test ration provided as function parameter.
 
     Args:
-        train_test_ratio (float): The parameter expressing what part of the dataset will be used
-        for training and what part for testing.
+        train_test_ratio (float): The parameter expressing what part of the dataset will be used for
+        training and what part for testing.
+        color_path (Path): The path to the color subset of the initial dataset.
+        segmented_path (Path): The path to the segmented subset of the initial dataset.
+        artificial_path (Path): The path to the artificial background subset of the initial dataset.
+        final_dataset_path (Path): The destination path for the newly created dataset divided into
+        training and testing subsets.
 
     """
-    color_path = Path("PATH_TO/initial_dataset/color")
-    segmented_path = Path("PATH_TO/initial_dataset/segmented")
-    artificial_path = Path("PATH_TO/initial_dataset/artificial_background")
-    final_dataset_path = Path("PATH_TO/final_dataset")
-
-    subset_paths = [
-        color_path,
-        segmented_path,
-        artificial_path,
-    ]
+    info_message = f"Running divide_initial_dataset(...) function at {file_name}"
+    logger.info(info_message)
+    subset_paths = [color_path, segmented_path, artificial_path]
     subset_paths_exist = [folder.exists() for folder in subset_paths]
 
-    for subset_path, exists in zip(
-        subset_paths,
-        subset_paths_exist,
-        strict=False,
-    ):
+    for subset_path, exists in zip(subset_paths, subset_paths_exist, strict=False):
         if not exists or subset_path.parent.name != "initial_dataset":
             error_message = f"No such subset of initial_dataset at {subset_path} found!"
             logger.error(error_message)
@@ -66,7 +79,7 @@ def divide_initial_dataset(
         return 1
 
     if final_dataset_path.exists():
-        error_message = f"Final dataset folder at {final_dataset_path} already exists!"
+        error_message = f"Final dataset folder at path {final_dataset_path} already exists!"
         logger.error(error_message)
         return 1
 
@@ -112,7 +125,7 @@ def divide_initial_dataset(
         if False in class_paths_exist:
             return 1
 
-        # dividing images of a class in all three datasets
+        # dividing images of a class from all three datasets
         for class_path in class_paths:
             info_message = (
                 f"Dividing images in class {class_path.name} of {class_path.parent.name} subset."
@@ -148,4 +161,10 @@ def divide_initial_dataset(
 
 
 if __name__ == "__main__":
-    sys.exit(divide_initial_dataset(TRAIN_TEST_RATIO))
+    info_message = f"Running {file_name} directly as script."
+    logger.info(info_message)
+    sys.exit(
+        divide_initial_dataset(
+            TRAIN_TEST_RATIO, COLOR_PATH, SEGMENTED_PATH, ARTIFICIAL_PATH, FINAL_DATASET_PATH
+        )
+    )

@@ -2,4 +2,4 @@
 
 
 class DatasetError(Exception):
-    """Exceptions used for unexpected states in the datasets."""
+    """Exception used for unexpected states in the datasets."""

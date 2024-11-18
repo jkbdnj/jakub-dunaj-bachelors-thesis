@@ -1,4 +1,5 @@
-#rules: https://docs.astral.sh/ruff/rules/
+# ruff rules: https://docs.astral.sh/ruff/rules/
+# docformatter: https://docformatter.readthedocs.io/en/latest/usage.html#use-with-pre-commit
 
 [tool.ruff]
 fix=true
@@ -49,9 +50,11 @@ quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
+docstring-code-format = true # only formats code within docstrings
 
 [tool.docformatter]
 wrap-summaries = 100
 wrap-descriptions = 100
 in-place = true
 blank = true
+config = "./pyproject.toml"
