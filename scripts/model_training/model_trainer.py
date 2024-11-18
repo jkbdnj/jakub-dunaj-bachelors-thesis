@@ -11,8 +11,6 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from cli import CLI
-from exceptions import DatasetError
 from keras.applications import EfficientNetB0
 from keras.callbacks import CSVLogger
 from keras.layers import (
@@ -28,6 +26,9 @@ from keras.layers import (
 )
 from keras.utils import image_dataset_from_directory
 from tensorflow import keras
+
+from .cli import CLI
+from .exceptions import DatasetError
 
 logger = logging.getLogger(__name__)
 
