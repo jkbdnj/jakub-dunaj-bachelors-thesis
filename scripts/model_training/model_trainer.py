@@ -11,9 +11,10 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from keras.applications import EfficientNetB0
-from keras.callbacks import CSVLogger
-from keras.layers import (
+from tensorflow import keras
+from tensorflow.keras.applications import EfficientNetB0
+from tensorflow.keras.callbacks import CSVLogger
+from tensorflow.keras.layers import (
     Dense,
     Dropout,
     GlobalAveragePooling2D,
@@ -24,8 +25,7 @@ from keras.layers import (
     RandomFlip,
     RandomRotation,
 )
-from keras.utils import image_dataset_from_directory
-from tensorflow import keras
+from tensorflow.keras.utils import image_dataset_from_directory
 
 from .cli import CLI
 from .exceptions import DatasetError
