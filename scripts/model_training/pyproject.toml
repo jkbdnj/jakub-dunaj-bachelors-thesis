@@ -9,7 +9,7 @@ authors = [{name = "Jakub Dunaj", email = "e12121285@student.tuwien.ac.at"}]
 dependencies = ["keras~=3.6.0", "tensorflow~=2.17.0", "matplotlib~=3.9.2", "rich~=13.9.4"]
 
 [project.scripts]
-model-trainer = "model_trainer:main"
+model-trainer = "model_trainer.model_trainer:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["model_trainer"]
