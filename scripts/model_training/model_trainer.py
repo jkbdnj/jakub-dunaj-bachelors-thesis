@@ -5,7 +5,7 @@ classification from leaf images.
 
 """
 
-import json
+import csv
 import logging
 from pathlib import Path
 
@@ -14,6 +14,7 @@ import tensorflow as tf
 from cli import CLI
 from exceptions import DatasetError
 from keras.applications import EfficientNetB0
+from keras.callbacks import CSVLogger
 from keras.layers import (
     Dense,
     Dropout,
@@ -228,7 +229,7 @@ class ModelTrainer:
         return model
 
     def train_model(
-        self, model: keras.Model, epochs: int, *, is_fine_tuning: bool
+        self, model: keras.Model, epochs: int, csv_file_path: str, *, is_fine_tuning: bool
     ) -> tuple[keras.Model, keras.callbacks.History]:
         """Public method training the model.
 
@@ -239,24 +240,25 @@ class ModelTrainer:
         learning without and with fine-tuning, it reports the accuracy and loss for each epoch.
 
         Args:
-           model (keras.Model): Model to be trained.
-           is_fine_tuning (bool): Boolean flag determining whether the fine-tuning will be
-           performed.
-           epochs (int): The number of epochs performed.
+            model (keras.Model): Model to be trained.
+            epochs (int): The number of epochs performed.
+            csv_file_path (str): File path where the csv file with training metrics is saved.
+            is_fine_tuning (bool): Boolean flag determining whether the fine-tuning will be
+            performed.
 
         Returns:
             tuple[keras.Model, keras.callbacks.History]:  Tuple with trained model and training
             history.
 
         """
-        train_dataset = self.train_dataset
-
-        # transfer learning without the fine-tuning step
+        csv_logger = CSVLogger(csv_file_path)
         model = self.__modify_layers_for_transfer_learning(model, is_fine_tuning=is_fine_tuning)
 
-        # training the model
         training_history = model.fit(
-            x=train_dataset, epochs=epochs, validation_data=self.test_dataset
+            x=self.train_dataset,
+            epochs=epochs,
+            validation_data=self.test_dataset,
+            callbacks=[csv_logger],
         )
 
         return model, training_history
@@ -282,36 +284,42 @@ def plot_and_save_history(history: keras.callbacks.History, output_path: Path) -
         output_path (Path): Output file path, where the plot is saved.
 
     """
-    figure, (ax1, ax2) = plt.subplots(1, 2)
+    figure, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+    epochs = range(1, len(history.history["accuracy"]) + 1)
 
     # subplot for training and testing accuracy
     ax1.set(xlabel="epoch", ylabel="accuracy")
-    ax1.set_title("Training and validation accuracy")
-    ax1.plot(history.history["accuracy"], label="train accuracy")
-    ax1.plot(history.history["val_accuracy"], label="test accuracy")
+    ax1.set_title("Model Accuracy")
+    ax1.plot(epochs, history.history["accuracy"], label="train accuracy")
+    ax1.plot(epochs, history.history["val_accuracy"], label="test accuracy")
     ax1.legend()
 
     # subplot for training and testing loss
     ax2.set(xlabel="epoch", ylabel="loss")
-    ax2.set_title("Training and validation loss")
-    ax2.plot(history.history["loss"], label="train loss")
-    ax2.plot(history.history["val_loss"], label="test loss")
+    ax2.set_title("Model Loss")
+    ax2.plot(epochs, history.history["loss"], label="train loss")
+    ax2.plot(epochs, history.history["val_loss"], label="test loss")
     ax2.legend()
 
+    plt.tight_layout()
     figure.savefig(output_path, format="png")
     plt.close(figure)
 
 
 def save_validation_metrics(output_path: Path, metrics: dir) -> None:
-    """Function saving the validation metrics.
+    """Function saving the validation metrics as csv file.
 
     Args:
-        output_path (Path): Output file path, where the plot is saved.
+        output_path (Path): Output file path, where the csv is saved.
         metrics (dir): Validation metrics as directory.
 
     """
     with output_path.open("a") as file:
-        json.dump(metrics, file, indent=4)
+        fieldnames = ["metric", "value"]
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for k, v in metrics.items():
+            writer.writerow({"metric": k, "value": v})
 
 
 def main():
@@ -325,47 +333,42 @@ def main():
 
     # transfer learning without the fine-tuning step
     initial_model, initial_history = model_trainer.train_model(
-        model, args.epochs, is_fine_tuning=False
+        model, args.epochs, str(args.output / "initial_training_metrics.csv"), is_fine_tuning=False
     )
-
-    # validating the initial model
-    validation_metrics = model_trainer.evaluate_model(initial_model)
-    validation_metrics = {
-        initial_model.metric_names[i]: validation_metrics[i] for i in range(len(validation_metrics))
-    }
-
-    # saving the validation metrics as json file
-    save_validation_metrics(
-        args.output / "initial_validation_metrics.json", {"initial_validation": validation_metrics}
-    )
-
-    # saving the initial model to the output path
-    initial_model.save(args.output / "initial_model.keras")
 
     # plotting and saving the initial metrics without the fine-tuning step
     plot_and_save_history(initial_history, args.output / "initial_training_metrics.png")
 
+    # validating the initial model
+    validation_metrics = model_trainer.evaluate_model(initial_model)
+    validation_metrics = dict(zip(initial_model.metrics_names, validation_metrics, strict=False))
+
+    # saving the validation metrics as csv file
+    save_validation_metrics(args.output / "initial_validation_metrics.csv", validation_metrics)
+
+    # saving the initial model to the output path
+    initial_model.save(args.output / "initial_model.keras")
+
     # transfer learning with the fine-tuning step
     final_model, final_history = model_trainer.train_model(
-        initial_model, args.epochs, is_fine_tuning=True
+        initial_model,
+        args.epochs,
+        str(args.output / "final_training_metrics.csv"),
+        is_fine_tuning=True,
     )
-
-    # validating the final model
-    validation_metrics = model_trainer.evaluate_model(final_model)
-    validation_metrics = {
-        initial_model.metric_names[i]: validation_metrics[i] for i in range(len(validation_metrics))
-    }
-
-    # saving the validation metrics as json file
-    save_validation_metrics(
-        args.output / "final_validation_metrics.json", {"final_validation": validation_metrics}
-    )
-
-    # saving the final model to the output path
-    final_model.save(args.output / "final_model.keras")
 
     # plotting and saving the final training metrics with the fine-tuning step
     plot_and_save_history(final_history, args.output / "final_training_metrics.png")
+
+    # validating the final model
+    validation_metrics = model_trainer.evaluate_model(final_model)
+    validation_metrics = dict(zip(final_model.metrics_names, validation_metrics, strict=False))
+
+    # saving the validation metrics as json file
+    save_validation_metrics(args.output / "final_validation_metrics.csv", validation_metrics)
+
+    # saving the final model to the output path
+    final_model.save(args.output / "final_model.keras")
 
 
 if __name__ == "__main__":
