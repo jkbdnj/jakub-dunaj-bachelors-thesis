@@ -27,8 +27,8 @@ from keras.layers import (
 )
 from keras.utils import image_dataset_from_directory
 
-from .cli import CLI
-from .exceptions import DatasetError
+from model_training.cli import CLI
+from model_training.exceptions import DatasetError
 
 logger = logging.getLogger(__name__)
 
