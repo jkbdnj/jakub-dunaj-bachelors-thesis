@@ -364,7 +364,7 @@ def main():
     validation_metrics = model_trainer.evaluate_model(final_model)
     validation_metrics = dict(zip(final_model.metrics_names, validation_metrics, strict=False))
 
-    # saving the validation metrics as json file
+    # saving the validation metrics as csv file
     save_validation_metrics(args.output / "final_validation_metrics.csv", validation_metrics)
 
     # saving the final model to the output path
