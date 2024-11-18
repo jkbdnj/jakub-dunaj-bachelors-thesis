@@ -370,7 +370,3 @@ def main():
 
     # saving the final model to the output path
     final_model.save(args.output / "final_model.keras")
-
-
-if __name__ == "__main__":
-    main()
