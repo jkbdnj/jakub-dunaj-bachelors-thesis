@@ -27,8 +27,8 @@ from keras.layers import (
 )
 from keras.utils import image_dataset_from_directory
 
-from model_trainer.cli import CLI
-from model_trainer.exceptions import DatasetError
+from .cli import CLI
+from .exceptions import DatasetError
 
 logger = logging.getLogger(__name__)
 
@@ -293,6 +293,7 @@ def plot_and_save_history(history: keras.callbacks.History, output_path: Path) -
     ax1.set_title("Model Accuracy")
     ax1.plot(epochs, history.history["accuracy"], label="train accuracy")
     ax1.plot(epochs, history.history["val_accuracy"], label="test accuracy")
+    ax1.set_xticks(epochs)
     ax1.legend()
 
     # subplot for training and testing loss
@@ -300,6 +301,7 @@ def plot_and_save_history(history: keras.callbacks.History, output_path: Path) -
     ax2.set_title("Model Loss")
     ax2.plot(epochs, history.history["loss"], label="train loss")
     ax2.plot(epochs, history.history["val_loss"], label="test loss")
+    ax2.set_xticks(epochs)
     ax2.legend()
 
     plt.tight_layout()
