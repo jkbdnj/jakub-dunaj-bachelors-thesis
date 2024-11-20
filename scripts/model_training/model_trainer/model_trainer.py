@@ -48,7 +48,7 @@ class ModelTrainer:
         """Constructor instantiating an object of the ModelTrainer class.
 
         This constructor loads up the train, test and validation datasets and applies augmentation
-        pipeline to each of the datasets. It also sets up the instance variables train_dataset,
+        pipeline to the train dataset. It also sets up the instance variables train_dataset,
         test_dataset and validation_dataset.
 
         Args:
@@ -61,8 +61,8 @@ class ModelTrainer:
             train_dataset_path, validation_dataset_path, batch_size
         )
         self.train_dataset = self.__apply_augmenting_pipeline(train_dataset)
-        self.test_dataset = self.__apply_augmenting_pipeline(test_dataset)
-        self.validation_dataset = self.__apply_augmenting_pipeline(validation_dataset)
+        self.test_dataset = test_dataset
+        self.validation_dataset = validation_dataset
         self.batch_size = batch_size
 
     def __load_dataset(
@@ -141,7 +141,7 @@ class ModelTrainer:
         augmentation_pipeline = Pipeline(
             [
                 RandomFlip(mode="horizontal_and_vertical"),
-                RandomRotation(factor=0.1, fill_mode="constant"),
+                RandomRotation(factor=0.1, fill_mode="reflect"),
                 RandomContrast(factor=0.2),
                 RandomBrightness(factor=0.2),
             ]
