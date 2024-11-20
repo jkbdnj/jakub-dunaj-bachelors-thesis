@@ -43,30 +43,16 @@ captions=tableheading
 %     font=\normalfont\itshape
 % ]{subparagraph}
 
-% % For paragraphs
-% \RedeclareSectionCommand[
-%     beforeskip=-3.25ex plus -1ex minus -0.2ex,
-%     afterskip=1.5ex plus 0.2ex,
-%     font=\normalfont\normalsize\bfseries
-% ]{paragraph}
-
-% % For subparagraphs
-% \RedeclareSectionCommand[
-%     beforeskip=-3.25ex plus -1ex minus -0.2ex,
-%     afterskip=1.5ex plus 0.2ex,
-%     font=\normalfont\normalsize\bfseries
-% ]{subparagraph}
-
 \addtokomafont{captionlabel}{\bfseries}
 
 \RequirePackage[T1]{fontenc}
 \RequirePackage{lmodern}
-\RequirePackage[babel]{microtype}     % improves the micro-typographic layout
-\RequirePackage[english]{babel} %
+\RequirePackage[babel]{microtype}
+\RequirePackage[english]{babel}
 
 
-\input{glyphtounicode.tex}    %Part of modern distribution
-\input{glyphtounicode-cmr.tex}     %Additionnal glyph: You must grab it from pdfx package
+\input{glyphtounicode.tex}
+\input{glyphtounicode-cmr.tex}
 \pdfgentounicode=1
 \pdfinterwordspaceon
 \pdfomitcharset 1
@@ -74,38 +60,25 @@ captions=tableheading
 \usepackage{cmap}
 \usepackage{hyperref}
 
-\hypersetup{ % Setzt einige Werte die in den Eigenschaften des PDF gespeichert sind.
+\hypersetup{
  bookmarksnumbered,
 %   % pdfdisplaydoctitle = true,
-  colorlinks, % Für Druck auf "false" setzen!
-  linkcolor={black}, % auch keine grellen Rahmen im View
+  colorlinks,
+  linkcolor={black},
   citecolor={black},
   urlcolor={black}
 }
 
-%% lines at - see: http://www.komascript.de/chapterwithlines
-%\renewcommand{\chapterlineswithprefixformat}[3]{%
-%  {\raggedleft #2}\nobreak
-%  \rule[.5\baselineskip]{\textwidth}{1pt}\\*
-%  #3\par\nobreak
-%  \rule[-.5\baselineskip]{\textwidth}{1pt}%
-%}
-%% Linien bei Überschriften - Ende
-
-%% Absatzkontrolle
 \clubpenalty10000
 \widowpenalty10000
 \displaywidowpenalty=10000
 
 \RequirePackage{graphicx}
-%Erweiterung graphic paket, optionale Parameter für \includegraphics
-% Seitenrand neu definieren
 \RequirePackage[left=2.5cm,right=2.5cm,top=1.5cm,bottom=2.5cm,includehead]{geometry}
-%Seitenlayout anpassen
 \RequirePackage[
 headsepline,
 automark
-]{scrlayer-scrpage} %Kopf und Fußzeile
+]{scrlayer-scrpage}
 
 \pagestyle{scrheadings}
 \clearpairofpagestyles
@@ -119,19 +92,19 @@ automark
 
 \RequirePackage[list=true]{subcaption}
 
-\RequirePackage{mathtools} %% extension of amsmath (also loads amstext)
-\RequirePackage{amssymb}   %% for complex formulas
-%Correct UTF8 mapping for ams fonts
-\ifdefined\pdffontattr% \ifdefined is part of the e-TeX extension, which is part of any modern LaTeX compiler.
+\RequirePackage{mathtools}
+\RequirePackage{amssymb}
+
+\ifdefined\pdffontattr
   \immediate\pdfobj stream file {umsa.cmap}
   {\usefont{U}{msa}{m}{n}\pdffontattr\font{/ToUnicode \the\pdflastobj\space 0 R}}
   \immediate\pdfobj stream file {umsb.cmap}
   {\usefont{U}{msb}{m}{n}\pdffontattr\font{/ToUnicode \the\pdflastobj\space 0 R}}
 \fi
-\RequirePackage{xfrac}  %% diagonals fractions - e.g. numbers
-\RequirePackage{siunitx} %% SI Units
+\RequirePackage{xfrac}
+\RequirePackage{siunitx}
 
-\RequirePackage{booktabs} %% for better looking tables
+\RequirePackage{booktabs}
 
 \RequirePackage[newcommands]{ragged2e}
 \RequirePackage{tabularx}
@@ -140,29 +113,26 @@ automark
 \RequirePackage{multirow}
 
 \PassOptionsToPackage{table}{xcolor}
-% \RequirePackage{xcolor} %% improvement to the color package, included by pdfx
-% muss jetzt vor pdfx geladen werden
-\RequirePackage{url} %% links inside the document as well as to websites
+\RequirePackage{url}
 
-\RequirePackage{pdfpages} %% to include pdf pages
+\RequirePackage{pdfpages}
 
-\RequirePackage{marvosym} %% additional symbols
-\RequirePackage{pifont}   %% additional symbols
-\RequirePackage{eurosym} %% for correct Euro-Symbol with \officialeuro{}
+\RequirePackage{marvosym}
+\RequirePackage{pifont}
+\RequirePackage{eurosym}
 
-\RequirePackage{xspace}  %% for intelligent spacing after commands \xspace
+\RequirePackage{xspace}
 
-\RequirePackage{enumitem}  %% to customize itemize, enumerate, description
+\RequirePackage{enumitem}
 
-\RequirePackage{listings} %% syntax highlighting - for program code
-\RequirePackage{scrhack} %% solve some problems with float of listings
+\RequirePackage{listings}
+\RequirePackage{scrhack}
 
 \renewcaptionname{english}{\bibname}{References}
 \renewcaptionname{english}{\abstractname}{Abstract}
 \renewcaptionname{english}{\tablename}{Tab.}
 \renewcaptionname{english}{\figurename}{Fig.}
 
-%% Title Format
 \subject{Bachelor's Thesis}
 \addtokomafont{subject}{\normalfont\sffamily\huge}
 \newcommand{\authorname}[1]{\renewcommand\@authorname{#1}}
@@ -175,9 +145,7 @@ automark
 \newcommand\@thesislanguage{\@latex@error{No \noexpand\thesislanguage specified}\@ehc}
 \newcommand{\keywords}[1]{\renewcommand\@keywords{#1}}
 \newcommand\@keywords{\@latex@error{No \noexpand\keywords specified}\@ehc}
-%\title{\@thesistitle}
 
-%% Typografische Einstellungen zu Gleitobjekten
 \renewcommand{\floatpagefraction}{0.6}
 \renewcommand{\textfraction}{0.15}
 \renewcommand{\topfraction}{0.8}

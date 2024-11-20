@@ -127,7 +127,7 @@ urlseen = {Accessed on}
         \begin{figure}[h]
             \centering
             \includegraphics[width=0.8\textwidth]{website_predicting_typed_characters.png}
-            \caption{Website predicting whether the user will type 'd' or 'f' next (\cite{website_predicting_typed_characters:2024})}
+            \caption{\centering Website predicting whether the user will type 'd' or 'f' next (\cite{website_predicting_typed_characters:2024})}
             \label{fig:website-predicting-typed-characters}
         \end{figure}
 
@@ -177,7 +177,7 @@ urlseen = {Accessed on}
                 \begin{subfigure}[b]{0.49\textwidth}
                     \centering
                     \includegraphics[width=\textwidth]{anatomy_of_neuron.png}
-                    \caption{Anatomy of a neuron (Source: \cite{anatomy_of_neuron:2022})}
+                    \caption{\centering Anatomy of a neuron (\cite{anatomy_of_neuron:2022})}
                     \label{fig:anatomy-of-neuron}
                 \end{subfigure}
                 \hfill
@@ -209,10 +209,10 @@ urlseen = {Accessed on}
                             }
                         \end{tikzpicture}
                     }
-                    \caption{Schematic anatomy of a neuron (Adapted from: \cite{Aggarwal:2018})}
+                    \caption{\centering Schematic anatomy of a neuron (Adapted from: \cite{Aggarwal:2018})}
                     \label{fig:schematic-anatomy-of-neuron}
                 \end{subfigure}
-                \caption{Detailed and schematic anatomy of a neuron}
+                \caption{\centering Detailed and schematic anatomy of a neuron}
             \end{figure}
 
             The artificial neuron is a basic processing unit and a building block of artificial neural networks (\cite{Alpaydin:2014}). At the same time, single artificial neuron builds a single-layer neural network. Single-layer networks may also include several artificial neurons in parallel. Layers of artificial neurons build complex neural networks that are also referred to as multilayer neural networks. Neural networks use representation learning (\cite{LeCun:2015}). This means that the artificial neural network discover the patterns in the data automatically without preprocessing the raw data (\cite{LeCun:2015}). The neural networks learn different representations of the input data at each of the layers (\cite{LeCun:2015}). The preprocessing of the raw data to extract important features has to be done in some conventional machine-learning approaches such as K-Nearest Neighbors technique.
@@ -274,7 +274,7 @@ urlseen = {Accessed on}
                         \draw[->] (artificial_neuron) -- (output);
                         \draw[->] (bias) -- (artificial_neuron) node[midway, left] {$b_i$};
                     \end{tikzpicture}
-                    \caption{Artificial neuron (Adapted from: \cite{Aggarwal:2018})}
+                    \caption{\centering Artificial neuron (Adapted from: \cite{Aggarwal:2018})}
                     \label{fig:artificial-neuron}
                 \end{figure}
 
@@ -319,7 +319,7 @@ urlseen = {Accessed on}
                         support vector machine (SVM)& identity function & $\mathcal{L}_{t}(y_t, \hat{y}_t) = \max(0, -y_t \cdot \hat{y}_t + 1)$  \\
                         \hline
                     \end{tabular}
-                    \caption{Single-layer neural network models consisting of a single artificial neuron (Adapted from: \cite{Aggarwal:2018})}
+                    \caption{\centering Single-layer neural network models consisting of a single artificial neuron (Adapted from: \cite{Aggarwal:2018})}
                     \label{tab:single-layer-single-neuron-models}
                 \end{table}
                 Perceptron with discrete output and support vector machine models may be used for binary classification (\cite{Alpaydin:2014}). Both of the models output real values. Logistic regression model may be used for the same task by predicting the probability for a positive class (\cite{Aggarwal:2018}). Linear regression model and perceptron with continuous output may be used for predicting a real-valued label of a problem instance represented as an input vector (\cite{Bishop:2024}).
@@ -336,7 +336,7 @@ urlseen = {Accessed on}
                         multinomial logistic regression & softmax function & $\mathcal{L}_{t}(\mathbf{\hat{y}}) = -log(-\hat{y}_{c(t)})$ \\
                         \hline
                     \end{tabular}
-                    \caption{Single-layer neural network models consisting of multiple artificial neurons (Adapted from: \cite{Aggarwal:2018})}
+                    \caption{\centering Single-layer neural network models consisting of multiple artificial neurons (Adapted from: \cite{Aggarwal:2018})}
                     \label{tab:single-layer-multiple-neuron-models}
                 \end{table}
                 All of the three models in \autoref{tab:single-layer-multiple-neuron-models} are used for multiclass classification problems. Each artificial neuron represents single class or label from the training set. The multiclass perceptron models as well as multiclass support vector machine models return real values (\cite{Aggarwal:2018}). The multinomial logistic regression models return probabilities for each of the classes represented by the neurons in the single-layer neural network. In addition, multinomial logistic regression models use the softmax activation function:
@@ -399,7 +399,7 @@ urlseen = {Accessed on}
                 \begin{figure}[h]
                     \centering
                     \includegraphics[width=\textwidth]{lenet5_architecture.png}
-                    \caption{LeNet-5 architecture (Source: \cite{LeCun:1998})}
+                    \caption{\centering LeNet-5 architecture (Source: \cite{LeCun:1998})}
                     \label{fig:lenet5-architecture}
                 \end{figure}
 
@@ -411,9 +411,9 @@ urlseen = {Accessed on}
 
         The overall accuracies over all the experiment settings varied from 85.53\% to 99.43\%. The accuracy at the low interval border was achieved by an AlexNet model trained from scratch using 80\% of the gray-scale dataset version for training and the remaining part for testing. The accuracy on the interval border was achieved by a GoogLeNet model trained using transfer learning method. In this case, 80\% of the dataset were used for training and the remaining 20\% of the dataset were used for testing. The authors stated that the overall accuracy of the models decreases when the train subset to test subset ratio is increased. Furthermore, the authors stated that among all trained models, models with GoogLeNet architecture achieved higher average accuracies than those with AlexNet architecture. Also, models trained using transfer learning method performed better than those trained from scratch. Among all three dataset versions, models trained on the color version of the PlantVillage dataset outperformed all other models. Moreover, models trained using transfer learning method with the fine-tuning step converged after significantly lower number of epochs than models trained from scratch. An epoch describes a full pass through the training dataset.
 
-        The authors also validated the performance of the model with the highest achieved average accuracy on two datasets containing images from other sources. The model achieved an average accuracy of 31.40\% and 31.69\% on these datasets. This inability of the model to generalize on different images was caused by the lack of variety of images in the PlantVillage dataset. The authors of the PlantVillage dataset took the images under controlled conditions. All images have neutral backgrounds and uniform lighting. Complex backgrounds containing other objects, different lighting conditions, and different leaf orientations in the images would increase the generalization ability of the models. Eventually, the authors stated that the models could not be used in practice, for example in a mobile application, at that point.
+        The authors also validated the performance of the model with the highest achieved average accuracy on two datasets containing images from other sources. The model achieved an average accuracy of 31.40\% and 31.69\% on these datasets. This inability of the model to generalize on different images was caused by the lack of variability of images in the PlantVillage dataset. The authors of the PlantVillage dataset took the images under controlled conditions. All images have neutral backgrounds and uniform lighting. Complex backgrounds containing other objects, different lighting conditions, and different leaf orientations in the images would increase the generalization ability of the models. Eventually, the authors stated that the models could not be used in practice, for example in a mobile application, at that point.
 
-        \textcite{Ferentinos:2018} trained five different CNN architectures --- AlexNet, AlexNetOWTBn, GoogLeNet, Overfeat, and VGG --- on an extended PlantVillage dataset. The author did not state if the models were already pre-trained or were trained from scratch with random parameter values. The extended dataset contained 87,848 images and 58 classes of plant--disease pairs or healthy plants. \textcite{Ferentinos:2018} recognized the limited variety of the dataset used by \textcite{Mohanty:2016}. More than 1/3 of the images in the dataset used by \textcite{Ferentinos:2018} were taken under field conditions. These images had, for example, complex backgrounds containing irrelevant object or other plant parts and were taken under different lighting conditions. The author used 80\% of the dataset to train the models and remaining 20\% to test these models. In both training and testing subsets, the authors left the ratio between images taken under laboratory condition and images taken under field conditions the same as in the full dataset.
+        \textcite{Ferentinos:2018} trained five different CNN architectures --- AlexNet, AlexNetOWTBn, GoogLeNet, Overfeat, and VGG --- on an extended PlantVillage dataset. The author did not state if the models were already pre-trained or were trained from scratch with random parameter values. The extended dataset contained 87,848 images and 58 classes of plant--disease pairs or healthy plants. \textcite{Ferentinos:2018} recognized the limited variability of the dataset used by \textcite{Mohanty:2016}. More than 1/3 of the images in the dataset used by \textcite{Ferentinos:2018} were taken under field conditions. These images had, for example, complex backgrounds containing irrelevant object or other plant parts and were taken under different lighting conditions. The author used 80\% of the dataset to train the models and remaining 20\% to test these models. In both training and testing subsets, the authors left the ratio between images taken under laboratory condition and images taken under field conditions the same as in the full dataset.
 
         Under this experiment setting, all five models achieved average accuracy of over 97\%. The best performing CNN models were AlexNetOWTBn with the average accuracy of 99.44\% and the VGG model with 99.48\%. Training the models using resized images to $256 \times 256$ pixels did not affect the average accuracy of the models. Using these two best performing models, the author investigated the impact of images taken under field conditions in the training dataset to the model performance. The author selected 12 classes from the initial dataset that either had only images taken under field or under laboratory conditions. The author then trained both of the best performing architectures on the images taken under field conditions and tested on images taken under laboratory conditions. Then, the author switched the training and testing subsets. As in (\cite{Mohanty:2016}), the average accuracy of the models decreased significantly. In the case of images taken under laboratory conditions used as a training dataset and images taken under field conditions as a testing dataset, the AlexNetOWTBn model achieved an average accuracy of 32.32\% and the VGG model an average accuracy of 33.27\%. In the reversed experiment setting, the AlexNetOWTBn model achieved an average accuracy of 62.57\% and the VGG model an average accuracy of 65.69\%. Images taken under field conditions indeed greatly impact the ability of a model to generalize on new images.
 
@@ -421,15 +421,15 @@ urlseen = {Accessed on}
 
         % similar research papers with more modern approaches
 
-        \textcite{Barbedo:2018:1} investigated the impact of datasets with limited size and variety on the accuracy of a CNN model to classify diseases from plant images. The author stated that datasets containing only images taken under laboratory conditions did not contain the symptom variety found under field conditions. The symptoms may also manifest on other plant parts than leaves. He also stated that the symptoms progress and change depending on several environmental factors, such as humidity and temperature. According to the author, the lack of variety in datasets not containing images taken under field conditions greatly influenced the generalizability of trained models. As an example, the author named the research by \textcite{Mohanty:2016}, where the accuracy of the models fell by 2/3 when tested on new unseen images. In (\cite{Mohanty:2016}), the models were trained using the PlantVillage dataset containing only images taken under controlled conditions.
+        \textcite{Barbedo:2018:1} investigated the impact of datasets with limited size and variability on the accuracy of a CNN model to classify diseases from plant images. The author stated that datasets containing only images taken under laboratory conditions did not contain the symptom variety found under field conditions. The symptoms may also manifest on other plant parts than leaves. He also stated that the symptoms progress and change depending on several environmental factors, such as humidity and temperature. According to the author, the lack of variability in datasets not containing images taken under field conditions greatly influenced the generalizability of trained models. As an example, the author named the research by \textcite{Mohanty:2016}, where the accuracy of the models fell by 2/3 when tested on new unseen images. In (\cite{Mohanty:2016}), the models were trained using the PlantVillage dataset containing only images taken under controlled conditions.
 
-        \textcite{Barbedo:2018:1} created a small dataset that contained a high variety of images. The dataset contained 1,383 images divided into 56 classes representing plant--disease pairs. The majority of images, about 85\%, were taken under field conditions. The rest was taken under controlled conditions. The number of images in each class varied from 5 to 77. When training a pre-trained GoogLeNet model, the author explicitly focused on the influence of background on the accuracy of the trained models. For this purpose, the author created a second version of the dataset containing images with removed background. The author removed the image backgrounds manually. Both dataset versions were augmented using affine transformations, random brightness increase and decrease, contrast enhancement and reduction, sharpness enhancement, and random Gaussian noise. The author used 80\% of the dataset for training and the remaining 20\% for testing. To obtain the final results, \textcite{Barbedo:2018:1} used the 10-fold cross validation method. The model trained on the original dataset achieved accuracies ranging from 65\% in case of wheat and common bean to 100\% in case of cotton. The model trained on the dataset containing images with removed background achieved accuracies ranging from 50\% in case of wheat to 100\% in case of cassava and sugarcane.
+        \textcite{Barbedo:2018:1} created a small dataset that contained a high variability of images. The dataset contained 1,383 images divided into 56 classes representing plant--disease pairs. The majority of images, about 85\%, were taken under field conditions. The rest was taken under controlled conditions. The number of images in each class varied from 5 to 77. When training a pre-trained GoogLeNet model, the author explicitly focused on the influence of background on the accuracy of the trained models. For this purpose, the author created a second version of the dataset containing images with removed background. The author removed the image backgrounds manually. Both dataset versions were augmented using affine transformations, random brightness increase and decrease, contrast enhancement and reduction, sharpness enhancement, and random Gaussian noise. The author used 80\% of the dataset for training and the remaining 20\% for testing. To obtain the final results, \textcite{Barbedo:2018:1} used the 10-fold cross validation method. The model trained on the original dataset achieved accuracies ranging from 65\% in case of wheat and common bean to 100\% in case of cotton. The model trained on the dataset containing images with removed background achieved accuracies ranging from 50\% in case of wheat to 100\% in case of cassava and sugarcane.
 
         The author then summarized the impact of background removal on the accuracies achieved by the model trained on the dataset containing images without background. Background removal had a positive effect in cases when the images had very busy backgrounds occupying a large portion of the images. The author observed a negative impact on image classes that had very similar symptom manifestation. This explains the decreased accuracy of the model in the case of wheat diseases. Very similar symptoms of wheat diseases led to the inability of the model to distinguish between them. For some crops, negative and positive effects were observed at the same time. \textcite{Barbedo:2018:1} observed no effect of background removal in the case of crops building at most three plant--disease classes and their diseases having distinctive symptom manifestations. The author noted that diseases that are rare or uncommon or have varied symptoms will always be classified with low accuracy.
 
-        \textcite{Barbedo:2018:1} concluded that limiting the scope to only some small number of classes enables the collection of a very comprehensive dataset with a high variety of images.
+        \textcite{Barbedo:2018:1} concluded that limiting the scope to only some small number of classes enables the collection of a very comprehensive dataset with a high variability of images.
 
-        \textcite{Barbedo:2018:2} stated that many papers at that time, such as papers by \textcite{Mohanty:2016} or \textcite{Ferentinos:2018}, reported high accuracies of the trained models but these models were not applicable in the real world. Although reporting high accuracies on the training dataset, the model generalized poorly on unseen images. Like in (\cite{Barbedo:2018:1}), \textcite{Barbedo:2018:2} named the PlantVillage dataset as the main cause because it was not representative and robust enough. The author analyzed different factors influencing the performance of CNN models. These factors were: dataset of insufficient size and variety, symptoms representation, covariate shift, image background, image capture conditions, symptom segmentation, symptom variations, multiple diseases on a single leaf, and diseases with similar symptoms.
+        \textcite{Barbedo:2018:2} stated that many papers at that time, such as papers by \textcite{Mohanty:2016} or \textcite{Ferentinos:2018}, reported high accuracies of the trained models but these models were not applicable in the real world. Although reporting high accuracies on the training dataset, the model generalized poorly on unseen images. Like in (\cite{Barbedo:2018:1}), \textcite{Barbedo:2018:2} named the PlantVillage dataset as the main cause because it was not representative and robust enough. The author analyzed different factors influencing the performance of CNN models. These factors were: dataset of insufficient size and variety/variability, symptoms representation, covariate shift, image background, image capture conditions, symptom segmentation, symptom variations, multiple diseases on a single leaf, and diseases with similar symptoms.
 
         When analyzing the factors, \textcite{Barbedo:2018:2} summed up their impacts on the generalization ability of a trained model. Models trained on datasets containing very few images or having images with very busy backgrounds may rely more on the background information. Additionally, if certain objects or elements appear throughout the images in the dataset, these may disturb the learning process. Further, the absence of symptom variety or different development stages in the dataset weakens models' ability to generalize. Using the training and testing images from the same dataset leads to very high accuracies of the models. As shown by \textcite{Sladojevic:2016}, \textcite{Mohanty:2016}, and \textcite{Ferentinos:2018}, validating the performance of trained models on images from other sources than the original dataset leads to a significant decrease in accuracy. In order for a dataset to be representative, it has to contain images taken under various conditions. These conditions may include different lighting conditions, different weather conditions, different objects present, or different leaf orientations. Extending a dataset by segmenting the diseased regions of leaves increases models' ability to generalize. At different stages of a disease, the symptoms may have very different characteristics. A robust dataset has to include leaf images with diseases at different stages. In case of leaves that are diseased by various diseases, the solution is to segment each diseased region and label it accordingly. When diseases show similar symptom characteristics, a model relies heavily on background information. This may lead to high misclassification rates. The author did not present a solution to this problem.
 
@@ -465,22 +465,202 @@ urlseen = {Accessed on}
 
 \section{Design}
 
-    This section explains the design of the whole process from the dataset and CNN architecture used, through the training and validation of the trained model, to the web-based application. The review of the related research gave a lot of valuable information about what is important when training a CNN model for image classification. The transfer learning method can speed up the training process, use less resources, and even result in better model performance. When designing a dataset, the variety of images in the dataset affects the model's ability to generalize. Overfitting and underfitting are also very important factors that play a role when designing the dataset and CNN architecture. A trade-off has to be done between the number of images in the dataset and the number of parameters in the model. The dataset has to be expressive and varied enough for the model to generalize well. It also has to contain enough images for the model to learn. CNN models trained on datasets that are too small will overfit. CNN models trained on datasets that are too large compared to the number of the parameters will underfit. There are also other problems that may arise during the training process, such as the exploding and vanishing gradients. However, there are several methods to minimize the negative impact of different factors on the training process and the model's performance. These techniques include normalization and regularization methods, and optimizations of the gradient descent.
+    This section explains the design of the whole process from the dataset and CNN architecture used, through the training and validation of the trained model, to the web-based application. The review of the related research gave a lot of valuable information about what is important when training a CNN model for image classification. The transfer learning method can speed up the training process, use less resources, and even result in better model performance. When designing a dataset, the variety of images and their variability in the dataset affects the model's ability to generalize. Overfitting and underfitting are also very important factors that play a role when designing the dataset and CNN architecture. A trade-off has to be done between the number of images in the dataset and the number of parameters in the model. The dataset has to be expressive and varied enough for the model to generalize well. It also has to contain enough images for the model to learn. CNN models trained on datasets that are too small will overfit. CNN models trained on datasets that are too large compared to the number of the parameters will underfit. There are also other problems that may arise during the training process, such as the exploding and vanishing gradients. However, there are several methods to minimize the negative impact of different factors on the training process and the model's performance. These techniques include normalization and regularization methods, and optimizations of the gradient descent.
 
     % add the focus when designing the webpage
 
     \subsection{Dataset}
 
-    During the review of related research only two datasets were identified as promising for training a CNN model to classify plant diseases from leaf images. The first dataset was created during the research done by \textcite{Mohanty:2016}. The second dataset was created by \textcite{Barbedo:2018:1}. The dataset provided by \textcite{Barbedo:2018:2} contains almost 50,000 images of 171 plant diseases affecting 21 plants. \textcite{Barbedo:2018:2} created the dataset with the focus on variety of symptoms and conditions. However, the number of images in individual classes is very low and varies form only 2 images to at most several tens of images. This makes the dataset unsuitable for the training of a CNN model that should generalize well. Any augmentation technique would not introduce enough variety into the dataset (\cite{Barbedo:2018:2}). The dataset provided by \textcite{Mohanty:2016} contains over 160.000 diseased and healthy plant leaf images. The images are divided into three subsets: color, gray-scale, and segmented. Each of the subsets contains 38 classes. The classes are the same over all three subsets. The color subset contains 54.306 images. The classes of the color subset contain from 152 to 5.090 images. The other two other are derived from the color one and contain the same number of images in each class and in total. One drawback of this dataset is that the images in the color dataset were taken under laboratory conditions and have insufficient variability. However, the dataset contains reasonable number of images in each of the subset classes. Using different augmentation techniques, the variety in the dataset could be increased. Eventually, the dataset provided by \textcite{Mohanty:2016} was chosen for the training of a CNN model to classify plant diseases from leaf images.
+        During the review of related research only two datasets were identified as promising for training a CNN model to classify plant diseases from leaf images. The first dataset was created during the research done by \textcite{Mohanty:2016}. The second dataset was created by \textcite{Barbedo:2018:1}. The dataset provided by \textcite{Barbedo:2018:2} contains almost 50,000 images of 171 plant diseases affecting 21 plants. \textcite{Barbedo:2018:2} created the dataset with the focus on variety of symptoms and conditions. However, the number of images in individual classes is very low and varies form only 2 images to at most several tens of images. This makes the dataset unsuitable for the training of a CNN model that should generalize well. Any augmentation technique would not introduce enough variability into the dataset (\cite{Barbedo:2018:2}). The dataset provided by \textcite{Mohanty:2016} contains over 160.000 diseased and healthy plant leaf images. The images are divided into three subsets: color, gray-scale, and segmented. Each of the subsets contains 38 classes. The classes are the same over all three subsets. The color subset contains 54,306 images. The classes of the color subset contain from 152 to 5,090 images. The other two other are derived from the color one and contain the same number of images in each class and in total. One drawback of this dataset is that the images in the color dataset were taken under laboratory conditions and have insufficient variability. However, the dataset contains reasonable number of images in each of the subset classes. Using different augmentation techniques, the variability in the dataset could be increased. Eventually, the dataset provided by \textcite{Mohanty:2016} was chosen for the training of a CNN model to classify plant diseases from leaf images. The gray-scale subset was excluded from the original dataset.
 
+        To introduce greater variability and complexity into the dataset, the images of segmented leaves were augmented using artificial backgrounds. The variety, variability, and complexity of images should force the CNN model to learn from the leaf surface and not from the image background. In case of uniform or similar image backgrounds and similar disease symptoms, the CNN model tends to rely on information from the background (\cite{Barbedo:2018:1}). This leads to misclassifications of images because the CNN model is not able to distinguish the images based on the disease symptoms. Artificial background images resembling conditions that would be found and observed in the field were chosen. The background images contain multiple leaves, other plant parts, or capture very busy natural environments. All images were acquired from the Wikipedia Commons dataset. The black background of the segmented images was changed for an artificial background. This way, a third artificial background subset was created. \autoref{fig:artificial-backgrounds} shows the artificial backgrounds that were used to augment the dataset.
 
+        \begin{figure}[h]
+            \centering
+            \begin{tabular}{ccc}
+                \begin{subfigure}{0.25\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{1_artificial_background.jpg}
+                    \caption{\centering(\cite{1_artificial_background:2021})}
+                \end{subfigure} &
+                \begin{subfigure}{0.40\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{2_artificial_background.jpg}
+                    \caption{\centering (\cite{2_artificial_background:2019})}
+                \end{subfigure} &
+                \begin{subfigure}{0.25\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{3_artificial_background.jpg}
+                    \caption{\centering (\cite{3_artificial_background:2022})}
+                \end{subfigure} \\
+            \end{tabular}
+            \begin{tabular}{ccc}
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{4_artificial_background.jpg}
+                    \caption{\centering (\cite{4_artificial_background:2023})}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{5_artificial_background.jpg}
+                    \caption{\centering (\cite{5_artificial_background:2022})}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{6_artificial_background.jpg}
+                    \caption{\centering (\cite{6_artificial_background:2017})}
+                \end{subfigure} \\
+            \end{tabular}
+            \begin{tabular}{ccc}
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{7_artificial_background.jpg}
+                    \caption{\centering (\cite{7_artificial_background:2019})}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{8_artificial_background.jpg}
+                    \caption{\centering (\cite{8_artificial_background:2009})}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{9_artificial_background.jpg}
+                    \caption{\centering (\cite{9_artificial_background:2016})}
+                \end{subfigure} \\
+            \end{tabular}
+            \begin{tabular}{c}
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{10_artificial_background.jpg}
+                    \caption{\centering (\cite{10_artificial_background:2009})}
+                \end{subfigure} \\
+            \end{tabular}
+            \caption{\centering Artificial background images used to augment the dataset}
+            \label{fig:artificial-backgrounds}
+        \end{figure}
 
+        The initial dataset used for training a CNN model contained three subsets: color, segmented and artificial background. Because of computing resources constrains, the number of images per class in each subset of the initial dataset was limited to 400 images. \autoref{fig:dataset-image-examples} shows examples of images from each of the three subsets of the initial dataset.
 
-    % There are not many free datasets available on the Internet. Only Mohanty and Barbedo. As of today barbedo barbedo's dataset is relatively small small
-    % using color and segmented versions of the Mohanty dataset based on the PlantVillage dataset and then crating a dataset with artificial background from the segmented dataset
-    % dividing the dataset into training/validation and testing dataset using hold-out method and then dividing the trainig/validation dataset into training and validation datasets using the 10-fold cross validation technique
-    % using augmentation:
-    \subsection{CNN Model} % EfficientB0 (from pretrained models in Keras)
+        \begin{figure}[h]
+            \centering
+            \begin{tabular}{ccc}
+                \begin{subfigure}[t]{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{color_strawberry_leaf_scorch.JPG}
+                    \caption{\centering Color subset}
+                \end{subfigure} &
+                \begin{subfigure}[t]{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{segmented_strawberry_leaf_scorch.jpg}
+                    \caption{\centering Segmented subset}
+                \end{subfigure} &
+                \begin{subfigure}[t]{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{artificial_strawberry_leaf_scorch.jpg}
+                    \caption{\centering Artificial background subset}
+                \end{subfigure} \\
+            \end{tabular}
+            \caption{\centering Examples of images from color, segmented, and artificial background subsets}
+            \label{fig:dataset-image-examples}
+        \end{figure}
+
+        \autoref{tab:dataset-overview} gives an overview of the initial dataset that was used to train and validate the CNN model. Each of the three subsets contains 14,731 images. In total, the whole initial dataset contains 44,193 images. Not limiting the size of the original dataset without the gray-scale subset, the dataset would contain almost 200,000 images.
+
+        \begin{table}[h]
+            \centering
+            \begin{tabular}{@{}l|l|l|l|l|l@{}}
+                \hline
+                \multirow{2}{*}{Plant species} & \multirow{2}{*}{Plant disease} & \multicolumn{3}{c|}{Number of images} & \multirow{2}{*}{Total} \\ \cline{3-5}
+                &  & Color & Segmented & Artificial &  \\ \hline
+                \multirow{4}{*}{Apple} & Scab & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Black rot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Cedar apple rust & 275 & 275 & 275 & 825 \\ \cline{2-6}
+                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                Blueberry & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                \multirow{2}{*}{Cherry} & Powdery mildew & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                \multirow{4}{*}{Corn} & Cercospora leaf spot and Gray leaf spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Common rust & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Northern leaf blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                \multirow{4}{*}{Grape} & Black rot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Esca (Black measles) & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Leaf blight (Isariopsis leaf spot) & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                Orange & Haunglongbing (Citrus greening) & 400 & 400 & 400 & 1,200 \\ \hline
+                \multirow{2}{*}{Peach} & Bacterial spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Healthy & 360 & 360 & 360 & 1,080 \\ \hline
+                \multirow{2}{*}{Pepper} & Bacterial spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                \multirow{3}{*}{Potato} & Early blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Late blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Healthy & 152 & 152 & 152 & 456 \\ \hline
+                Raspberry & Healthy & 371 & 371 & 371 & 1,113 \\ \hline
+                Soybean & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                Squash & Powdery mildew & 400 & 400 & 400 & 1,200 \\ \hline
+                \multirow{2}{*}{Strawberry} & Leaf scorch & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                \multirow{9}{*}{Tomato} & Bacterial spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Early blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Late blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Leaf mold & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Septoria leaf spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Spider mite and Two-spotted spider mite & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Target spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                & Tomato yellow leaf curl virus & 373 & 373 & 373 & 1,200 \\ \cline{2-6}
+                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                Total &  & 14,731 & 14,731 & 14,731 & 44,193 \\ \hline
+            \end{tabular}
+            \caption{\centering Overveiw of the initial dataset}
+            \label{tab:dataset-overview}
+        \end{table}
+
+        The images in the original dataset had the size of $256 \times 256$ pixels. Prior to the training process, the images of the initial dataset were divided into the train, test and validation datasets. To divide the initial dataset, the hold-out method was used. From the initial dataset, 80\% of the images were used in the training process. The train subset contained 35,349 images. The remaining 20\% of the images were used to validate the CNN model. The validation subset contained 8,844 images. Out of the images used for the training process, 80\% of the images were used for the actual training of the CNN and the rest of the images was used as test dataset. This test dataset was used to evaluate model's performance after each epoch. Furthermore, the images were resized to the input size of the CNN model trained. The input size of the CNN model trained was $224 \times 224$ pixels. To introduce more variability during the training process, the subset used for training of the CNN model was augmented using four different augmentation operations. These operation were: random horizontal and/or vertical flip, random rotation, random contrast incase or decrease, and random brightness increase or decrease. \autoref{fig:augmentation-pipeline} shows an image of a healthy Pepper leaf with artificial background and its different versions after applying the augmentation pipeline.
+
+        \begin{figure}[h]
+            \centering
+            \begin{tabular}{ccc}
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{original_image.jpg}
+                    \caption{\centering Original image}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{1_pipeline.png}
+                    \caption{\centering Augmented image}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{2_pipeline.png}
+                    \caption{\centering Augmented image}
+                \end{subfigure} \\
+            \end{tabular}
+            \begin{tabular}{ccc}
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{3_pipeline.png}
+                    \caption{\centering Augmented image}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{4_pipeline.png}
+                    \caption{\centering Augmented image}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{5_pipeline.png}
+                    \caption{\centering Augmented image}
+                \end{subfigure} \\
+            \end{tabular}
+            \caption{\centering Original image (Pepper healthy) and its different augmented versions}
+            \label{fig:augmentation-pipeline}
+        \end{figure}
+
+        The various augmentation steps used in the dataset preprocessing introduce greater variability and complexity into the dataset used for the CNN model training and validation. However, the created dataset is significantly smaller than the dataset used by \textcite{Mohanty:2016}. Thus, it is very important to choose a CNN architecture that performs well enough when trained on the created dataset.
+
+    \subsection{CNN Architecture} % EfficientB0 (from pretrained models in Keras)
+
     % A good rule of thumb is that the total number of training data points should be at least 2 to 3 times larger than the number of parameters in the neural network, although the precise number of data instances depends on the specific model at hand. In general, models with a larger number of parameters are said to have high capacity, and they require a larger amount of data in order to gain generalization power to unseen test data. The notion of overfitting is often understood in the trade-off between bias and variance in machine learning. (\cite{Aggarwal:2018})
                 % when talking about the CNN model and the way to train it, I have to be talking about solver type, base learning rate, learning rate policy, Nesterov momentum, weight decay, gamma and batch size: \textcite{Mohanty:2016} \cite{Ferentinos:2018}
                 % I can really test in on barbedo images even when training on plant village
@@ -494,8 +674,9 @@ urlseen = {Accessed on}
         \subsubsection{Backend Design}
 
 \section{Development}
-    \subsection{Dataset Augmentation Script}
-    \subsection{CNN Model Training and Validation Scrip}
+    \subsection{Dataset Preprocessing Pipeline}
+    \subsection{CNN Model Training and Validation Package}
+    % tensoflow and keras
     \subsection{Web-based Application Development}
         \subsubsection{Frontend Development}
         \subsubsection{Backend Development}
@@ -503,6 +684,7 @@ urlseen = {Accessed on}
 \section{Web-based Application Walkthrough}
 
 \section{Discussion}
+% Google Colab + Jupyter Notebook, training on my own computer then adding the plots
 
 \section{Conclusion}
 
