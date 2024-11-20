@@ -9,10 +9,9 @@ import csv
 import logging
 from pathlib import Path
 
+import keras
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from cli import CLI
-from exceptions import DatasetError
 from keras.applications import EfficientNetB0
 from keras.callbacks import CSVLogger
 from keras.layers import (
@@ -27,7 +26,9 @@ from keras.layers import (
     RandomRotation,
 )
 from keras.utils import image_dataset_from_directory
-from tensorflow import keras
+
+from .cli import CLI
+from .exceptions import DatasetError
 
 logger = logging.getLogger(__name__)
 
@@ -292,6 +293,7 @@ def plot_and_save_history(history: keras.callbacks.History, output_path: Path) -
     ax1.set_title("Model Accuracy")
     ax1.plot(epochs, history.history["accuracy"], label="train accuracy")
     ax1.plot(epochs, history.history["val_accuracy"], label="test accuracy")
+    ax1.set_xticks(epochs)
     ax1.legend()
 
     # subplot for training and testing loss
@@ -299,6 +301,7 @@ def plot_and_save_history(history: keras.callbacks.History, output_path: Path) -
     ax2.set_title("Model Loss")
     ax2.plot(epochs, history.history["loss"], label="train loss")
     ax2.plot(epochs, history.history["val_loss"], label="test loss")
+    ax2.set_xticks(epochs)
     ax2.legend()
 
     plt.tight_layout()
@@ -369,7 +372,3 @@ def main():
 
     # saving the final model to the output path
     final_model.save(args.output / "final_model.keras")
-
-
-if __name__ == "__main__":
-    main()
