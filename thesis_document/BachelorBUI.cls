@@ -1,3 +1,4 @@
+% KOMA-Script https://ctan.math.illinois.edu/macros/latex/contrib/koma-script/doc/scrguide-en.pdf#[0,{%22name%22:%22Fit%22}]
 \ProvidesClass{BachelorBUI}[2022/10/01]
 
 \LoadClass{scrartcl}
@@ -25,31 +26,12 @@ captions=tableheading
   afterindent=false
 ]{subparagraph}
 
-% \RedeclareSectionCommand[
-%     beforeskip=1em,
-%     afterskip=0.5em,
-%     indent=0em,
-%     runin=false,
-%     afterindent=false,
-%     font=\normalfont\bfseries
-% ]{paragraph}
-
-% \RedeclareSectionCommand[
-%     beforeskip=1em,
-%     afterskip=0.5em,
-%     indent=2em,
-%     runin=false,
-%     afterindent=false,
-%     font=\normalfont\itshape
-% ]{subparagraph}
-
 \addtokomafont{captionlabel}{\bfseries}
 
 \RequirePackage[T1]{fontenc}
 \RequirePackage{lmodern}
 \RequirePackage[babel]{microtype}
 \RequirePackage[english]{babel}
-
 
 \input{glyphtounicode.tex}
 \input{glyphtounicode-cmr.tex}
@@ -61,8 +43,8 @@ captions=tableheading
 \usepackage{hyperref}
 
 \hypersetup{
- bookmarksnumbered,
-%   % pdfdisplaydoctitle = true,
+  bookmarksnumbered,
+  % pdfdisplaydoctitle = true,
   colorlinks,
   linkcolor={black},
   citecolor={black},
@@ -160,9 +142,7 @@ automark
  {\small Date: \today} }
 \addtokomafont{author}{\sffamily}
 \date{}
-%
 
-%% Customize Listing
 \lstset{
 	basicstyle = \footnotesize\ttfamily,
 	keywordstyle=\color{blue}\bfseries,
