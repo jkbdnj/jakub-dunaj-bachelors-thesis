@@ -25,6 +25,8 @@ from keras.layers import (
     RandomFlip,
     RandomRotation,
 )
+from keras.optimizers import RMSprop
+from keras.optimizers.schedules import ExponentialDecay
 from keras.utils import image_dataset_from_directory
 
 from .cli import CLI
@@ -44,7 +46,9 @@ class ModelTrainer:
 
     """
 
-    def __init__(self, train_dataset_path: Path, validation_dataset_path: Path, batch_size: int):
+    def __init__(
+        self, train_dataset_path: Path, validation_dataset_path: Path, batch_size: int, epochs: int
+    ):
         """Constructor instantiating an object of the ModelTrainer class.
 
         This constructor loads up the train, test and validation datasets and applies augmentation
@@ -55,15 +59,17 @@ class ModelTrainer:
             train_dataset_path (Path): The path to the train dataset.
             validation_dataset_path (Path): The path to the validation dataset.
             batch_size (int): The batch size used.
+            epochs (int): Number of epoch within one training process.
 
         """
         train_dataset, test_dataset, validation_dataset = self.__load_dataset(
             train_dataset_path, validation_dataset_path, batch_size
         )
-        self.train_dataset = self.__apply_augmenting_pipeline(train_dataset)
-        self.test_dataset = test_dataset
-        self.validation_dataset = validation_dataset
-        self.batch_size = batch_size
+        self._train_dataset = self.__apply_augmenting_pipeline(train_dataset)
+        self._test_dataset = test_dataset
+        self._validation_dataset = validation_dataset
+        self._batch_size = batch_size
+        self._epochs = epochs
 
     def __load_dataset(
         self, train_dataset_path: Path, validation_dataset_path: Path, batch_size: int
@@ -148,8 +154,31 @@ class ModelTrainer:
         )
 
         # https://www.tensorflow.org/guide/keras/preprocessing_layers#preprocessing_data_before_the_model_or_inside_the_model
+        # https://www.tensorflow.org/api_docs/python/tf/data/Dataset#map
         return dataset.map(
             lambda x, y: (augmentation_pipeline(x), y), num_parallel_calls=tf.data.AUTOTUNE
+        )
+
+    def __compile_model(self, model: keras.Model) -> None:
+        """Private method compiling the model.
+
+        This method sets up the optimizer and compiles the model.
+
+        Args:
+            model (keras.Model): The model to compile.
+
+        """
+        steps_per_epoch = int(len(self._train_dataset))
+        decay_steps = steps_per_epoch * 2.4
+        learning_rate_schedule = ExponentialDecay(
+            initial_learning_rate=0.256, decay_steps=decay_steps, decay_rate=0.97
+        )
+        model.compile(
+            optimizer=RMSprop(
+                learning_rate=learning_rate_schedule, rho=0.9, momentum=0.9, weight_decay=1e-5
+            ),
+            loss="sparse_categorical_crossentropy",
+            metrics=["accuracy"],
         )
 
     def __modify_layers_for_transfer_learning(
@@ -180,9 +209,7 @@ class ModelTrainer:
             layer.trainable = is_fine_tuning
 
         if is_fine_tuning:
-            model.compile(
-                optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
-            )
+            self.__compile_model(model)
 
         return model
 
@@ -220,17 +247,12 @@ class ModelTrainer:
             name="plant_disease_classifier",
         )
 
-        # compiling the model
-        model.compile(
-            optimizer="adam",
-            loss="sparse_categorical_crossentropy",
-            metrics=["accuracy"],
-        )
+        self.__compile_model(model)
 
         return model
 
     def train_model(
-        self, model: keras.Model, epochs: int, csv_file_path: str, *, is_fine_tuning: bool
+        self, model: keras.Model, csv_file_path: str, *, is_fine_tuning: bool
     ) -> tuple[keras.Model, keras.callbacks.History]:
         """Public method training the model.
 
@@ -242,7 +264,6 @@ class ModelTrainer:
 
         Args:
             model (keras.Model): Model to be trained.
-            epochs (int): The number of epochs performed.
             csv_file_path (str): File path where the csv file with training metrics is saved.
             is_fine_tuning (bool): Boolean flag determining whether the fine-tuning will be
             performed.
@@ -257,7 +278,7 @@ class ModelTrainer:
 
         training_history = model.fit(
             x=self.train_dataset,
-            epochs=epochs,
+            epochs=self.epochs,
             validation_data=self.test_dataset,
             callbacks=[csv_logger],
         )
@@ -330,7 +351,7 @@ def main():
     cli = CLI()
     args = cli.parse_args()
     model_trainer = ModelTrainer(
-        args.train_dataset_path, args.validation_dataset_path, args.batch_size
+        args.train_dataset_path, args.validation_dataset_path, args.batch_size, args.epochs
     )
     model = model_trainer.load_model()
 
@@ -355,7 +376,6 @@ def main():
     # transfer learning with the fine-tuning step
     final_model, final_history = model_trainer.train_model(
         initial_model,
-        args.epochs,
         str(args.output / "final_training_metrics.csv"),
         is_fine_tuning=True,
     )
