@@ -18,7 +18,7 @@ class CustomHistory(History):
     logging the epoch duration.
 
     Attributes:
-        _epoch_start_time (float): Float number holding the start time fo the epoch execution.
+        _epoch_start_time (float): Float number holding the start time of the epoch execution.
 
     """
 
