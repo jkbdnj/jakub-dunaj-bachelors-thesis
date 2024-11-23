@@ -1,6 +1,5 @@
 """Nothing now."""
 
-import numpy
 import tensorflow as tf
 from keras.metrics import Metric
 from keras.src import ops
@@ -32,11 +31,11 @@ class AccuracyPerClassMetric(Metric):
         super().__init__(name=name, dtype=dtype)
         self._class_count = class_count
         self._total_per_class = self.add_variable(
-            shape=(class_count,), initializer="zeros", dtype="int", name="total_per_class"
+            shape=(class_count,), initializer="zeros", dtype="int32", name="total_per_class"
         )
 
         self._correct_per_class = self.add_variable(
-            shape=(class_count,), initializer="zeros", dtype="int", name="correct_per_class"
+            shape=(class_count,), initializer="zeros", dtype="int32", name="correct_per_class"
         )
 
     def update_state(self, y: tf.Tensor, y_pred: tf.Tensor, sample_weight=None):
@@ -59,7 +58,26 @@ class AccuracyPerClassMetric(Metric):
         y_pred = ops.argmax(y_pred, axis=-1)
         ops.equal(y, y_pred)
 
+        for label in range(self._class_count):
+            # https://www.tensorflow.org/api_docs/python/tf/keras/ops/equal
+            # https://www.tensorflow.org/api_docs/python/tf/keras/ops/full
+            # https://www.tensorflow.org/api_docs/python/tf/keras/ops/shape
+            # https://www.tensorflow.org/api_docs/python/tf/keras/ops/reshape
+            # https://www.tensorflow.org/api_docs/python/tf/keras/ops/scatter
+            label_occurrences_tensor = ops.equal(y, ops.full(ops.shape(y), label))
+            label_occurrences_count = ops.reshape(
+                ops.sum(label_occurrences_tensor), (1,)
+            )  #  ops.shape(ops.sum(label_occurrences_tensor)) == ()
+            self._total_per_class.assign_add(
+                ops.scatter(
+                    ops.reshape(ops.convert_to_tensor(ops.array([label]), dtype="int32"), (1, 1)),
+                    label_occurrences_count,
+                    (self._class_count,),
+                )
+            )
+            tf.print(self._total_per_class)
+
     def result(self) -> list[float]:
         """Nothing now."""
         # using map on those 2 arrays with the division operation
-        return numpy.zeros(38)
+        return ops.zeros(38)
