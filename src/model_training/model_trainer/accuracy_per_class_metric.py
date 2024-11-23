@@ -1,6 +1,7 @@
 """Nothing now."""
 
 import tensorflow as tf
+from keras.backend import epsilon
 from keras.metrics import Metric
 from keras.src import ops
 
@@ -56,7 +57,7 @@ class AccuracyPerClassMetric(Metric):
         # https://www.tensorflow.org/api_docs/python/tf/keras/ops/argmax
         # the axis is index within the shape of the tensor
         y_pred = ops.argmax(y_pred, axis=-1)
-        ops.equal(y, y_pred)
+        correct_predictions = ops.equal(y, y_pred)
 
         for label in range(self._class_count):
             # https://www.tensorflow.org/api_docs/python/tf/keras/ops/equal
@@ -75,9 +76,22 @@ class AccuracyPerClassMetric(Metric):
                     (self._class_count,),
                 )
             )
-            tf.print(self._total_per_class)
 
-    def result(self) -> list[float]:
+            correct_predictions_label_tensor = ops.logical_and(
+                correct_predictions, label_occurrences_tensor
+            )
+            correct_predictions_label_count = ops.reshape(
+                ops.sum(correct_predictions_label_tensor), (1,)
+            )
+
+            self._correct_per_class.assign_add(
+                ops.scatter(
+                    ops.reshape(ops.convert_to_tensor(ops.array([label]), dtype="int32"), (1, 1)),
+                    correct_predictions_label_count,
+                    (self._class_count,),
+                )
+            )
+
+    def result(self) -> tf.Tensor:
         """Nothing now."""
-        # using map on those 2 arrays with the division operation
-        return ops.zeros(38)
+        return ops.divide(self._correct_per_class, self._total_per_class + epsilon())
