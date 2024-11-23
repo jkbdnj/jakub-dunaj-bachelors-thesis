@@ -9,13 +9,15 @@ import time
 from keras.callbacks import History
 
 
-# https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/History
-# https://github.com/keras-team/keras/blob/v3.3.3/keras/src/callbacks/callback.py
 class CustomHistory(History):
     """Custom class extending the History class.
 
     This custom history class extends the keras callback History by
     logging the epoch duration.
+
+    Useful links for implementation:
+        https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/History
+        https://github.com/keras-team/keras/blob/v3.3.3/keras/src/callbacks/callback.py
 
     Attributes:
         _epoch_start_time (float): Float number holding the start time of the epoch execution.
@@ -28,7 +30,7 @@ class CustomHistory(History):
 
     def on_epoch_begin(self, *args):
         """Method initiating the time measurement at the start of an epoch."""
-        self._epoch_start_time: float = time.time()
+        self._epoch_start_time = time.time()
 
     def on_epoch_end(self, epoch, logs=None):
         """Method logging the epoch duration in second at the end of an epoch."""
