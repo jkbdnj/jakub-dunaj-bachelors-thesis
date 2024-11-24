@@ -63,10 +63,10 @@ class ModelTrainer:
             epochs (int): Number of epoch within one training process.
 
         """
-        train_dataset, test_dataset, validation_dataset = self.__load_dataset(
+        train_dataset, test_dataset, validation_dataset = self._load_dataset(
             train_dataset_path, validation_dataset_path, batch_size
         )
-        self._train_dataset = self.__apply_augmenting_pipeline(train_dataset)
+        self._train_dataset = self._apply_augmenting_pipeline(train_dataset)
         self._test_dataset = test_dataset
         self._validation_dataset = validation_dataset
         self._batch_size = batch_size
@@ -78,10 +78,10 @@ class ModelTrainer:
         """Property returning labels as list."""
         return self._labels
 
-    def __load_dataset(
+    def _load_dataset(
         self, train_dataset_path: Path, validation_dataset_path: Path, batch_size: int
     ) -> tuple[tf.data.Dataset, tf.data.Dataset, tf.data.Dataset]:
-        """Private method loading train, test and validation datasets.
+        """Protected method loading train, test and validation datasets.
 
         Args:
             train_dataset_path (Path): The path to the train dataset.
@@ -136,8 +136,8 @@ class ModelTrainer:
 
         return train_dataset, test_dataset, validation_dataset
 
-    def __apply_augmenting_pipeline(self, dataset: tf.data.Dataset) -> tf.data.Dataset:
-        """Private method applying augmentation operations to dataset images.
+    def _apply_augmenting_pipeline(self, dataset: tf.data.Dataset) -> tf.data.Dataset:
+        """Protected method applying augmentation operations to dataset images.
 
         This method uses an augmentation pipeline with 4 augmentation layers. These layers are:
         RandomFlip, RandomRotation, RandomContrast, and RandomBrightness. Each layer applies an
@@ -172,8 +172,8 @@ class ModelTrainer:
             lambda x, y: (augmentation_pipeline(x), y), num_parallel_calls=tf.data.AUTOTUNE
         )
 
-    def __compile_model(self, model: keras.Model) -> None:
-        """Private method compiling the model.
+    def _compile_model(self, model: keras.Model) -> None:
+        """Protected method compiling the model.
 
         This method sets up the optimizer and compiles the model.
 
@@ -191,13 +191,13 @@ class ModelTrainer:
                 learning_rate=learning_rate_schedule, rho=0.9, momentum=0.9, weight_decay=1e-5
             ),
             loss="sparse_categorical_crossentropy",
-            metrics=["accuracy", AccuracyPerClassMetric(14)],
+            metrics=["accuracy", AccuracyPerClassMetric(len(self.labels))],
         )
 
-    def __modify_layers_for_transfer_learning(
+    def _modify_layers_for_transfer_learning(
         self, model: keras.Model, *, is_fine_tuning: bool
     ) -> keras.Model:
-        """Private method modifying the layers of a model for transfer learning.
+        """Protected method modifying the layers of a model for transfer learning.
 
         This method sets the trainable attribute of the layers based on the is_fine_tuning flag.
         If the fine-tuning step takes place, all the layers of the base model will be trainable.
@@ -222,14 +222,14 @@ class ModelTrainer:
             layer.trainable = is_fine_tuning
 
         if is_fine_tuning:
-            self.__compile_model(model)
+            self._compile_model(model)
 
         return model
 
     def load_model(self) -> keras.Model:
-        """Function loading the EfficientNetB0 pre-trained model.
+        """Public method loading the EfficientNetB0 pre-trained model.
 
-        This function loads a EfficientNetB0 model. The EfficientNetB0 model is pre-trained
+        This method loads a EfficientNetB0 model. The EfficientNetB0 model is pre-trained
         on ImageNet dataset and is loaded without the classifier layer. A new classifier
         layer with 38 outputs and softmax activation function is added to the architecture.
 
@@ -265,7 +265,7 @@ class ModelTrainer:
             name="plant_disease_classifier",
         )
 
-        self.__compile_model(model)
+        self._compile_model(model)
 
         return model
 
@@ -291,7 +291,7 @@ class ModelTrainer:
             history.
 
         """
-        model = self.__modify_layers_for_transfer_learning(model, is_fine_tuning=is_fine_tuning)
+        model = self._modify_layers_for_transfer_learning(model, is_fine_tuning=is_fine_tuning)
 
         training_history = model.fit(
             x=self._train_dataset,
