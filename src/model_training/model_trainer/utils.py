@@ -41,6 +41,9 @@ def save_bar_plot(
     figure, ax = plt.subplots(figsize=(20, 10))
     plt.subplots_adjust(left=0.2, right=0.9, top=0.96, bottom=0.04)
 
+    # setting up x-axis label
+    ax.set(xlabel="accuracy")
+
     # averaging the data
     average = numpy.mean(data)
 
@@ -73,6 +76,7 @@ def save_bar_plot(
     file_name = f"{file_name}_{time_stamp}.{file_format}"
 
     # saving and closing the figure
+    plt.tight_layout()
     figure.savefig(output_path / file_name, format=file_format)
     plt.close(figure)
 
@@ -99,23 +103,64 @@ def save_accuracy_per_class_as_plot(
         output_path=output_path,
     )
 
-    val_accuracy_matrix = []
+    test_accuracy_matrix = []
 
     # iterating over tf.Tensor (not symbolic)
-    for val_accuracy_epoch in history.history["val_accuracy_per_class"]:
-        val_accuracy_matrix.append(ops.convert_to_numpy(val_accuracy_epoch))
+    for test_accuracy_epoch in history.history["val_accuracy_per_class"]:
+        test_accuracy_matrix.append(ops.convert_to_numpy(test_accuracy_epoch))
 
-    val_mean_per_class = numpy.mean(val_accuracy_matrix, axis=0)
+    val_mean_per_class = numpy.mean(test_accuracy_matrix, axis=0)
 
     # saving the bar plot with validation accuracy per class averaged over all epochs
     save_bar_plot(
         labels=labels,
         data=val_mean_per_class,
-        title="Validation accuracy per class averaged over all epochs",
-        file_name="val_accuracy_per_class",
+        title="Test accuracy per class averaged over all epochs",
+        file_name="test_accuracy_per_class",
         file_format="png",
         output_path=output_path,
     )
+
+
+def save_accuracy_and_loss_as_plot(history: keras.callbacks.History, output_path: Path) -> None:
+    """Function saving accuracy and loss metrics as plots.
+
+    This function aggregates the train and test accuracy and train and test loss into two
+    separate subplots of a figure
+
+    Args:
+        history (keras.callbacks.History): Object holding accuracy and loss metrics form the
+        training process.
+        output_path (Path): Output file path, where the plot is saved.
+
+    """
+    figure, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+    plt.subplots_adjust(left=0.2, right=0.9, top=0.96, bottom=0.04)
+    epochs = range(1, len(history.history["accuracy"]) + 1)
+
+    # subplot for training and testing accuracy
+    ax1.set(xlabel="epoch", ylabel="accuracy")
+    ax1.set_title("Model Accuracy")
+    ax1.plot(epochs, history.history["accuracy"], label="train accuracy")
+    ax1.plot(epochs, history.history["val_accuracy"], label="test accuracy")
+    ax1.set_xticks(epochs)
+    ax1.legend()
+
+    # subplot for training and testing loss
+    ax2.set(xlabel="epoch", ylabel="loss")
+    ax2.set_title("Model Loss")
+    ax2.plot(epochs, history.history["loss"], label="train loss")
+    ax2.plot(epochs, history.history["val_loss"], label="test loss")
+    ax2.set_xticks(epochs)
+    ax2.legend()
+
+    # formatting file name
+    time_stamp = generate_time_stamp()
+    file_name = f"accuracy_and_loss_{time_stamp}.png"
+
+    plt.tight_layout()
+    figure.savefig(output_path / file_name, format="png")
+    plt.close(figure)
 
 
 def save_validation_metrics_as_csv(output_path: Path, metrics: dir) -> None:
