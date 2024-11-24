@@ -1,5 +1,6 @@
 """Module providing utility function for the model_trainer package."""
 
+import json
 import time
 from pathlib import Path
 
@@ -163,21 +164,37 @@ def save_accuracy_and_loss_as_plot(history: keras.callbacks.History, output_path
     plt.close(figure)
 
 
-def save_validation_metrics_as_csv(output_path: Path, metrics: dir) -> None:
-    """Function saving the validation metrics as csv file.
+def save_history_as_json(
+    history: keras.callbacks.History, output_path: Path, keyword: str | None = None
+) -> None:
+    """Function saving history Keras object as json file.
+
+    Args:
+        history (keras.callbacks.History): Object holding the
+        output_path (Path): Output file path, where the plot is saved.
+        keyword (str | None): If provided, keyword parameter will be added into the file name.
+
+    """
+    time_stamp = generate_time_stamp()
+    file_name = f"{keyword + "_" if not None else ""}accuracy_and_loss_{time_stamp}.json"
+    file_path = output_path / file_name
+    with file_path.open("w") as file:
+        json.dump(history.history, file, indent=4)
+
+
+def save_evaluation_metrics_as_json(
+    metrics: dir, output_path: Path, keyword: str | None = None
+) -> None:
+    """Function saving the evaluation metrics as csv file.
 
     Args:
         output_path (Path): Output file path, where the csv is saved.
-        metrics (dir): Validation metrics as directory.
+        metrics (dir): Evaluation metrics as directory.
+        keyword (str | None): If provided, keyword parameter will be added into the file name.
 
     """
-    # with output_path.open("w") as file:
-    #     fieldnames = ["metric", "value"]
-    #     writer = csv.DictWriter(file, fieldnames=fieldnames)
-    #     writer.writeheader()
-    #     for k, v in metrics.items():
-    #         writer.writerow({"metric": k, "value": v})
-
-
-def save_history_as_json(history: keras.callbacks.History, output_path: Path) -> None:
-    """Nothing now."""
+    time_stamp = generate_time_stamp()
+    file_name = f"{keyword + "_" if not None else ""}evaluation_{time_stamp}.json"
+    file_path = output_path / file_name
+    with file_path.open("w") as file:
+        json.dump(metrics, file, indent=4)
