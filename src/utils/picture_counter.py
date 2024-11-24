@@ -3,9 +3,7 @@
 import json
 from pathlib import Path
 
-DATASET_PATH = Path(
-    "/Users/kubkodunaj/Desktop/jakub-dunaj-bachelors-thesis/datasets/original_dataset"
-)
+DATASET_PATH = Path("PATH_TO/datasets/original_dataset")
 
 dictionary = {}
 aggregated_dictionary = {}

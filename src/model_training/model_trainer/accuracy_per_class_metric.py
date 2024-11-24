@@ -36,7 +36,7 @@ class AccuracyPerClassMetric(Metric):
 
     """
 
-    def __init__(self, class_count: int, name="accuracy_per_class_metric", dtype=None):
+    def __init__(self, class_count: int, name="accuracy_per_class", dtype=None):
         """Constructor instantiating an object of the AccuracyPerClassMetric class."""
         super().__init__(name=name, dtype=dtype)
         self._class_count = class_count

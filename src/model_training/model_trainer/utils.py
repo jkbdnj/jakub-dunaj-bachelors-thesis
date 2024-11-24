@@ -8,7 +8,6 @@ import keras
 import matplotlib.pyplot as plt
 import numpy
 from keras.src import ops
-from matplotlib import ticker
 
 
 def generate_time_stamp():
@@ -52,22 +51,16 @@ def save_bar_plot(
     bars = ax.barh(labels, data)
     ax.bar_label(bars, fmt="%.2f")
 
+    ax.set_xlim(0.0, 1.0)
+
     # inverting the y-axis so that the labels start from the top of the bar plot
     ax.invert_yaxis()
 
     # plotting the average as a line
-    ax.axvline(x=average, color="g", label="average", lw=2)
+    ax.axvline(x=average, color="g", label=f"average {average:.2f}", lw=2)
 
     # adding legend for the average line
-    ax.legend(loc="best")
-
-    # adding tick for the average line to the x-axis
-    ticks = list(ax.get_xticks()) + [average]
-    ticks.sort()
-
-    # formatting the ticks at the x-axis
-    ax.xaxis.set_major_formatter(ticker.StrMethodFormatter("{x:.2f}"))
-    ax.set_xticks(ticks)
+    ax.legend(loc="upper right")
 
     # setting title
     ax.set_title(title, fontsize="x-large")
@@ -108,7 +101,7 @@ def save_accuracy_per_class_as_plot(
     train_mean_per_class = numpy.mean(train_accuracy_matrix, axis=0)
 
     # saving the bar plot with train accuracy per class averaged over all epochs
-    file_name = f"{keyword + "_" if not None else ""}train_accuracy_per_class"
+    file_name = f"{keyword + '_' if not None else ''}train_accuracy_per_class"
     save_bar_plot(
         labels=labels,
         data=train_mean_per_class,
@@ -127,7 +120,7 @@ def save_accuracy_per_class_as_plot(
     val_mean_per_class = numpy.mean(test_accuracy_matrix, axis=0)
 
     # saving the bar plot with validation accuracy per class averaged over all epochs
-    file_name = f"{keyword + "_" if not None else ""}test_accuracy_per_class"
+    file_name = f"{keyword + '_' if not None else ''}test_accuracy_per_class"
     save_bar_plot(
         labels=labels,
         data=val_mean_per_class,
@@ -175,7 +168,7 @@ def save_accuracy_and_loss_as_plot(
 
     # formatting file name
     time_stamp = generate_time_stamp()
-    file_name = f"{keyword + "_" if not None else ""}accuracy_and_loss_{time_stamp}.png"
+    file_name = f"{keyword + '_' if not None else ''}accuracy_and_loss_{time_stamp}.png"
 
     plt.tight_layout()
     figure.savefig(output_path / file_name, format="png")
@@ -183,36 +176,54 @@ def save_accuracy_and_loss_as_plot(
 
 
 def save_history_as_json(
-    history: keras.callbacks.History, output_path: Path, keyword: str | None = None
+    history: keras.callbacks.History,
+    output_path: Path,
+    labels: list[str],
+    keyword: str | None = None,
 ) -> None:
-    """Function saving history Keras object as json file.
+    """Function saving history object as json file.
 
     Args:
-        history (keras.callbacks.History): Object holding the
+        history (keras.callbacks.History): Object holding the training history to save.
         output_path (Path): Output file path, where the plot is saved.
+        labels (list[str]): Labels for the bars in the bar plot.
         keyword (str | None): If provided, keyword parameter will be added into the file name.
 
     """
     time_stamp = generate_time_stamp()
-    file_name = f"{keyword + "_" if not None else ""}accuracy_and_loss_{time_stamp}.json"
+    file_name = f"{keyword + '_' if not None else ''}history_{time_stamp}.json"
     file_path = output_path / file_name
+
+    modified_history = {}
+
+    # the accuracy per class metrics are saved as tf.Tensor
+    for k, v in history.history.items():
+        epochs_with_labels = []
+        if "per_class" in k:
+            matrix = ops.convert_to_numpy(v).tolist()
+            for epoch in matrix:
+                epochs_with_labels.append(list(map(lambda x, y: [x, y], labels, epoch)))
+            modified_history[k] = epochs_with_labels
+        else:
+            modified_history[k] = v
+
     with file_path.open("w") as file:
-        json.dump(history.history, file, indent=4)
+        json.dump(modified_history, file, indent=4)
 
 
 def save_evaluation_metrics_as_json(
-    metrics: dir, output_path: Path, keyword: str | None = None
+    metrics: dict, output_path: Path, keyword: str | None = None
 ) -> None:
-    """Function saving the evaluation metrics as csv file.
+    """Function saving the evaluation metrics as json file.
 
     Args:
-        output_path (Path): Output file path, where the csv is saved.
-        metrics (dir): Evaluation metrics as directory.
+        output_path (Path): Output file path, where the json is saved.
+        metrics (dict): Evaluation metrics as directory.
         keyword (str | None): If provided, keyword parameter will be added into the file name.
 
     """
     time_stamp = generate_time_stamp()
-    file_name = f"{keyword + "_" if not None else ""}evaluation_{time_stamp}.json"
+    file_name = f"{keyword + '_' if not None else ''}evaluation_{time_stamp}.json"
     file_path = output_path / file_name
     with file_path.open("w") as file:
         json.dump(metrics, file, indent=4)
