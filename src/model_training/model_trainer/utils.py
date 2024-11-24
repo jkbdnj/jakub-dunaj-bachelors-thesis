@@ -83,9 +83,22 @@ def save_bar_plot(
 
 
 def save_accuracy_per_class_as_plot(
-    history: keras.callbacks.History, labels: list, output_path: Path
+    history: keras.callbacks.History,
+    labels: list[str],
+    output_path: Path,
+    keyword: str | None = None,
 ) -> None:
-    """Nothing now."""
+    """Function saving accuracy per class metric averaged over all epochs.
+
+    This function saves the train and test accuracies per class averaged over all epochs into 2
+    distinct plots.
+
+    Args.:     history (keras.callbacks.History): Object holding accuracy per class metric form the
+    training process.     labels (list[str]): Labels for the bars in the bar plot.     output_path
+    (Path): Output path, where the plots are saved.     keyword (str | None): If provided, keyword
+    parameter will be added into the file names.
+
+    """
     train_accuracy_matrix = []
 
     # iterating over tf.Tensor (not symbolic)
@@ -95,11 +108,12 @@ def save_accuracy_per_class_as_plot(
     train_mean_per_class = numpy.mean(train_accuracy_matrix, axis=0)
 
     # saving the bar plot with train accuracy per class averaged over all epochs
+    file_name = f"{keyword + "_" if not None else ""}train_accuracy_per_class"
     save_bar_plot(
         labels=labels,
         data=train_mean_per_class,
         title="Train accuracy per class averaged over all epochs",
-        file_name="train_accuracy_per_class",
+        file_name=file_name,
         file_format="png",
         output_path=output_path,
     )
@@ -113,17 +127,20 @@ def save_accuracy_per_class_as_plot(
     val_mean_per_class = numpy.mean(test_accuracy_matrix, axis=0)
 
     # saving the bar plot with validation accuracy per class averaged over all epochs
+    file_name = f"{keyword + "_" if not None else ""}test_accuracy_per_class"
     save_bar_plot(
         labels=labels,
         data=val_mean_per_class,
         title="Test accuracy per class averaged over all epochs",
-        file_name="test_accuracy_per_class",
+        file_name=file_name,
         file_format="png",
         output_path=output_path,
     )
 
 
-def save_accuracy_and_loss_as_plot(history: keras.callbacks.History, output_path: Path) -> None:
+def save_accuracy_and_loss_as_plot(
+    history: keras.callbacks.History, output_path: Path, keyword: str | None = None
+) -> None:
     """Function saving accuracy and loss metrics as plots.
 
     This function aggregates the train and test accuracy and train and test loss into two
@@ -133,6 +150,7 @@ def save_accuracy_and_loss_as_plot(history: keras.callbacks.History, output_path
         history (keras.callbacks.History): Object holding accuracy and loss metrics form the
         training process.
         output_path (Path): Output file path, where the plot is saved.
+        keyword (str | None): If provided, keyword parameter will be added into the file name.
 
     """
     figure, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
@@ -157,7 +175,7 @@ def save_accuracy_and_loss_as_plot(history: keras.callbacks.History, output_path
 
     # formatting file name
     time_stamp = generate_time_stamp()
-    file_name = f"accuracy_and_loss_{time_stamp}.png"
+    file_name = f"{keyword + "_" if not None else ""}accuracy_and_loss_{time_stamp}.png"
 
     plt.tight_layout()
     figure.savefig(output_path / file_name, format="png")
