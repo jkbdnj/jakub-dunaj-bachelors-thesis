@@ -86,10 +86,12 @@ def save_accuracy_per_class_as_plot(
     This function saves the train and test accuracies per class averaged over all epochs into 2
     distinct plots.
 
-    Args.:     history (keras.callbacks.History): Object holding accuracy per class metric form the
-    training process.     labels (list[str]): Labels for the bars in the bar plot.     output_path
-    (Path): Output path, where the plots are saved.     keyword (str | None): If provided, keyword
-    parameter will be added into the file names.
+    Args:
+        history (keras.callbacks.History): Object holding accuracy per class metric form the
+        training process.
+        labels (list[str]): Labels for the bars in the bar plot.
+        output_path (Path): Output path, where the plots are saved.
+        keyword (str | None): If provided, keyword parameter will be added into the file names.
 
     """
     train_accuracy_matrix = []
