@@ -40,7 +40,7 @@ select = [
   "PL",
 ]
 fixable = ["ALL"]
-ignore = ["COM812", "PLR0912", "ARG002"]
+ignore = ["COM812", "PLR0912", "ARG002", "PLR0913"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
