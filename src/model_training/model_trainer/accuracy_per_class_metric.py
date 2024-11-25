@@ -64,12 +64,11 @@ class AccuracyPerClassMetric(Metric):
             sample_weight: Weights for batch elements. Ignored in this case.
 
         """
-        # returns the index of max value within each row of 2D tensor
-        # result is 1D tensor with labels with highest probabilities for each batch element
+        # returns the index==label with highest probability within each row of 2D tensor
         label_predictions = ops.argmax(y_pred, axis=-1)
 
         # returns 1D tensor containing boolean values
-        # contains True if the prediction equals label at an index, otherwise False
+        # contains True, if the prediction equals label at an index, otherwise False
         correct_predictions = ops.equal(y, label_predictions)
 
         for label in range(self._class_count):
