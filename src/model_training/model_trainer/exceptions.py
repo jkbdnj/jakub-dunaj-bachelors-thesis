@@ -1,4 +1,4 @@
-"""File with custom exceptions."""
+"""Module providing custom problem related exceptions."""
 
 
 class DatasetError(Exception):

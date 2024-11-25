@@ -1,4 +1,4 @@
-"""File holding simple class providing command line argument parsing."""
+"""Module providing simple class providing command line argument parsing."""
 
 import logging
 from argparse import ArgumentParser, ArgumentTypeError
@@ -35,8 +35,8 @@ class CLI:
 
         return cls._cli_instance
 
-    def __validate_dataset_path(self, arg_value: str, arg: str) -> Path:
-        """Private method validating the path to a dataset (train/test) folder.
+    def _validate_dataset_path(self, arg_value: str, arg: str) -> Path:
+        """Protected method validating the path to a dataset (train/test) folder.
 
         This method checks the existence of the train/test datasets.
 
@@ -56,8 +56,8 @@ class CLI:
 
         return path
 
-    def __validate_int(self, arg_value: str, arg: str) -> int:
-        """Private method validating integers.
+    def _validate_int(self, arg_value: str, arg: str) -> int:
+        """Protected method validating integers.
 
         This method validates integer values. The values should be positive integers.
         If the value is non-integer value, negative integer or 0, it raises an
@@ -89,15 +89,15 @@ class CLI:
             logger.error(error_message)
             raise ArgumentTypeError(error_message) from None
 
-    def __validate_output_path(self, output_path: Path | None) -> Path:
-        """Private method validating output path.
+    def _validate_output_path(self, output_path: Path | None) -> Path:
+        """Protected method validating output path.
 
         This method validates the output path. If an output path is given, it checks its
         existence and appends a /results folder to it. If an output is not given, it crates
         a folder /results in current working directory.
 
         Args:
-            output_path (Path|None): The output path.
+            output_path (Path | None): The output path.
 
         Returns:
             Path: Returns a Path object representing the path to the results folder.
@@ -114,20 +114,22 @@ class CLI:
 
         try:
             output_path.mkdir(exist_ok=True)
+            # e.g. the parent may not exist
         except FileNotFoundError:
             error_message = f"Folder at path {output_path} does not exist!"
             logger.error(error_message)
             raise ArgumentTypeError(error_message) from None
+
         return output_path
 
     def parse_args(self):
         """Public method parsing command line arguments.
 
-        This method crates the parser object and adds positional and optional arguments to the
-        parser. Next, it parsers the command line input.
+        This method instantiates the parser object as singleton, and adds positional
+        and optional arguments to the parser. Next, it parsers the command line input.
 
         Returns:
-            args (Namespace): Object holding parsed command line arguments.
+            args: Object holding parsed command line arguments.
 
         """
         parser = ArgumentParser(
@@ -139,12 +141,12 @@ class CLI:
         parser.add_argument(
             "train_dataset_path",
             help="path to the train dataset",
-            type=lambda arg_value: self.__validate_dataset_path(arg_value, "train_dataset_path"),
+            type=lambda arg_value: self._validate_dataset_path(arg_value, "train_dataset_path"),
         )
         parser.add_argument(
             "validation_dataset_path",
             help="path to the validation dataset",
-            type=lambda arg_value: self.__validate_dataset_path(
+            type=lambda arg_value: self._validate_dataset_path(
                 arg_value, "validation_dataset_path"
             ),
         )
@@ -152,14 +154,14 @@ class CLI:
             "-b",
             "--batch_size",
             help="batch size",
-            type=lambda arg_value: self.__validate_int(arg_value, arg="-b/--batch_size"),
+            type=lambda arg_value: self._validate_int(arg_value, arg="-b/--batch_size"),
             default=32,
         )
         parser.add_argument(
             "-e",
             "--epochs",
             help="number of epochs",
-            type=lambda arg_value: self.__validate_int(arg_value, arg="-e/--epochs"),
+            type=lambda arg_value: self._validate_int(arg_value, arg="-e/--epochs"),
             default=10,
         )
         parser.add_argument(
@@ -172,6 +174,6 @@ class CLI:
         )
 
         args = parser.parse_args()
-        args.output = self.__validate_output_path(args.output)
+        args.output = self._validate_output_path(args.output)
 
         return args
