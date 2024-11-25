@@ -355,7 +355,7 @@ def main():
     utils.save_accuracy_per_class_as_plot(
         final_history, model_trainer.labels, args.output, keyword="final"
     )
-    utils.save_history_as_json(final_history, args.output, keyword="final")
+    utils.save_history_as_json(final_history, args.output, model_trainer.labels, keyword="final")
 
     # validating the final model
     evaluation_metrics = model_trainer.evaluate_model(final_model)
