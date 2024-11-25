@@ -29,11 +29,24 @@ class CustomHistory(History):
         super().__init__()
 
     def on_epoch_begin(self, *args):
-        """Method initiating the time measurement at the start of an epoch."""
+        """Method initiating the time measurement at the start of an epoch.
+
+        Args:
+            *args: Stands for epoch and logs positional arguments. These are ignored
+            in this implementation.
+
+        """
         self._epoch_start_time = time.time()
 
     def on_epoch_end(self, epoch, logs=None):
-        """Method logging the epoch duration in second at the end of an epoch."""
+        """Method logging epoch duration in second at the end of an epoch.
+
+        Args:
+            epoch: Index of an epoch.
+            logs: Directory with results for the training and validation metrics
+            during the epoch.
+
+        """
         logs = logs or {}
         epoch_end_time = time.time()
         logs["epoch_duration_sec"] = epoch_end_time - self._epoch_start_time
