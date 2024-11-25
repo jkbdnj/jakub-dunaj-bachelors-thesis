@@ -473,7 +473,7 @@ urlseen = {Accessed on}
 
         To introduce greater variability and complexity into the dataset, the images of segmented leaves were augmented using artificial backgrounds. The variety, variability, and complexity of images should force the CNN model to learn from the leaf surface and not from the image background. In case of uniform or similar image backgrounds and similar disease symptoms, the CNN model tends to rely on information from the background (\cite{Barbedo:2018:1}). This leads to misclassifications of images because the CNN model is not able to distinguish the images based on the disease symptoms. Artificial background images resembling conditions that would be found and observed in the field were chosen. The background images contain multiple leaves, other plant parts, or capture very busy natural environments. All images were acquired from the Wikipedia Commons dataset. The black background of the segmented images was changed for an artificial background. This way, a third artificial background subset was created. \autoref{fig:artificial-backgrounds} shows the artificial backgrounds that were used to augment the dataset.
 
-        \begin{figure}[h]
+        \begin{figure}[!h]
             \centering
             \begin{tabular}{ccc}
                 \begin{subfigure}{0.25\textwidth}
@@ -539,7 +539,7 @@ urlseen = {Accessed on}
 
         The initial dataset used for training a CNN model contained three subsets: color, segmented and artificial background. Because of computing resources constrains, the number of images per class in each subset of the initial dataset was limited to 400 images. \autoref{fig:dataset-image-examples} shows examples of images from each of the three subsets of the initial dataset.
 
-        \begin{figure}[h]
+        \begin{figure}[!h]
             \centering
             \begin{tabular}{ccc}
                 \begin{subfigure}[t]{0.30\textwidth}
@@ -564,58 +564,60 @@ urlseen = {Accessed on}
 
         \autoref{tab:dataset-overview} gives an overview of the initial dataset that was used to train and validate the CNN model. Each of the three subsets contains 14,731 images. In total, the whole initial dataset contains 44,193 images. Not limiting the size of the original dataset without the gray-scale subset, the dataset would contain almost 200,000 images.
 
-        \begin{table}[h]
+        \begin{table}[!h]
             \centering
-            \begin{tabular}{@{}c|c|c|c|c|c@{}}
-                \hline
-                \multirow{2}{*}{Plant species} & \multirow{2}{*}{Plant disease} & \multicolumn{3}{c|}{Number of images} & \multirow{2}{*}{Total} \\ \cline{3-5}
-                &  & Color & Segmented & Artificial &  \\ \hline
-                \multirow{4}{*}{Apple} & Scab & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Black rot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Cedar apple rust & 275 & 275 & 275 & 825 \\ \cline{2-6}
-                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
-                Blueberry & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
-                \multirow{2}{*}{Cherry} & Powdery mildew & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
-                \multirow{4}{*}{Corn} & Cercospora leaf spot and Gray leaf spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Common rust & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Northern leaf blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
-                \multirow{4}{*}{Grape} & Black rot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Esca (Black measles) & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Leaf blight (Isariopsis leaf spot) & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
-                Orange & Haunglongbing (Citrus greening) & 400 & 400 & 400 & 1,200 \\ \hline
-                \multirow{2}{*}{Peach} & Bacterial spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Healthy & 360 & 360 & 360 & 1,080 \\ \hline
-                \multirow{2}{*}{Pepper} & Bacterial spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
-                \multirow{3}{*}{Potato} & Early blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Late blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Healthy & 152 & 152 & 152 & 456 \\ \hline
-                Raspberry & Healthy & 371 & 371 & 371 & 1,113 \\ \hline
-                Soybean & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
-                Squash & Powdery mildew & 400 & 400 & 400 & 1,200 \\ \hline
-                \multirow{2}{*}{Strawberry} & Leaf scorch & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
-                \multirow{9}{*}{Tomato} & Bacterial spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Early blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Late blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Leaf mold & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Septoria leaf spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Spider mite and Two-spotted spider mite & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Target spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
-                & Tomato yellow leaf curl virus & 373 & 373 & 373 & 1,200 \\ \cline{2-6}
-                & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
-                Total &  & 14,731 & 14,731 & 14,731 & 44,193 \\ \hline
-            \end{tabular}
-            \caption{\centering Overveiw of the initial dataset}
+            \resizebox{\textwidth}{!}{
+                \begin{tabular}{c|c|c|c|c|c}
+                    \hline
+                    \multirow{2}{*}{Plant species} & \multirow{2}{*}{Plant disease} & \multicolumn{3}{c|}{Number of images} & \multirow{2}{*}{Total} \\ \cline{3-5}
+                    &  & Color & Segmented & Artificial &  \\ \hline
+                    \multirow{4}{*}{Apple} & Scab & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Black rot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Cedar apple rust & 275 & 275 & 275 & 825 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    Blueberry & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{2}{*}{Cherry} & Powdery mildew & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{4}{*}{Corn} & Cercospora leaf spot and Gray leaf spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Common rust & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Northern leaf blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{4}{*}{Grape} & Black rot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Esca (Black measles) & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Leaf blight (Isariopsis leaf spot) & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    Orange & Haunglongbing (Citrus greening) & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{2}{*}{Peach} & Bacterial spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 360 & 360 & 360 & 1,080 \\ \hline
+                    \multirow{2}{*}{Pepper} & Bacterial spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{3}{*}{Potato} & Early blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Late blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 152 & 152 & 152 & 456 \\ \hline
+                    Raspberry & Healthy & 371 & 371 & 371 & 1,113 \\ \hline
+                    Soybean & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    Squash & Powdery mildew & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{2}{*}{Strawberry} & Leaf scorch & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{9}{*}{Tomato} & Bacterial spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Early blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Late blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Leaf mold & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Septoria leaf spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Spider mite and Two-spotted spider mite & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Target spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Tomato yellow leaf curl virus & 373 & 373 & 373 & 1,200 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    Total &  & 14,731 & 14,731 & 14,731 & 44,193 \\ \hline
+                \end{tabular}
+            }
+            \caption{\centering Overview of the initial dataset}
             \label{tab:dataset-overview}
         \end{table}
 
         The images in the original dataset had the size of $256 \times 256$ pixels. Prior to the training process, the images of the initial dataset were divided into the train, test and validation datasets. To divide the initial dataset, the hold-out method was used. From the initial dataset, 80\% of the images were used in the training process. The train subset contained 35,349 images. The remaining 20\% of the images were used to validate the CNN model. The validation subset contained 8,844 images. Out of the images used for the training process, 80\% of the images were used for the actual training of the CNN and the rest of the images was used as test dataset. This test dataset was used to evaluate model's performance after each epoch. Furthermore, the images were resized to the input size of the CNN model trained. The input size of the CNN model trained was $224 \times 224$ pixels. To introduce more variability during the training process, the subset used for training of the CNN model was augmented using four different augmentation operations. These operations were: random horizontal and/or vertical flip, random rotation, random contrast increase or decrease, and random brightness increase or decrease. \autoref{fig:augmentation-pipeline} shows an image of a healthy Pepper leaf with artificial background and its different versions after applying the augmentation pipeline.
 
-        \begin{figure}[h]
+        \begin{figure}[!h]
             \centering
             \begin{tabular}{ccc}
                 \begin{subfigure}{0.30\textwidth}
@@ -661,7 +663,7 @@ urlseen = {Accessed on}
 
     For the training process, the EfficientNetB0 CNN architecture was selected. The EfficientNetB0 architecture belongs to the EfficientNet family of convolutional neural networks introduced by \textcite{Tan:2019}. In their paper, \textcite{Tan:2019} researched the architecture scaling in other CNN architecture families, such as the ResNet, the Inception, and the DenseNet families. The authors focused on the resolution, width, and depth balancing of an architecture when scaling up the architecture to contain more trainable parameters. The authors introduced a process of architecture scaling. This scaling process should result in accurate and efficient architectures. As a result, the authors introduced the EfficientNet family containing the architectures EfficientNetB0 to EfficientNetB7. The base EfficientNetB0 architecture has 5.3 million and the EfficientNetB7 has 66.7 million trainable parameters. \autoref{fig:efficientnet-family-comparison} shows the comparison of the architecture size and accuracy of the trained models between EfficientNet and other CNN architecture families.
 
-    \begin{figure}[h]
+    \begin{figure}[!h]
         \centering
         \includegraphics[width=0.60\textwidth]{efficientnet_architectures.png}
         \caption{\centering Comparison of the architecture size and accuracy of the trained models between EfficientNet and other CNN architecture families (\cite{Tan:2019})}
@@ -672,30 +674,32 @@ urlseen = {Accessed on}
 
     \autoref{fig:efficientb0-architecture} shows the EfficientNetB0 architecture introduced by \textcite{Tan:2019}. It does not specify the number of output neurons in the fully connected layer. The main building block of the EfficientNetB0 architecture is the module called mobile inverted bottleneck (MBConv) (\cite{Tan:2019}). The MBConv is also referred to as the inverted residual with linear bottleneck (\cite{Sandler:2019}). The MBConv module takes a tensor, expands the depth of the tensor, performs depthwise separable convolution operations, and finally decreases the depth of the tensor (\cite{Sandler:2019}). The expansion is done using $1 \times 1$ pointwise convolution operations. The decrease of the depth is performed also using a $1 \times 1$ pointwise convolution operation. The depthwise separable convolution consists of a depthwise and pointwise convolution operation (\cite{Chollet:2017}). The depthwise convolution operation performs convolutions over each channel of the input tensor separately (\cite{Chollet:2017}). It can use filters of different resolutions. These filters have a depth of 1. The pointwise convolution operation uses $1 \times 1$ kernels with the depth being the number of channels in the input tensor (\cite{Chollet:2017}). The MBConv modules also contain residual (skip) connections. For example, the module MBConv6 (k$3\times3$) at the stage 5 in \autoref{fig:efficientb0-architecture} uses kernels of size $3 \times 3$ in the depthwise convolution operations and the initial expansion ratio is 6. This means that the depth of the input tensor is expanded six times at the start of the MBConv module (\cite{Sandler:2019}). The three layers in this stage stand for the number of depthwise separable convolution operations. The MBConv module can also be very efficiently implemented (\cite{Sandler:2019}). This means that the EfficientNetB0 may also be used in edge or mobile devices, and embedded software because of the MBConv modules (\cite{Sandler:2019}). Additionally, the CNN architectures from the EfficientNet family use the SiLU activation function.
 
-    \begin{table}[h]
+    \begin{table}[!h]
         \centering
-        \begin{tabular}{c|c|c|c|c}
-            \hline
-            Stage & Operator & Input Resolution & Output Channels & Layers \\
-            \hline
-            1 & Conv$3\times3$ & $224 \times 224$ & 32 & 1 \\
-            2 & MBConv1, k$3\times3$ & $112 \times 112$ & 16 & 1 \\
-            3 & MBConv6, k$3\times3$ & $112 \times 112$ & 24 & 2 \\
-            4 & MBConv6, k$5\times5$ & $56 \times 56$ & 40 & 2 \\
-            5 & MBConv6, k$3\times3$ & $28 \times 28$ & 80 & 3 \\
-            6 & MBConv6, k$5\times5$ & $14 \times 14$ & 112 & 3 \\
-            7 & MBConv6, k$5\times5$ & $14 \times 14$ & 192 & 4 \\
-            8 & MBConv6, k$3\times3$ & $7 \times 7$ & 320 & 1 \\
-            9 & Conv$1\times1$, Pooling, Fully Connected & $7 \times 7$ & 1280 & 1 \\
-            \hline
-        \end{tabular}
+        \resizebox{\textwidth}{!}{
+            \begin{tabular}{c|c|c|c|c}
+                \hline
+                Stage & Operator & Input Resolution & Output Channels & Layers \\
+                \hline
+                1 & Conv$3\times3$ & $224 \times 224$ & 32 & 1 \\
+                2 & MBConv1, k$3\times3$ & $112 \times 112$ & 16 & 1 \\
+                3 & MBConv6, k$3\times3$ & $112 \times 112$ & 24 & 2 \\
+                4 & MBConv6, k$5\times5$ & $56 \times 56$ & 40 & 2 \\
+                5 & MBConv6, k$3\times3$ & $28 \times 28$ & 80 & 3 \\
+                6 & MBConv6, k$5\times5$ & $14 \times 14$ & 112 & 3 \\
+                7 & MBConv6, k$5\times5$ & $14 \times 14$ & 192 & 4 \\
+                8 & MBConv6, k$3\times3$ & $7 \times 7$ & 320 & 1 \\
+                9 & Conv$1\times1$, Pooling, Fully Connected & $7 \times 7$ & 1280 & 1 \\
+                \hline
+            \end{tabular}
+        }
         \caption{\centering EfficientNetB0 architecture (Adapted from: \cite{Tan:2019})}
         \label{fig:efficientb0-architecture}
     \end{table}
 
     \textcite{Tan:2019} also added the squeeze-and-excitation optimization to each MBConv. A squeeze-and-excitation block is an architectural unit allowing the model to learn from useful features and suppress features that are not useful (\cite{Hu:2019}). At first, a squeeze-and-excitation block squeezes the input tensor of size $H \times W \times d$ to the size $1 \times 1 \times d$ (\cite{Hu:2019}). The depth of the tensor is retained. The following excitation operation scales the tensor of size $1 \times 1 \times d$ to the original size $H \times W \times d$ (\cite{Hu:2019}). This means that values within each feature map are the same.
 
-    The EfficientNetB0 architecture was chosen because it achieves considerably high accuracies with low number of parameters when compared to other CNN architectures, such as ResNet-152, ResNet-50, or Inception v2 (\cite{Tan:2019}). The architecture also uses batch normalization layers. This means that the EfficientNetB0 architecture is suitable to be trained on datasets with a lower number of images that would be needed when training for example a ResNet-152 architecture with 60 million parameters. Furthermore, because of a lower number of trainable parameters and the efficient implementation of the MBConv module, it can be trained using constrained resources.
+    The EfficientNetB0 architecture was chosen because it achieves considerably high accuracies with low number of parameters when compared to other CNN architectures, such as ResNet-152, ResNet-50, or Inception v2 (\cite{Tan:2019}). The architecture also uses batch normalization layers. This means that the EfficientNetB0 architecture can be trained on datasets containing smaller number of images compared to datasets needed to train for example a ResNet-152 architecture with 60 million parameters. Furthermore, because of a lower number of trainable parameters and the efficient implementation of the MBConv module, it can be trained using constrained computational resources.
 
     \subsection{Training and Validation}
     As already discussed in \autoref{subsub:dataset}, the segmented and color subsets from the original dataset provided by \textcite{Mohanty:2016} were used to create the initial dataset. Furthermore, additional subset of images with artificial backgrounds created from the segmented subset was added. From the initial dataset, 80\% of the images were used as train and the remaining 20\% of the images were used as validation dataset. From the train dataset, 80\% of the images were used for the actual training of the EfficientNetB0 architecture and the remaining 20\% of the images for testing after each epoch. The validation dataset was used to evaluate the model. In each class of both the train and validation subsets of the final dataset, the ratio between images from color, segmented and artificial background was equal. Images from each subset made up one-third of images in each class of train or validation datasets. The train and validation dataset created the final subset. Images in the final dataset were resized to the resolution of $224 \times 224$ pixels. This was the input size of the EfficientNetB0 architecture. Moreover, each image was preprocessed using an augmentation pipeline. This pipeline applied  random horizontal and/or vertical flip, random rotation, random contrast increase or decrease, and random brightness increase or decrease.
@@ -707,9 +711,6 @@ urlseen = {Accessed on}
     % parameters used for the training: so the adam, loss function, batch size and number of epochs
                 % Instead, a widely adopted method known as n-fold cross-validation is used to exploit the labeled data both for model selection and for training. \cite{Mohri:2018} p 71
                 % 4.3 Generalization Issues in Model Tuning and Evaluation (\cite{Aggarwal:2018}) -> Hold-Out vs. Cross-Validation
-    \subsection{Web-based Application Design}
-        \subsubsection{Frontend Design}
-        \subsubsection{Backend Design}
 
 \section{Development}
     % To maintain high code quality and to comply with python standards a pre-commit hook locally and as GitHub Action has been set up.
@@ -720,14 +721,47 @@ urlseen = {Accessed on}
     % keras functions: load dataset, fit, compile, evaluate
 
     % different important code parts like setting up the neural network and preprocessing it
-    \subsection{Web-based Application Development}
-        \subsubsection{Frontend Development}
-        \subsubsection{Backend Development}
-
-\section{Web-based Application Walkthrough}
 
 \section{Discussion}
 % Google Colab + Jupyter Notebook, training on my own computer then adding the plots
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{initial_accuracy_and_loss_2024-11-25_07.55.35.png}
+        \caption{\centering Initial model accuracy and loss during training and testing}
+        \label{fig:initial_accuracy_and_loss}
+    \end{figure}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{initial_train_accuracy_per_class_2024-11-25_07.55.35.png}
+        \caption{\centering Initial model accuracy per class averaged over all epochs during training}
+        \label{fig:initial_train_accuracy_per_class}
+    \end{figure}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{initial_test_accuracy_per_class_2024-11-25_07.55.35.png}
+        \caption{\centering Initial model accuracy per class averaged over all epochs during testing}
+        \label{fig:initial_test_accuracy_per_class}
+    \end{figure}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{final_accuracy_and_loss_2024-11-25_11.16.13.png}
+        \caption{\centering Final model accuracy and loss during training and testing}
+        \label{fig:final_accuracy_and_loss}
+    \end{figure}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{final_train_accuracy_per_class_2024-11-25_11.16.13.png}
+        \caption{\centering Final model accuracy per class averaged over all epochs during training}
+        \label{fig:final_train_accuracy_per_class}
+    \end{figure}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{final_test_accuracy_per_class_2024-11-25_11.16.14.png}
+        \caption{\centering Final model accuracy per class averaged over all epochs during testing}
+        \label{fig:final_test_accuracy_per_class}
+    \end{figure}
+
+
 
 \section{Conclusion}
 
