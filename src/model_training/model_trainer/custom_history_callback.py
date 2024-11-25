@@ -38,7 +38,7 @@ class CustomHistory(History):
         """
         self._epoch_start_time = time.time()
 
-    def on_epoch_end(self, epoch, logs=None):
+    def on_epoch_end(self, epoch: int, logs: dict | None = None):
         """Method logging epoch duration in second at the end of an epoch.
 
         Args:
