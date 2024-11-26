@@ -713,7 +713,7 @@ urlseen = {Accessed on}
     % To maintain high code quality and to comply with python standards a pre-commit hook locally and as GitHub Action has been set up.
     \subsection{Dataset Preprocessing Pipeline}
 
-    \autoref{fig:dataset-preprocessing-github} shows the structure of the folder with Python modules used for the preprocessing of the original dataset provided by \textcite{Mohanty:2016}. The Python modules were created as scripts that are successively applied to the dataset by a wrapper module. The wrapper and the modules create a dataset preprocessing pipeline. The modules may be also executed as standalone scripts.
+    \autoref{fig:dataset-preprocessing-github} shows the structure of the folder with Python modules used for the preprocessing of the original dataset provided by \textcite{Mohanty:2016}. The \verb|\src| folder is in the root folder of the repository. The Python modules were created as scripts that are successively applied to the dataset by a wrapper module. The wrapper and the modules create a dataset preprocessing pipeline. The modules may be also executed as standalone scripts.
 
     \begin{figure}[h]
         \centering
@@ -743,7 +743,7 @@ urlseen = {Accessed on}
     \end{lstlisting}
     The \verb|add_artificial_background(...)| function takes the paths to the artificial background images, to the segmented images, and to the destination folder as arguments. It returns 0 on success and 1 on failure. The \verb|dataset_limiter.py| and \verb|artificial_background_adder.py| modules crate the initial dataset with three subsets: color, segmented, and artificial background.
 
-    The \verb|dataset_divider.py| divides this initial dataset into a train and validation subsets and creates the final dataset. The function \verb|divide_dataset(...)| from \autoref{lst:dataset-divider-function} takes the paths to the color, segmented, and artificial background subsets of the initial dataset, the path to final folder and the train-validation split ration. It creates the final dataset with train and validation subsets at a destination given by \verb|final_dataset_path| function parameter. In each class of both test and validation subsets, the ratio of images from color, segmented and artificial background subsets is the same. This function also returns 0 on success and 1 on failure.
+    The \verb|dataset_divider.py| divides this initial dataset into a train and validation subsets and creates the final dataset. The function \verb|divide_dataset(...)| from \autoref{lst:dataset-divider-function} takes the paths to the color, segmented, and artificial background subsets of the initial dataset, the path to final folder and the train-validation split ratio. It creates the final dataset with train and validation subsets at a destination given by \verb|final_dataset_path| function parameter. In each class of both test and validation subsets, the ratio of images from color, segmented and artificial background subsets is the same. This function also returns 0 on success and 1 on failure.
     \begin{lstlisting}[caption={\centering Signature of the function defined in dataset\_divider.py}, label={lst:dataset-divider-function}, captionpos=b]
         def divide_dataset(
             train_validation_ratio: float,
@@ -757,6 +757,13 @@ urlseen = {Accessed on}
     The \verb|dataset_preprocessing_wrapper(...)| calls the functions in succession and creates a dataset preprocessing pipeline. At the end of this preprocessing pipeline, a final dataset with train and validation subsets that can be used to train the CNN model is created.
 
     \subsection{CNN Model Training and Validation Package}
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.4\textwidth]{model_trainer_package_github.png}
+        \caption{\centering Structure of the model\_trainer package}
+        \label{fig:model-trainer-package-github}
+    \end{figure}
     % tensoflow and keras
     % keras functions: load dataset, fit, compile, evaluate
 
