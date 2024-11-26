@@ -16,7 +16,7 @@ list-final-separator={ and }}
 %----------------------------------------------------------------------------------------
 \usepackage{tikz}
 \usepackage{color}
-\usetikzlibrary{positioning, shapes.multipart}
+\usetikzlibrary{positioning}
 
 %----------------------------------------------------------------------------------------
 % Graphics
@@ -709,11 +709,53 @@ urlseen = {Accessed on}
     Initially, only the final classifier layer was trained. Other layers were kept frozen. Finally, fine-tuning was applied, and the whole architecture was trained.
 
 \section{Development}
-    The development process was divided into two phases. In the first phase, the dataset preprocessing scripts had been created. In the second phase, a package used as a command line tool was created to train and validate an EfficientNetB0 module. The programming language of choice in this thesis was Python. The training and validation package was created using the Keras and TensorFlow libraries. Keras is essentially an API using TensorFlow as a backend framework (\cite{tensorflow:2024, keras:2024}). However, Keras provides a higher level of abstraction to the TensorFlow library.
-
+    The development process was divided into two phases. In the first phase, the dataset preprocessing scripts had been created. In the second phase, a package used as a command line tool was created to train and validate an EfficientNetB0 module. The programming language of choice in this thesis was Python. The training and validation package was created using the Keras and TensorFlow libraries. Keras is essentially an API using TensorFlow as a backend framework (\cite{tensorflow:2024, keras:2024}). However, Keras provides a higher level of abstraction to the TensorFlow library. Next, the dataset preprocessing scripts and the model training and validation package will be described in greater detail.
     % To maintain high code quality and to comply with python standards a pre-commit hook locally and as GitHub Action has been set up.
     \subsection{Dataset Preprocessing Pipeline}
-    % diagram how the preprocessing is done
+
+    \autoref{fig:dataset-preprocessing-github} shows the structure of the folder with Python modules used for the preprocessing of the original dataset provided by \textcite{Mohanty:2016}. The Python modules were created as scripts that are successively applied to the dataset by a wrapper module. The wrapper and the modules create a dataset preprocessing pipeline. The modules may be also executed as standalone scripts.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.4\textwidth]{dataset_preprocessing_github.png}
+        \caption{\centering Folder structure of Python modules used for dataset preprocessing}
+        \label{fig:dataset-preprocessing-github}
+    \end{figure}
+
+    The \verb|dataset_limiter.py| is applied to the original dataset provided by \textcite{Mohanty:2016} without the gray-scale subset. The module limits the number of images in each class of each subset to a pre-defined limit. The function defined in the \verb|dataset_limiter.py| module has the signature shown in \autoref{lst:dataset-limiter-function}.
+    \begin{lstlisting}[caption={\centering Signature of the function defined in dataset\_limiter.py}, label={lst:dataset-limiter-function}, captionpos=b]
+        def limit_dataset(
+            color_path: Path,
+            segmented_path: Path,
+            destination_path: Path,
+            limit: int
+        ) -> Literal[0, 1]:
+    \end{lstlisting}
+    The \verb|limit_dataset(...)| function takes the paths to the color and segmented subsets of the original dataset, to the destination folder, and the limit as arguments. It creates a copy of the original dataset with classes that contain at most the count of images given in the \verb|limit| parameter. The function returns 0 on success and 1 on failure.
+
+    The \verb|artificial_background_adder.py| module is applied to the limited dataset created by the \verb|dataset_limiter.py| module. It adds artificial backgrounds to the leaf images from the segmented subset and creates a new \verb|artificial_backgorund| subset within the folder given in destination path. The function defined in \verb|artificial_background_adder.py| module has the signature shown by \autoref{lst:artificial-backgorund-adder-function}.
+    \begin{lstlisting}[caption={\centering Signature of the function defined in artificial\_background\_adder.py}, label={lst:artificial-backgorund-adder-function}, captionpos=b]
+        def add_artificial_background(
+            artificial_backgrounds_path: Path,
+            segmented_path: Path,
+            destination_path: Path
+        ) -> Literal[0, 1]:
+    \end{lstlisting}
+    The \verb|add_artificial_background(...)| function takes the paths to the artificial background images, to the segmented images, and to the destination folder as arguments. It returns 0 on success and 1 on failure. The \verb|dataset_limiter.py| and \verb|artificial_background_adder.py| modules crate the initial dataset with three subsets: color, segmented, and artificial background.
+
+    The \verb|dataset_divider.py| divides this initial dataset into a train and validation subsets and creates the final dataset. The function \verb|divide_dataset(...)| from \autoref{lst:dataset-divider-function} takes the paths to the color, segmented, and artificial background subsets of the initial dataset, the path to final folder and the train-validation split ration. It creates the final dataset with train and validation subsets at a destination given by \verb|final_dataset_path| function parameter. In each class of both test and validation subsets, the ratio of images from color, segmented and artificial background subsets is the same. This function also returns 0 on success and 1 on failure.
+    \begin{lstlisting}[caption={\centering Signature of the function defined in dataset\_divider.py}, label={lst:dataset-divider-function}, captionpos=b]
+        def divide_dataset(
+            train_validation_ratio: float,
+            color_path: Path,
+            segmented_path: Path,
+            artificial_path: Path,
+            final_dataset_path: Path,
+        ) -> Literal[0, 1]:
+    \end{lstlisting}
+
+    The \verb|dataset_preprocessing_wrapper(...)| calls the functions in succession and creates a dataset preprocessing pipeline. At the end of this preprocessing pipeline, a final dataset with train and validation subsets that can be used to train the CNN model is created.
+
     \subsection{CNN Model Training and Validation Package}
     % tensoflow and keras
     % keras functions: load dataset, fit, compile, evaluate
@@ -726,37 +768,37 @@ urlseen = {Accessed on}
         \centering
         \includegraphics[width=\textwidth]{initial_accuracy_and_loss_2024-11-25_07.55.35.png}
         \caption{\centering Initial model accuracy and loss during training and testing}
-        \label{fig:initial_accuracy_and_loss}
+        \label{fig:initial-accuracy-and-loss}
     \end{figure}
     \begin{figure}[h]
         \centering
         \includegraphics[width=\textwidth]{initial_train_accuracy_per_class_2024-11-25_07.55.35.png}
         \caption{\centering Initial model accuracy per class averaged over all epochs during training}
-        \label{fig:initial_train_accuracy_per_class}
+        \label{fig:initial-train-accuracy-per-class}
     \end{figure}
     \begin{figure}[h]
         \centering
         \includegraphics[width=\textwidth]{initial_test_accuracy_per_class_2024-11-25_07.55.35.png}
         \caption{\centering Initial model accuracy per class averaged over all epochs during testing}
-        \label{fig:initial_test_accuracy_per_class}
+        \label{fig:initial-test-accuracy-per-class}
     \end{figure}
     \begin{figure}[h]
         \centering
         \includegraphics[width=\textwidth]{final_accuracy_and_loss_2024-11-25_11.16.13.png}
         \caption{\centering Final model accuracy and loss during training and testing}
-        \label{fig:final_accuracy_and_loss}
+        \label{fig:final-accuracy-and-loss}
     \end{figure}
     \begin{figure}[h]
         \centering
         \includegraphics[width=\textwidth]{final_train_accuracy_per_class_2024-11-25_11.16.13.png}
         \caption{\centering Final model accuracy per class averaged over all epochs during training}
-        \label{fig:final_train_accuracy_per_class}
+        \label{fig:final-train-accuracy-per-class}
     \end{figure}
     \begin{figure}[h]
         \centering
         \includegraphics[width=\textwidth]{final_test_accuracy_per_class_2024-11-25_11.16.14.png}
         \caption{\centering Final model accuracy per class averaged over all epochs during testing}
-        \label{fig:final_test_accuracy_per_class}
+        \label{fig:final-test-accuracy-per-class}
     \end{figure}
 
 
