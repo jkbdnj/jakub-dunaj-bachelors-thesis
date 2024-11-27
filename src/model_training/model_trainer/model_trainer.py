@@ -128,12 +128,14 @@ class ModelTrainer:
             == set(validation_dataset.class_names)
         ):
             error_message = "Train, test, and validation datasets differ in the class names!"
+            logger.error(error_message)
             raise DatasetError(error_message)
 
         if not (
             train_dataset.class_names == test_dataset.class_names == validation_dataset.class_names
         ):
             error_message = "Train, test, and validation datasets differ in the class name orders!"
+            logger.error(error_message)
             raise DatasetError(error_message)
 
         return train_dataset, test_dataset, validation_dataset
