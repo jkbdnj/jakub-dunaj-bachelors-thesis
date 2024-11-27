@@ -434,7 +434,7 @@ urlseen = {Accessed on}
 
         \textcite{Barbedo:2019} investigated the impact of images of individual diseased regions on model's classification accuracy. For this research, the author created a base dataset containing 1,567 images of plant leaves divided into 79 classes representing plant--disease pairs. Images in the dataset were captured under various conditions and included varied symptom characteristics for each class. About 60\% of the images in the dataset were taken under controlled conditions and the rest of the images was taken under field conditions. Further, the author created two other versions. One version contained only images of segmented leaf masks and the other version contained also images of segmented diseased regions. The dataset version including images of diseased regions contained 46,409 images. The author segmented the individual diseased leaf regions manually.
 
-        \textcite{Barbedo:2019} used all three dataset versions to train a GoogLeNet model using the transfer-learning method. To validate the models, the author used the 10-fold cross validation technique. The average accuracy of the model trained on the original dataset was 82\%. The same accuracy was reported by the model trained on the dataset version containing images of segmented leaf mask. The model trained on the extended dataset containing also images of diseased leaf regions achieved the average accuracy of 94\%. Even though the original dataset contained high variety of images, it was relatively small and thus not robust enough. Nevertheless looking at the absolute percentages, the model trained on the dataset version containing images of diseased leaf regions achieved superior results. Due to the images of individual diseased regions, the dataset contained more homogenous characteristics of the symptoms. This positively influenced the learning process and the model was able to learn the disease characteristics more effectively.
+        \textcite{Barbedo:2019} used all three dataset versions to train a GoogLeNet model using the transfer-learning method. To validate the models, the author used the 10-fold cross validation technique. The average accuracy of the model trained on the original dataset was 82\%. The same accuracy was reported by the model trained on the dataset version containing images of segmented leaf mask. The model trained on the extended dataset containing also images of diseased leaf regions achieved the average accuracy of 94\%. Even though the original dataset contained high variety of images, it was relatively small and thus not robust enough. Nevertheless, looking at the absolute percentages, the model trained on the dataset version containing images of diseased leaf regions achieved superior results. Due to the images of individual diseased regions, the dataset contained more homogenous characteristics of the symptoms. This positively influenced the learning process and the model was able to learn the disease characteristics more effectively.
 
         Unfortunately, the author concluded that the dataset was still a limiting factor of the training process because it was not representative enough. However, the author showed that extending the dataset by images of individual diseased regions makes the dataset more robust.
 
@@ -789,45 +789,52 @@ urlseen = {Accessed on}
 
 \section{Discussion}
 
-    In this section, the performance of the trained EfficientNetB0 model during the training process will be evaluated. The training process had two phases: the initial and the final phase. In the initial phase, only the last dense classifier layer was trained. In the final phase, the all trainable parameters of the model were trained. Each of these two training cycles had 8 epochs. After each training cycle, the train and test accuracy and loss and the train and test accuracy per class were saved as plots. The model was evaluated and saved after each training cycle. Additionaly, he validation data and the whole training history for a training cycle were saved as JSON files.
-% Google Colab + Jupyter Notebook, training on my own computer then adding the plots
-        \begin{figure}[h]
-            \centering
-            \includegraphics[width=\textwidth]{initial_accuracy_and_loss_2024-11-25_07.55.35.png}
-            \caption{\centering Initial model accuracy and loss during training and testing}
-            \label{fig:initial-accuracy-and-loss}
-        \end{figure}
-        \begin{figure}[h]
-            \centering
-            \includegraphics[width=\textwidth]{initial_train_accuracy_per_class_2024-11-25_07.55.35.png}
-            \caption{\centering Initial model accuracy per class averaged over all epochs during training}
-            \label{fig:initial-train-accuracy-per-class}
-        \end{figure}
-        \begin{figure}[h]
-            \centering
-            \includegraphics[width=\textwidth]{initial_test_accuracy_per_class_2024-11-25_07.55.35.png}
-            \caption{\centering Initial model accuracy per class averaged over all epochs during testing}
-            \label{fig:initial-test-accuracy-per-class}
-        \end{figure}
-        \begin{figure}[h]
-            \centering
-            \includegraphics[width=\textwidth]{final_accuracy_and_loss_2024-11-25_11.16.13.png}
-            \caption{\centering Final model accuracy and loss during training and testing}
-            \label{fig:final-accuracy-and-loss}
-        \end{figure}
-        \begin{figure}[h]
-            \centering
-            \includegraphics[width=\textwidth]{final_train_accuracy_per_class_2024-11-25_11.16.13.png}
-            \caption{\centering Final model accuracy per class averaged over all epochs during training}
-            \label{fig:final-train-accuracy-per-class}
-        \end{figure}
-        \begin{figure}[h]
-            \centering
-            \includegraphics[width=\textwidth]{final_test_accuracy_per_class_2024-11-25_11.16.14.png}
-            \caption{\centering Final model accuracy per class averaged over all epochs during testing}
-            \label{fig:final-test-accuracy-per-class}
-        \end{figure}
+    In this section, the performance of the trained EfficientNetB0 model during the training process will be evaluated. The training process had two phases: the initial and the final phase. In the initial phase, only the last dense classifier layer was trained. In the final phase, the all trainable parameters of the model were trained. Each of these two training cycles had 8 epochs. After each training cycle, the train and test accuracy and loss and the train and test accuracy per class were saved as plots. The model was evaluated and saved after each training cycle. Additionally, the validation data and the whole training history for a training cycle were saved as JSON files. The whole training process was done on a personal computer and took 4 hours and 10 minutes to complete. There was also an attempt made to train the model using Google Colab. Unfortunately, because of network limitations, this approach was impractical and would have taken substantially longer.
 
+    \autoref{fig:initial-accuracy-and-loss} shows the accuracy and loss metrics of the model during the whole initial training cycle. The train accuracy reached 85\% and the test accuracy reached almost 90\% in the last epoch. The train loss reached 0.56 and the test loss reached 0.35 at the end of the last epoch.
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{initial_accuracy_and_loss_2024-11-25_07.55.35.png}
+        \caption{\centering Initial model accuracy and loss during training and testing}
+        \label{fig:initial-accuracy-and-loss}
+    \end{figure}
+
+    \autoref{fig:initial-train-accuracy-per-class} shows accuracies of each class averaged over all 8 epochs during the training phase of the initial cycle. The model reached 83\% average accuracy over all classes. The model reported accuracy of at least 80\% in 71\% of the classes. In 34\% of the classes, the model reached accuracy of at least 90\%. The model really struggled in prediction the diseased tomato leaves. After revision of the tomato disease classes, the images in these classes are very similar. There were probably not enough images for the model to learn to distinguish between the different tomato leaf diseases.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{initial_train_accuracy_per_class_2024-11-25_07.55.35.png}
+        \caption{\centering Initial model accuracy per class averaged over all epochs during training}
+        \label{fig:initial-train-accuracy-per-class}
+    \end{figure}
+
+    \autoref{fig:initial-test-accuracy-per-class} shows accuracies of each class averages over all 8 epochs during the testing phase of the initial cycle. The model reported very similar results to those achieved during the training. Same as in the training phase, the model reported lower accuracies in the case of tomato disease classes.
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{initial_test_accuracy_per_class_2024-11-25_07.55.35.png}
+        \caption{\centering Initial model accuracy per class averaged over all epochs during testing}
+        \label{fig:initial-test-accuracy-per-class}
+    \end{figure}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{final_accuracy_and_loss_2024-11-25_11.16.13.png}
+        \caption{\centering Final model accuracy and loss during training and testing}
+        \label{fig:final-accuracy-and-loss}
+    \end{figure}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{final_train_accuracy_per_class_2024-11-25_11.16.13.png}
+        \caption{\centering Final model accuracy per class averaged over all epochs during training}
+        \label{fig:final-train-accuracy-per-class}
+    \end{figure}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{final_test_accuracy_per_class_2024-11-25_11.16.14.png}
+        \caption{\centering Final model accuracy per class averaged over all epochs during testing}
+        \label{fig:final-test-accuracy-per-class}
+    \end{figure}
+
+        Having more images and applying less conservative training strategy would lead to higher accuracies.
 
 
 \section{Conclusion}
