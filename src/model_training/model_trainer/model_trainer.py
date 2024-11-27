@@ -40,10 +40,12 @@ class ModelTrainer:
     """This class represents provides model training functionality.
 
     Attributes:
-        train_dataset (tf.data.Dataset): The dataset used for training.
-        test_dataset (tf.data.Dataset): The dataset used for testing.
-        validation_dataset (tf.data.Dataset): The dataset used for validation.
-        batch_size (int): The batch size used.
+        _train_dataset (tf.data.Dataset): The dataset used for training.
+        _test_dataset (tf.data.Dataset): The dataset used for testing.
+        _validation_dataset (tf.data.Dataset): The dataset used for validation.
+        _batch_size (int): The batch size used.
+        _epochs (int): The number of epochs.
+        _labels (list[str]): The class names/labels in the dataset.
 
     """
 
@@ -315,7 +317,7 @@ class ModelTrainer:
         return model.evaluate(x=self._validation_dataset)
 
 
-def main():
+def main() -> None:
     """Main function."""
     cli = CLI()
     args = cli.parse_args()

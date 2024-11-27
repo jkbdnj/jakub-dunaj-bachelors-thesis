@@ -48,7 +48,7 @@ class AccuracyPerClassMetric(Metric):
         )
 
     def update_state(self, y: tf.Tensor, y_pred: tf.Tensor, sample_weight=None):
-        """Function updating the _total_per_class and _correct_per_class instance attributes.
+        """Method updating the _total_per_class and _correct_per_class instance attributes.
 
         This method accumulates the statistics for the accuracy per class metric. The symbolic
         tensors cannot be converted to a numpy array and the values cannot be accessed directly.
@@ -110,11 +110,14 @@ class AccuracyPerClassMetric(Metric):
             )
 
     def result(self):
-        """Function computing current accuracy per class metric.
+        """Method computing current accuracy per class metric.
 
-        This function divides the _correct_per_class and _total_per_class tensors (variables) of
+        This method divides the _correct_per_class and _total_per_class tensors (variables) of
         shape (class_count,) element-wise returning the accuracy for every class/label. The
         ops.divide_no_nan() function does not return exception when dividing by 0.
+
+        Returns:
+            A tensor with current accuracies per class.
 
         """
         return ops.divide_no_nan(self._correct_per_class, self._total_per_class)

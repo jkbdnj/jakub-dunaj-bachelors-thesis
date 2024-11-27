@@ -42,8 +42,8 @@ class CustomHistory(History):
         """Method logging epoch duration in second at the end of an epoch.
 
         Args:
-            epoch: Index of an epoch.
-            logs: Directory with results for the training and validation metrics
+            epoch (int): Index of an epoch.
+            logs (dict | None): Directory with results for the training and validation metrics
             during the epoch.
 
         """

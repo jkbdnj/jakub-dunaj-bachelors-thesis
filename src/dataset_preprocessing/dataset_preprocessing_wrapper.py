@@ -58,7 +58,7 @@ def main() -> Literal[0, 1]:
         Literal[0, 1]: Returns 0 on success, 1 on failure.
 
     """
-    pipeline = [
+    preprocessing_pipeline = [
         (limit_dataset, (ORIGINAL_COLOR_PATH, ORIGINAL_SEGMENTED_PATH, INITIAL_PATH, LIMIT)),
         (
             add_artificial_background,
@@ -76,7 +76,7 @@ def main() -> Literal[0, 1]:
         ),
     ]
 
-    for func, args in pipeline:
+    for func, args in preprocessing_pipeline:
         info_message = f"Executing function {func.__name__}."
         logger.info(info_message)
 
