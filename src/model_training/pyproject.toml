@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "model_trainer"
 version = "0.1.0"
 authors = [{name = "Jakub Dunaj", email = "e12121285@student.tuwien.ac.at"}]
-dependencies = ["keras~=3.6.0", "tensorflow~=2.16.0", "matplotlib~=3.9.2", "rich-argparse~=1.6.0"]
+dependencies = ["keras~=3.6.0", "tensorflow~=2.16.1", "matplotlib~=3.9.2", "rich-argparse~=1.6.0"]
 
 [project.scripts]
 model-trainer = "model_trainer.model_trainer:main"

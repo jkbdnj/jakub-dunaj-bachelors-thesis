@@ -1,0 +1,6 @@
+# conda crate --name thesis_env python=3.11
+keras==3.6.0
+matplotlib==3.9.2
+numpy==1.26.4
+rich-argparse==1.6.0
+tensorflow==2.16.1
