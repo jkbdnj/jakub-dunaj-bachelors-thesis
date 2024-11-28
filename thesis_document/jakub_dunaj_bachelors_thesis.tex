@@ -702,6 +702,7 @@ urlseen = {Accessed on}
     The EfficientNetB0 architecture was chosen because it achieves considerably high accuracies with low number of parameters when compared to other CNN architectures, such as ResNet-152, ResNet-50, or Inception v2 (\cite{Tan:2019}). The architecture also uses batch normalization layers. This means that the EfficientNetB0 architecture can be trained on datasets containing smaller number of images compared to datasets needed to train for example a ResNet-152 architecture with 60 million parameters. Furthermore, because of a lower number of trainable parameters and the efficient implementation of the MBConv module, it can be trained using constrained computational resources.
 
     \subsection{Training and Validation}
+    \label{sub:trainig-and-validation}
     As already discussed in \autoref{subsub:dataset}, the segmented and color subsets from the original dataset provided by \textcite{Mohanty:2016} were used to create the initial dataset. Furthermore, additional subset of images with artificial backgrounds created from the segmented subset was added. From the initial dataset, 80\% of the images were used as train and the remaining 20\% of the images were used as validation dataset. From the train dataset, 80\% of the images were used for the actual training of the EfficientNetB0 architecture and the remaining 20\% of the images for testing after each epoch. The validation dataset was used to evaluate the model. In each class of both the train and validation subsets of the final dataset, the ratio between images from color, segmented and artificial background was equal. Images from each subset made up one-third of images in each class of train or validation datasets. The train and validation dataset created the final subset. Images in the final dataset were resized to the resolution of $224 \times 224$ pixels. This was the input size of the EfficientNetB0 architecture. Moreover, each image was preprocessed using an augmentation pipeline. This pipeline applied  random horizontal and/or vertical flip, random rotation, random contrast increase or decrease, and random brightness increase or decrease.
 
     For the training process, an EfficientNetB0 model pre-trained on the ImageNet dataset was used. The last dense classifier layer with 1,000 outputs was removed and a new dense classifier layer with 38 outputs with the softmax activation function was added to the network. The training configuration for the EfficientNetB0 model in this thesis is inspired by the configuration used by \textcite{Tan:2019}. However, the authors apply learning approach creating rather very high loss values at the beginning of the training process. This approach is more suitable for trainings with large datasets, such as the ImageNet, and higher numbers of epochs. Considering the considerably smaller dataset and constrained computational resources, the RMSProp optimizer with momentum of 0.9 and $\rho = 0.9$ was used. Next, weight decay of $1 \times 10^{-5}$ was applied. The learning rate schedule used the initial learning rate of 0.001 that decayed by 0.9 every 2 epochs. The model was trained in 8 epochs in two training cycles applying the transfer learning method without and with fine-tuning step.
@@ -789,53 +790,67 @@ urlseen = {Accessed on}
 
 \section{Discussion}
 
-    In this section, the performance of the trained EfficientNetB0 model during the training process will be evaluated. The training process had two phases: the initial and the final phase. In the initial phase, only the last dense classifier layer was trained. In the final phase, the all trainable parameters of the model were trained. Each of these two training cycles had 8 epochs. After each training cycle, the train and test accuracy and loss and the train and test accuracy per class were saved as plots. The model was evaluated and saved after each training cycle. Additionally, the validation data and the whole training history for a training cycle were saved as JSON files. The whole training process was done on a personal computer and took 4 hours and 10 minutes to complete. There was also an attempt made to train the model using Google Colab. Unfortunately, because of network limitations, this approach was impractical and would have taken substantially longer.
+    In this section, the performance of the trained EfficientNetB0 model during the training process will be evaluated. Furthermore, the future work and the possible applications of the trained model will be discussed.
 
-    \autoref{fig:initial-accuracy-and-loss} shows the accuracy and loss metrics of the model during the whole initial training cycle. The train accuracy reached 85\% and the test accuracy reached almost 90\% in the last epoch. The train loss reached 0.56 and the test loss reached 0.35 at the end of the last epoch.
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=\textwidth]{initial_accuracy_and_loss_2024-11-25_07.55.35.png}
-        \caption{\centering Initial model accuracy and loss during training and testing}
-        \label{fig:initial-accuracy-and-loss}
-    \end{figure}
+    \subsection{CNN Model Performance Review}
+        The training process was divided into two cycles: the initial and the final training cycles. During the initial cycle, only the last dense classifier layer of the model with 38 outputs was trained. Other layers or trainable parameters were kept frozen. In the final cycle, all trainable parameters of the model were trained. Each of these two training cycles had 8 epochs. After each epoch, the model was tested using 20\% of the train subset of the final dataset. After the whole training cycle, the model was evaluated using the validation subset of the final dataset. Moreover, after each training cycle, the average train and test accuracy and loss and the train and test accuracy per class were saved as plots. The train and test accuracy per class metrics were averaged over all epochs of the training cycle for each class. The train and test accuracy metrics were averaged over all classes in one epoch. Additionally, the evaluation data and the whole training history for a training cycle were saved as JSON files. The whole training process was done on a personal computer and took 4 hours and 10 minutes to complete. There was also an attempt made to train the model using Google Colab. Unfortunately, because of network limitations, this approach was impractical and would have taken substantially longer.
 
-    \autoref{fig:initial-train-accuracy-per-class} shows accuracies of each class averaged over all 8 epochs during the training phase of the initial cycle. The model reached 83\% average accuracy over all classes. The model reported accuracy of at least 80\% in 71\% of the classes. In 34\% of the classes, the model reached accuracy of at least 90\%. The model really struggled in prediction the diseased tomato leaves. After revision of the tomato disease classes, the images in these classes are very similar. There were probably not enough images for the model to learn to distinguish between the different tomato leaf diseases.
+        \autoref{fig:initial-accuracy-and-loss} shows the accuracy and loss metrics of the model during the whole initial training cycle. The model achieved a train accuracy of 85.5\% and a test accuracy of almost 90\% in the last epoch. The train loss was 0.56 and the test loss was 0.35 in the last epoch.
 
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=\textwidth]{initial_train_accuracy_per_class_2024-11-25_07.55.35.png}
-        \caption{\centering Initial model accuracy per class averaged over all epochs during training}
-        \label{fig:initial-train-accuracy-per-class}
-    \end{figure}
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{initial_accuracy_and_loss_2024-11-25_07.55.35.png}
+            \caption{\centering Initial model accuracy and loss during training and testing}
+            \label{fig:initial-accuracy-and-loss}
+        \end{figure}
 
-    \autoref{fig:initial-test-accuracy-per-class} shows accuracies of each class averages over all 8 epochs during the testing phase of the initial cycle. The model reported very similar results to those achieved during the training. Same as in the training phase, the model reported lower accuracies in the case of tomato disease classes.
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=\textwidth]{initial_test_accuracy_per_class_2024-11-25_07.55.35.png}
-        \caption{\centering Initial model accuracy per class averaged over all epochs during testing}
-        \label{fig:initial-test-accuracy-per-class}
-    \end{figure}
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=\textwidth]{final_accuracy_and_loss_2024-11-25_11.16.13.png}
-        \caption{\centering Final model accuracy and loss during training and testing}
-        \label{fig:final-accuracy-and-loss}
-    \end{figure}
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=\textwidth]{final_train_accuracy_per_class_2024-11-25_11.16.13.png}
-        \caption{\centering Final model accuracy per class averaged over all epochs during training}
-        \label{fig:final-train-accuracy-per-class}
-    \end{figure}
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=\textwidth]{final_test_accuracy_per_class_2024-11-25_11.16.14.png}
-        \caption{\centering Final model accuracy per class averaged over all epochs during testing}
-        \label{fig:final-test-accuracy-per-class}
-    \end{figure}
+        \autoref{fig:initial-train-accuracy-per-class} shows accuracies of each class averaged over all 8 epochs during the actual training in the initial cycle. The model reached 83\% average accuracy over all classes. The model reported an accuracy of at least 80\% in 71\% of the classes. In 34\% of the classes, the model reached an accuracy of at least 90\%. \autoref{fig:initial-train-accuracy-per-class} also shows that the model reported lower accuracies in tomato disease classes. Looking at the average per class metric in each epoch, the model struggled to correctly predict the tomato disease classes in early epochs. In the last epoch, the model achieved an accuracy of at least 62\% for each tomato disease class during the actual training. The average accuracy of the model in tomato disease classes was 70.2\%. The revision of the images in the tomato disease classes showed that these images were very similar in terms of disease symptoms. The model would need more images to learn to distinguish between the different tomato leaf diseases and classify these reliably when compared to other dataset classes.
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{initial_train_accuracy_per_class_2024-11-25_07.55.35.png}
+            \caption{\centering Initial model accuracy per class averaged over all epochs during training}
+            \label{fig:initial-train-accuracy-per-class}
+        \end{figure}
 
-        Having more images and applying less conservative training strategy would lead to higher accuracies.
+        \autoref{fig:initial-test-accuracy-per-class} shows accuracies of each class averages over all 8 epochs during testing in the initial cycle. The average accuracy over all classes was 88\%. The model reported very similar accuracies to those achieved during the training. Same as in the training phase, the model reported lower accuracies in the case of tomato disease classes. Unfortunately, the model struggled in the last epoch and could not reliably predict certain tomato disease classes. The average accuracy of tomato disease classes was 76\%. After the initial training cycle, the model was evaluated and reported an average accuracy of 89.7\% and a loss of 0.37.
 
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{initial_test_accuracy_per_class_2024-11-25_07.55.35.png}
+            \caption{\centering Initial model accuracy per class averaged over all epochs during testing}
+            \label{fig:initial-test-accuracy-per-class}
+        \end{figure}
+
+        \autoref{fig:final-accuracy-and-loss} shows the accuracy and loss of the model during the final training cycle. The model achieved a train accuracy of 92.8\% and a test accuracy of 88.5\% in the last epoch. The train loss was 0.22 and the test loss was 0.39. \autoref{fig:final-accuracy-and-loss} also shows a very interesting decrease of the model's accuracy and increase of the loss in the fourth epoch.
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{final_accuracy_and_loss_2024-11-25_11.16.13.png}
+            \caption{\centering Final model accuracy and loss during training and testing}
+            \label{fig:final-accuracy-and-loss}
+        \end{figure}
+
+        The final training cycle applied the fine-tuning step. That is why the \autoref{fig:final-train-accuracy-per-class} and \autoref{fig:final-test-accuracy-per-class} report slightly worse results as the \autoref{fig:initial-test-accuracy-per-class} and \autoref{fig:final-accuracy-and-loss}. \autoref{fig:final-train-accuracy-per-class} and \autoref{fig:final-test-accuracy-per-class} show that the model struggled to correctly predict the tomato disease classes as in the initial cycle. Moreover, the \autoref{fig:final-test-accuracy-per-class} shows that the model's performance during the testing was not optimal.
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{final_train_accuracy_per_class_2024-11-25_11.16.13.png}
+            \caption{\centering Final model accuracy per class averaged over all epochs during training}
+            \label{fig:final-train-accuracy-per-class}
+        \end{figure}
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{final_test_accuracy_per_class_2024-11-25_11.16.14.png}
+            \caption{\centering Final model accuracy per class averaged over all epochs during testing}
+            \label{fig:final-test-accuracy-per-class}
+        \end{figure}
+        The evaluation of the final model after the final training cycle reported an accuracy of 89\% and a loss of 0.38.
+
+        The validation accuracies and losses of the model after each training cycle are considerably high. But after looking at the accuracy per class metric either as averaged value over all epochs or within single epoch, the model struggled to reliably predict the tomato disease classes. The average accuracy per class metric does not express the actual performance of the model because it also takes the accuracies from earlier epochs. In these epochs, the model will be always less accurate than in the later epochs. The metric also depends on the number of epochs done. However, the average accuracy per class metric shows the model's consistency in each class. In this case, the metric clearly shows that the model is not consistent over all classes and cannot classify tomato disease classes with such high accuracy as the other classes. Using a dataset that would contain more images in the tomato disease classes would have helped the model to learn to distinguish between the classes. Moreover, to achieve even higher accuracies, the model would need more images to learn from. However, given the dataset and computing limitations, the model reported considerably high accuracies. This is highlighted by the fact that \textcite{Tan:2019} trained the EfficientNetB0 on ImageNet dataset and reported the average accuracy of 77.1\%.
+
+    \subsection{Future Work}
+
+        The review of model's performance during the training process shows that the model struggled to accurately classify tomato disease images. It also shows that the model's overall performance can be increased. The next step would be to extend the dataset and apply more epochs. \autoref{fig:initial-accuracy-and-loss} and \autoref{fig:final-accuracy-and-loss} show that the losses of the model converged rather quickly and stayed relatively high. This also shows that the dataset has to contain more images. Moreover, using the same dataset for training, testing and validation may result in inflated accuracies as shown by \textcite{Mohanty:2016}. The next step would be to evaluate the model on new and unseen images. To make the model generalizable, the dataset would have to contain even grater variety and variability of images. The obvious limitation of the dataset is that it does not contain images taken under complex field conditions.
+
+        Despite the dataset limitations, the EfficientNetB0 architecture is efficient and contains rather small number of parameters. It can very efficiently be trained on a personal computer with high number of images. It was explicitly designed for edge devices and mobile phones that have limited computational resources. A EfficientNetB0 model that would generalize sufficiently can be easily embedded into a mobile application or a drone. Using a drone to examine crops on the field and search for potential diseases could considerably lower expenses. Large fields could be checked and an emerging disease could be spot early on. This would lower the use of pesticides or insecticides and eliminate potential losses.
 
 \section{Conclusion}
 
