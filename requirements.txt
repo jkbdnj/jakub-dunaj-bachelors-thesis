@@ -1,4 +1,5 @@
-# conda crate --name thesis_env python=3.11
+# conda create --name thesis_env python=3.11
+# pip install -r requirements.txt
 keras==3.6.0
 matplotlib==3.9.2
 numpy==1.26.4
