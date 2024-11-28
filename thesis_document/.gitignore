@@ -13,5 +13,6 @@
 *.pdf
 *.bcf
 *.run.xml
+*.pytxcode
 *.xmpdata
 *-SAVE-ERROR

@@ -16,7 +16,7 @@ list-final-separator={ and }}
 %----------------------------------------------------------------------------------------
 \usepackage{tikz}
 \usepackage{color}
-\usetikzlibrary{positioning, shapes.multipart}
+\usetikzlibrary{positioning}
 
 %----------------------------------------------------------------------------------------
 % Graphics
@@ -37,7 +37,6 @@ list-final-separator={ and }}
 \colorlet{dark_blue}{light_blue!50!black}
 \colorlet{light_green}{green!25}
 \colorlet{dark_green}{light_green!50!black}
-
 %----------------------------------------------------------------------------------------
 % Acronyms
 %----------------------------------------------------------------------------------------
@@ -54,7 +53,7 @@ list-final-separator={ and }}
 %----------------------------------------------------------------------------------------
 % Bibliography
 %----------------------------------------------------------------------------------------
-\usepackage[style=authoryear,backend=biber,maxcitenames=2]{biblatex}
+\usepackage[style=authoryear,backend=biber,maxcitenames=2, dashed=false]{biblatex}
 \ExecuteBibliographyOptions{%
  giveninits=true, maxbibnames=99}%
 \DefineBibliographyStrings{english}{%
@@ -99,6 +98,7 @@ urlseen = {Accessed on}
 % Abstract
 %----------------------------------------------------------------------------------------
 \begin{abstract}
+    The field of automatic plant disease classification poses a very interesting area for the application of artificial intelligence. A deep neural network could be trained to recognize and classify plant diseases from leaf images. This application of deep neural networks may indeed have very positive impact on humans and ecosystems. This bachelor's thesis focuses on the use of convolutional neural networks (CNNs). Many approaches have already been made to train a CNN for the task of recognition and classification of plant diseases from leaf images. This thesis reviews recent and most influential work that has been done in this field so far. The thesis then applies the gained information to train a CNN model. The design of the dataset, the CNN architecture chosen, and the training and validation strategy are presented in greater detail. The developed code used for the training process of the CNN model is also introduced. Eventually, the thesis reviews the performance of the trained CNN and draws a conclusion.
 \end{abstract}
 
 %----------------------------------------------------------------------------------------
@@ -113,25 +113,28 @@ urlseen = {Accessed on}
 \clearpage
 \section{Introduction}
 
-% climate change \cite{Sladojevic:2016}
+The research objective of this bachelor's thesis is the plant disease classification from leaf images using artificial intelligence. The ability to recognize and classify plant diseases from plant images has different very important implications and impacts. Being able to classify a disease at an early stage may save substantial part of the crops. This saves the yield and considerably reduces the money loss. The early disease recognition and classification may also reduce the amount of pesticides applied (\cite{Sladojevic:2016}). The pesticides are toxic, and their use poses direct negative impact on environment and has serious effects on human health (\cite{Aktar:2009}). Moreover, the pesticides contaminate surface water, groundwater, and soil (\cite{Aktar:2009}). The pesticides also contaminate beneficial non-target organisms, such as insects or other plants (\cite{Aktar:2009}). This means that the use of pesticides has severe ecological and sociological consequences. The early disease recognition and classification may also increase the food security in less developed countries (\cite{Mohanty:2016}).
+
+This thesis focuses on plant disease classification from leaf images using deep neural network. IN this thesis, convolutional neural networks (CNNs) were used. In \autoref{sub:machine-learning-overview}, the \autoref{sec:thesis-focus-and-related-research} gives an overview about machine learning and neural networks. In \autoref{sec:thesis-focus-and-related-research} the related research in the field of plant disease classification using CNNs is reviewed. In \autoref{sub:dataset}, the \autoref{sec:design} describes the dataset that will be used to train a CNN. Subsection \ref{sub:cnn-architecture} describes the CNN architecture that will be trained. Subsection \ref{sub:training-and-validation} proposes the training and validation strategy applied during the training process of the CNN model. Section \ref{sec:development} introduces and explains the developed code that is used to train the CNN model. For the development of the code, Keras and TensoFlow Python libraries have been used. Section \ref{sec:discussion} reviews the performance of the model during the training process and presents the future work. Eventually, the \ref{sec:conclusion} summarizes this bachelor's thesis and its impact.
 
 \section{Thesis Focus and Related Research}
+\label{sec:thesis-focus-and-related-research}
 
     This section is divided into two main parts. The first part gives an overview of machine learning, describes different machine learning approaches and gives detailed insights into neural networks, especially into convolutional neural networks. The second part presents and reviews related research in the field of plant disease classification from leaf images.
 
     \subsection{Machine Learning: An Introduction}
-    \label{sec:machine-learning-overveiw}
+    \label{sub:machine-learning-overview}
 
-        The reader of thesis thesis may think about a random sequence of characters 'd' and 'f'. Next, the reader can try to write down a random sequence of maybe 10 to 20 of these two characters. How random does the reader think the sequence is? Are there any patterns present in the sequence? In fact, this is hard to tell only from one short sequence. What about thousand sequences or one very long sequence? Does the reader think that those would be random and unique even if trying very hard? I would advise the reader to have a look at the following website \url{https://people.ischool.berkeley.edu/~nick/aaronson-oracle/index.html} and try the website out. The algorithm on the website attempts to predict whether the next typed character will be 'd' or 'f'. The algorithm predicts the next typed character based on the sequence of 'd's and 'f's the user has typed so far. In \autoref{fig:website-predicting-typed-characters}, the algorithm could predict user's next typed character with a probability of 67\%.
+        The reader of this thesis may think about a random sequence of characters 'd' and 'f'. Next, the reader can try to write down a random sequence of maybe 10 to 20 of these two characters. How random does the reader think the sequence is? Are there any patterns present in the sequence? In fact, this is hard to tell only from one short sequence. What about a thousand sequences or one very long sequence? Does the reader think that those would be random and unique even if trying very hard? The reader may have a look at the following website \url{https://people.ischool.berkeley.edu/~nick/aaronson-oracle/index.html} and try the website out. The algorithm on the website attempts to predict whether the next typed character will be 'd' or 'f'. The algorithm predicts the next typed character based on the sequence of 'd's and 'f's the user has typed so far. In \autoref{fig:website-predicting-typed-characters}, the algorithm could predict user's next typed character with a probability of 67\%.
 
         \begin{figure}[h]
             \centering
             \includegraphics[width=0.8\textwidth]{website_predicting_typed_characters.png}
-            \caption{Website predicting whether the user will type 'd' or 'f' next (\cite{website_predicting_typed_characters:2024})}
+            \caption{\centering Website predicting whether the user will type 'd' or 'f' next (\cite{website_predicting_typed_characters:2024})}
             \label{fig:website-predicting-typed-characters}
         \end{figure}
 
-        The website is based on the book "Quantum Computing since Democritus" by Scott Aaronson. \textcite{Aaronson:2013} wrote a simple program predicting whether the next typed character would be 'd' or 'f'. The author found that the algorithm was successful 70\% of the time. To answer the rhetorical questions asked at the beginning of this sections, humans can't generate truly random sequences of 'd's and 'f's. There is something fundamental in our sequences making the next character predictable. That is true for all human-generated data. In fact, we leave patterns in all our data. This is tightly coupled with human behavior and the complexity of our everyday tasks. Humans don't behave randomly. We exercise different behavioral patters instead. We can observe this phenomenon all around us. For example, fashion trends differ between generations or age groups. Young people wear different styles of clothes than elderly people. People with higher income spend their money differently than people with lower income. Sporty people are maybe more health conscious and tend to buy healthier groceries than general population.
+        The website is based on the book "Quantum Computing since Democritus" by Scott Aaronson. \textcite{Aaronson:2013} wrote a simple program predicting whether the next typed character would be 'd' or 'f'. The author found that the algorithm was successful 70\% of the time. To answer the rhetorical questions asked at the beginning of this section, humans can't generate truly random sequences of 'd's and 'f's. There is something fundamental in our sequences making the next character predictable. That is true for all human-generated data. In fact, we leave patterns in all our data. This is tightly coupled with human behavior and the complexity of our everyday tasks. Humans don't behave randomly. We exercise different behavioral patters instead. We can observe this phenomenon all around us. For example, fashion trends differ between generations or age groups. Young people wear different styles of clothes than elderly people. People with higher income spend their money differently than people with lower income. Sporty people are maybe more health conscious and tend to buy healthier groceries than general population.
 
         We can think, for example, of a large fashion retailer offering thousands of articles in thousands of physical stores and through a website. This retailer wants to know which products or styles and when are popular among customer. The retailer stores different data from every transaction made online or in-store by customers enrolled in the bonus program: customer gender, customer age, articles bought, total price, store location, current weather, current clothing season, and many others. Customers don't buy their clothes randomly. They are influenced by many different factors, such as their gender or age group. From this huge amount of collected data, the retailer could infer different behavioral patterns and accordingly modify its offer to maximize profits. The retailer could ask the following question: "What products do 35-year-old customers buy in Vienna during the summer after 2PM?". Clearly, there is no standard algorithm for this complex multidimensional problem. We don't have the knowledge about the behavioral patterns of the customers. Instead, we need to create a mechanism that would infer these patterns in customers' buying habits from the transaction data. That is where the machine learning comes into play. It allows us to predict possible outputs based on a specific input of parameters. In the specified problem, the input parameters would be the customer's age, store location, clothing season and purchase time. We would expect the mechanism to predict the customers' preferences from these input parameters. The mechanism would obtain and infer the knowledge from the transaction data.
 
@@ -159,11 +162,11 @@ urlseen = {Accessed on}
 
             \paragraph{Unsupervised Learning}
 
-                Supervised machine learning algorithms use labeled training data to create a machine learning models that map the inputs  to learned outputs. In unsupervised learning, the training data consists only of fixed-dimensional input vectors without any labels (\cite{Bishop:2006}). The objective of unsupervised learning is to find regularities in the training data (\cite{Alpaydin:2014}). In unsupervised learning, learning algorithms use only the input vectors from the unlabeled training data to train model that are able to find regularities or structures in the input space (\cite{Alpaydin:2014}). There are various groups of machine learning problems that can be solved using an unsupervised machine learning approach. The partitioning of problem instances into homogeneous subsets is called clustering (\cite{Mohri:2018}). An example of a clustering problem is image compression (\cite{Alpaydin:2014}). A machine learning algorithm would search for clusters of pixels with similar colors. The average pixel color for the pixel regions is then computed. Saving information only about the location of the pixel regions and about the average color of the regions compresses the size of an image. Another group of problems is the dimensionality reduction problems (\cite{Mohri:2018}). If the problem instances have a large number of parameters, so that the input vectors are of high dimension, there is often a need to search for lower-dimensional representation of problem instances (\cite{Mohri:2018}). The high dimensionality of input vectors is reduced to speed up computations done on the data or to extract only parameters of problem instances that are useful and significant (\cite{Mohri:2018}).
+                Supervised machine learning algorithms use labeled training data to create a machine learning models that map the inputs  to learned outputs. In unsupervised learning, the training data consists only of fixed-dimensional input vectors without any labels (\cite{Bishop:2006}). The objective of unsupervised learning is to find regularities in the training data (\cite{Alpaydin:2014}). In unsupervised learning, learning algorithms use only the input vectors from the unlabeled training data to train model that are able to find regularities or structures in the input space (\cite{Alpaydin:2014}). There are various groups of machine learning problems that can be solved using an unsupervised machine learning approach. The partitioning of problem instances into homogeneous subsets is called clustering (\cite{Mohri:2018}). An example of a clustering problem is image compression (\cite{Alpaydin:2014}). A machine learning algorithm would search for clusters of pixels with similar colors. The average pixel color for the pixel regions is then computed. Saving information only about the location of the pixel regions and about the average color of the regions compresses the size of an image. Another group of problems is the dimensionality reduction problems (\cite{Mohri:2018}). If the problem instances have many parameters, so that the input vectors are of high dimension, there is often a need to search for lower-dimensional representation of problem instances (\cite{Mohri:2018}). The high dimensionality of input vectors is reduced to speed up computations done on the data or to extract only parameters of problem instances that are useful and significant (\cite{Mohri:2018}).
 
             \paragraph{Reinforcement Learning}
 
-                In reinforcement learning, a learning algorithm tries to find a solution, sequence of actions, to a problem by interacting with the environment (\cite{Alpaydin:2014}). In contrast to supervised or unsupervised learning algorithms, a reinforcement learning algorithm does not have any prepared training data to use to find the best sequence of actions (\cite{Mohri:2018}). Instead, the learning algorithm, also called learner or agent, collects the data by exploring an environment using the trial and error process (\cite{Bishop:2006}). When interacting with the environment, the agent receives rewards or penalties for its actions (\cite{Alpaydin:2014}). Based on the rewards or penalties, the learner tries to modify its future actions to maximize the reward (\cite{Mohri:2018}). By maximizing the reward, the learner searches for the optimal solution to a given problem (\cite{Bishop:2006}). The resulting sequence of actions leading to the optimal solution is also called a policy. The reward or penalty that the learner receives is only for its immediate action (\cite{Mohri:2018}). That is why the learner has to learn from its past actions to assess and predict how its future action may influence the goodness of the current policy (\cite{Alpaydin:2014}). This is also called the exploration versus exploitation dilemma (\cite{Alpaydin:2014}). The learner has to decide between exploring the environment to gain more information and exploiting the information it has already collected (\cite{Alpaydin:2014}). An example of a problem that can be solved by a reinforcement learning algorithm is teaching a learner to play chess (\cite{Alpaydin:2014}). There are about $10^{120}$ different possible chess games (\cite{Shannon:1988}). It is computationally infeasible to use supervised or unsupervised learning approach and list all possible piece positions or games. In reinforcement learning setting, one move done by the learner leaning to play chess in insignificant on itself. The learner receives the feedback after completing the whole game. Receiving reward or penalty depends on winning or losing a game. This means that the learner learns the goodness of the complete sequence of moves.
+                In reinforcement learning, a learning algorithm tries to find a solution, sequence of actions, to a problem by interacting with the environment (\cite{Alpaydin:2014}). In contrast to supervised or unsupervised learning algorithms, a reinforcement learning algorithm does not have any prepared training data to use to find the best sequence of actions (\cite{Mohri:2018}). Instead, the learning algorithm, also called learner or agent, collects the data by exploring an environment using the trial and error process (\cite{Bishop:2006}). When interacting with the environment, the learner receives rewards or penalties for its actions (\cite{Alpaydin:2014}). Based on the rewards or penalties, the learner tries to modify its future actions to maximize the reward (\cite{Mohri:2018}). By maximizing the reward, the learner searches for the optimal solution to a given problem (\cite{Bishop:2006}). The resulting sequence of actions leading to the optimal solution is also called a policy. The reward or penalty that the learner receives is only for its immediate action (\cite{Mohri:2018}). That is why the learner has to learn from its past actions to assess and predict how its future action may influence the goodness of the current policy (\cite{Alpaydin:2014}). This is also called the exploration versus exploitation dilemma (\cite{Alpaydin:2014}). The learner has to decide between exploring the environment to gain more information and exploiting the information it has already collected (\cite{Alpaydin:2014}). An example of a problem that can be solved by a reinforcement learning algorithm is teaching a learner to play chess (\cite{Alpaydin:2014}). There are about $10^{120}$ different possible chess games (\cite{Shannon:1988}). It is computationally infeasible to use supervised or unsupervised learning approach and list all possible piece positions or games. In reinforcement learning setting, one move done by the learner leaning to play chess in insignificant on itself. The learner receives the feedback after completing the whole game. Receiving reward or penalty depends on winning or losing a game. This means that the learner learns the goodness of the complete sequence of moves.
 
         \subsubsection{Neural Networks: An Introduction}
 
@@ -177,7 +180,7 @@ urlseen = {Accessed on}
                 \begin{subfigure}[b]{0.49\textwidth}
                     \centering
                     \includegraphics[width=\textwidth]{anatomy_of_neuron.png}
-                    \caption{Anatomy of a neuron (Source: \cite{anatomy_of_neuron:2022})}
+                    \caption{\centering Anatomy of a neuron (\cite{anatomy_of_neuron:2022})}
                     \label{fig:anatomy-of-neuron}
                 \end{subfigure}
                 \hfill
@@ -209,10 +212,10 @@ urlseen = {Accessed on}
                             }
                         \end{tikzpicture}
                     }
-                    \caption{Schematic anatomy of a neuron (Adapted from: \cite{Aggarwal:2018})}
+                    \caption{\centering Schematic anatomy of a neuron (Adapted from: \cite{Aggarwal:2018})}
                     \label{fig:schematic-anatomy-of-neuron}
                 \end{subfigure}
-                \caption{Detailed and schematic anatomy of a neuron}
+                \caption{\centering Detailed and schematic anatomy of a neuron}
             \end{figure}
 
             The artificial neuron is a basic processing unit and a building block of artificial neural networks (\cite{Alpaydin:2014}). At the same time, single artificial neuron builds a single-layer neural network. Single-layer networks may also include several artificial neurons in parallel. Layers of artificial neurons build complex neural networks that are also referred to as multilayer neural networks. Neural networks use representation learning (\cite{LeCun:2015}). This means that the artificial neural network discover the patterns in the data automatically without preprocessing the raw data (\cite{LeCun:2015}). The neural networks learn different representations of the input data at each of the layers (\cite{LeCun:2015}). The preprocessing of the raw data to extract important features has to be done in some conventional machine-learning approaches such as K-Nearest Neighbors technique.
@@ -274,11 +277,11 @@ urlseen = {Accessed on}
                         \draw[->] (artificial_neuron) -- (output);
                         \draw[->] (bias) -- (artificial_neuron) node[midway, left] {$b_i$};
                     \end{tikzpicture}
-                    \caption{Artificial neuron (Adapted from: \cite{Aggarwal:2018})}
+                    \caption{\centering Artificial neuron (Adapted from: \cite{Aggarwal:2018})}
                     \label{fig:artificial-neuron}
                 \end{figure}
 
-                Artificial neurons may use different activation functions depending on the task they should accomplish (\cite{Aggarwal:2018}). In the following examples of activation functions I will denote the dot product from \autoref{eq:dot-product-complex-modified} simply as $x$. The most basic activation function is the identity function (\cite{Aggarwal:2018}):
+                Artificial neurons may use different activation functions depending on the task they should accomplish (\cite{Aggarwal:2018}). In the following examples of activation functions, the dot product from \autoref{eq:dot-product-complex-modified} will be denoted simply as $x$. The most basic activation function is the identity function (\cite{Aggarwal:2018}):
                 \begin{equation}
                     f(x)=x.
                     \label{eq:identity-function}
@@ -303,7 +306,7 @@ urlseen = {Accessed on}
                     f(x) = \max(0, x).
                     \label{eq:relu-function}
                 \end{equation}
-                The sign activation function divides the input space into two half-spaces where its output is either positive or negative (\cite{Alpaydin:2014}). This function outputs either $1$ or $-1$. A single artificial neuron using the sign$(x)$ activation function, also called perceptron, can be used for binary classification (\cite{Aggarwal:2018}). While a perceptron with only one input defines a line, a perceptron with two inputs defines a plane and a perceptron with more than two inputs defines a hyperplane (\cite{Alpaydin:2014}). The sigmoid activation function, whose output values are from the interval $(0,1)$, is used when the output of an artificial neuron is interpreted as a probability. The tanh activation function outputs values from the interval $[-1,1]$ and the ReLU from the interval $[0, \infty)$. The sigmoid, tanh and ReLU activation functions are particularly applied in multilayer neural networks (\cite{Alpaydin:2014}). The sigmoid and tanh activation functions are saturating functions (\cite{Murphy:2022}). This means that for large positive numbers the sigmoid activation function outputs values approaching $1$. The tanh activation function outputs $1$. For large negative numbers, the sigmoid activation function outputs values approaching $0$ and the tanh activation function outputs $-1$.
+                The sign activation function divides the input space into two half-spaces where its output is either positive or negative (\cite{Alpaydin:2014}). This function outputs either $1$ or $-1$. A single artificial neuron using the sign$(x)$ activation function, also called perceptron, can be used for binary classification (\cite{Aggarwal:2018}). While a perceptron with only one input defines a line, a perceptron with two inputs defines a plane and a perceptron with more than two inputs defines a hyperplane (\cite{Alpaydin:2014}). The sigmoid activation function, whose output values are from the interval $(0,1)$, is used when the output of an artificial neuron is interpreted as a probability. The tanh activation function outputs values from the interval $[-1,1]$ and the ReLU from the interval $[0, \infty)$. The sigmoid, tanh and ReLU activation functions are particularly applied in multilayer neural networks (\cite{Alpaydin:2014}). The sigmoid and tanh activation functions are saturating functions (\cite{Murphy:2022}). This means that for large positive numbers the sigmoid activation function outputs values approaching $1$. The tanh activation function outputs $1$. For large negative numbers, the sigmoid activation function outputs values approaching $0$ and the tanh activation function outputs $-1$. There are other activation functions such as the sigmoid-weighted linear unit (SiLU) activation function. The SiLU multiplies its input with the output of the sigmoid activation function applied to the input (\cite{Elfwing:2017}).
 
                 To build and train a single-layer neural network, we have to define not only the activation but also the loss function for the artificial neurons. In supervised learning, the loss function quantifies the difference, or loss, between the expected value and the real output of the artificial neuron (\cite{Mohri:2018}). In term of unsupervised learning, the loss function measures the difference between the predicted output and original input of the neural network (\cite{Bishop:2024}). The concept of unsupervised learning becomes significant in multilayer neural networks. The \autoref{tab:single-layer-single-neuron-models} shows examples of different single-layer neural networks consisting of single artificial neuron and the activation and loss functions used in these models. The loss function represents the loss of the neuron for the training sample with the index $t$. The $y_t$ stands for the prediction and $\hat{y}_t$ for the label of the training pair.
                 \begin{table}[h]
@@ -319,7 +322,7 @@ urlseen = {Accessed on}
                         support vector machine (SVM)& identity function & $\mathcal{L}_{t}(y_t, \hat{y}_t) = \max(0, -y_t \cdot \hat{y}_t + 1)$  \\
                         \hline
                     \end{tabular}
-                    \caption{Single-layer neural network models consisting of a single artificial neuron (Adapted from: \cite{Aggarwal:2018})}
+                    \caption{\centering Single-layer neural network models consisting of a single artificial neuron (Adapted from: \cite{Aggarwal:2018})}
                     \label{tab:single-layer-single-neuron-models}
                 \end{table}
                 Perceptron with discrete output and support vector machine models may be used for binary classification (\cite{Alpaydin:2014}). Both of the models output real values. Logistic regression model may be used for the same task by predicting the probability for a positive class (\cite{Aggarwal:2018}). Linear regression model and perceptron with continuous output may be used for predicting a real-valued label of a problem instance represented as an input vector (\cite{Bishop:2024}).
@@ -336,7 +339,7 @@ urlseen = {Accessed on}
                         multinomial logistic regression & softmax function & $\mathcal{L}_{t}(\mathbf{\hat{y}}) = -log(-\hat{y}_{c(t)})$ \\
                         \hline
                     \end{tabular}
-                    \caption{Single-layer neural network models consisting of multiple artificial neurons (Adapted from: \cite{Aggarwal:2018})}
+                    \caption{\centering Single-layer neural network models consisting of multiple artificial neurons (Adapted from: \cite{Aggarwal:2018})}
                     \label{tab:single-layer-multiple-neuron-models}
                 \end{table}
                 All of the three models in \autoref{tab:single-layer-multiple-neuron-models} are used for multiclass classification problems. Each artificial neuron represents single class or label from the training set. The multiclass perceptron models as well as multiclass support vector machine models return real values (\cite{Aggarwal:2018}). The multinomial logistic regression models return probabilities for each of the classes represented by the neurons in the single-layer neural network. In addition, multinomial logistic regression models use the softmax activation function:
@@ -360,7 +363,7 @@ urlseen = {Accessed on}
             \paragraph{Multilayer Neural Networks}
             \label{par:multilayer-neural-networks}
 
-                Multilayer neural networks contain more than one computational layer of artificial neurons. Typically, multilayer neural networks have input, output and multiple hidden layers. In \autoref{par:single-layer-neural-networks}, I have briefly described the limitations of single-layer neural networks. These are not limitations for multilayer neural networks. The multilayer neural networks can learn more complex patterns in the data by transforming the input space in a way that makes the data in the input space linearly separable (\cite{LeCun:2015}). This ability of neural networks is achieved by the hidden layers. More formally, the power of multilayer neural networks to explore non-linear patterns in the data comes from the repeated composition of non-linear functions over multiple layers of the network (\cite{Aggarwal:2018}). This increases the representational power of a multilayer neural network and lowers the numbers of parameters of the network (\cite{Aggarwal:2018}). Each layer of a multilayer neural network learns different representations of the input space (\cite{LeCun:2015}). The representations are obtained by combining simple representations at lower layer into abstract representations at higher layers. Through this composition of different representations very complex functions may be learned by the neural networks (\cite{Bishop:2024}). Thus, multilayer neural network are able to explore complex patterns in high-dimensional input data (\cite{LeCun:2015}). An example would be a neural network learning to classify different objects. At lower layers, the neural network learns the presence of horizontal and vertical lines. At the higher levels, these representations are combined into abstract features of the objects such as edges or textures. This enables the neural networks to learn the distinguishing features of the objects and correctly classify them.
+                Multilayer neural networks contain more than one computational layer of artificial neurons. Typically, multilayer neural networks have input, output and multiple hidden layers. In \autoref{par:single-layer-neural-networks}, the limitations of single-layer neural networks were briefly described. These are not limitations for multilayer neural networks. The multilayer neural networks can learn more complex patterns in the data by transforming the input space in a way that makes the data in the input space linearly separable (\cite{LeCun:2015}). This ability of neural networks is achieved by the hidden layers. More formally, the power of multilayer neural networks to explore non-linear patterns in the data comes from the repeated composition of non-linear functions over multiple layers of the network (\cite{Aggarwal:2018}). This increases the representational power of a multilayer neural network and lowers the numbers of parameters of the network (\cite{Aggarwal:2018}). Each layer of a multilayer neural network learns different representations of the input space (\cite{LeCun:2015}). The representations are obtained by combining simple representations at lower layer into abstract representations at higher layers. Through this composition of different representations very complex functions may be learned by the neural networks (\cite{Bishop:2024}). Thus, multilayer neural network are able to explore complex patterns in high-dimensional input data (\cite{LeCun:2015}). An example would be a neural network learning to classify different objects. At lower layers, the neural network learns the presence of horizontal and vertical lines. At the higher levels, these representations are combined into abstract features of the objects such as edges or textures. This enables the neural networks to learn the distinguishing features of the objects and correctly classify them.
 
                 Neural networks with a few hidden layers are considered shallow. Multilayer neural networks with many hidden layers are considered deep. Deep neural networks are at the forefront of neural networks research (\cite{LeCun:2015}). Nowadays, when discussing multilayer neural networks, a deep architecture with many layers is meant usually. The subfield of machine learning that deals with deep neural networks is called deep learning. At the core of deep learning, there is the representation learning (\cite{LeCun:2015}). As stated previously, it enables the deep neural networks to learn different abstractions of the input data at each of the layers by combining simple representations to get abstract representations of the input data (\cite{LeCun:2015}). The representation learning also allows to use the unlabeled data because it forces the neural network to explore structures in the data (\cite{Bishop:2024}).
 
@@ -368,7 +371,7 @@ urlseen = {Accessed on}
 
                 Deep neural networks are trained using the process of backpropagation. The backpropagation algorithm adjusts the incoming weights of artificial neurons at every layer of the neural network. As mentioned in the \autoref{par:single-layer-neural-networks}, the adjustment of weights or parameters in a single-layer neural network is relatively easy. The problem in multilayer neural network is that the loss computed using a loss function at the output layer is also affected by the parameters in the previous layers. It is not sufficient to adjust the incoming weights of artificial neurons only at the output layer. The loss has to be propagated backwards to the previous layers of the neural network. The loss function is applied to an output that is a result of a composition of functions from the previous layers (\cite{Bishop:2024}). The contribution of any parameter within the neural network is the partial derivative of the loss function with respect to the parameter (\cite{Bishop:2024}). The backpropagation algorithm has to apply the chain rule to compute this contribution (\cite{Aggarwal:2018}). The parameters within the neural network will be then adjusted by their contribution and a learning factor in the same way as those in the single-layer neural networks.
 
-                When training a deep neural network, several issues and problems may arise. One of them is the problem of overfitting. When a neural network suffers from overfitting, it is very accurate on the training dataset but generalizes poorly on new, unseen data (\cite{Aggarwal:2018}). The overfitting problem is a consequence of the bias--variance tradeoff (\cite{Aggarwal:2018}). By increasing the number of trainable parameters in a model, it becomes more powerful in learning from the training dataset (\cite{Aggarwal:2018}). This means that the model becomes less biased (\cite{Aggarwal:2018}). Training deep neural networks with a high number of parameters on different limited subsets of a larger dataset would produce high variance of predictions when the models are tested on the same dataset (\cite{Aggarwal:2018}). It is important to choose the optimum between the complexity of a model and the size of a dataset (\cite{Aggarwal:2018}). To minimize overfitting, regularization methods may be used (\cite{Aggarwal:2018}). Regularization methods are used to reduce the representational capacity of a model (\cite{Goodfellow:2016}). There are different regularization methods, for example: weight decay, dropout, or early stopping. The weight decay method adds a penalty term to the loss function (\cite{Bishop:2024}). This method makes the parameters or weights of a deep neural network decay towards zero (\cite{Bishop:2024}). It prevents a deep neural network from learning high weight values (\cite{Bishop:2024}). The dropout method excludes a neuron and all its incoming or outgoing connections from the learning process (\cite{Aggarwal:2018}). A neuron is typically excluded with a probability between 20\% and 50\% (\cite{Aggarwal:2018}). This way, one or many different neural networks may be created from a base network and trained using shared parameters (\cite{Aggarwal:2018}). The early stopping method stops the execution of the backpropagation algorithm when the loss of the networks starts to rise on the validation dataset (\cite{Murphy:2022}).
+                When training a deep neural network, several issues and problems may arise. One of them is the problem of overfitting. When a neural network suffers from overfitting, it is very accurate on the training dataset but generalizes poorly on new, unseen data (\cite{Aggarwal:2018}). The overfitting problem is a consequence of the bias--variance trade-off (\cite{Aggarwal:2018}). By increasing the number of trainable parameters in a model, it becomes more powerful in learning from the training dataset (\cite{Aggarwal:2018}). This means that the model becomes less biased (\cite{Aggarwal:2018}). Training deep neural networks with a high number of parameters on different limited subsets of a larger dataset would produce high variance of predictions when the models are tested on the same dataset (\cite{Aggarwal:2018}). It is important to choose the optimum between the complexity of a model and the size of a dataset (\cite{Aggarwal:2018}). To minimize overfitting, regularization methods may be used (\cite{Aggarwal:2018}). Regularization methods are used to reduce the representational capacity of a model (\cite{Goodfellow:2016}). There are different regularization methods, for example: weight decay, dropout, or early stopping. The weight decay method adds a penalty term to the loss function (\cite{Bishop:2024}). This method makes the parameters or weights of a deep neural network decay towards zero (\cite{Bishop:2024}). It prevents a deep neural network from learning high weight values (\cite{Bishop:2024}). The dropout method excludes a neuron and all its incoming or outgoing connections from the learning process (\cite{Aggarwal:2018}). A neuron is typically excluded with a probability between 20\% and 50\% (\cite{Aggarwal:2018}). This way, different neural networks are created theoretically from a base network during the training (\cite{Aggarwal:2018}). The early stopping method stops the execution of the backpropagation algorithm when the loss of the networks starts to rise on the validation dataset (\cite{Murphy:2022}).
 
                 The next problem is the vanishing and exploding gradients. When training a deep neural network, the behavior of saturating functions such as sigmoid or tanh creates the vanishing gradient problem (\cite{Murphy:2022}). In the saturated regions of these saturating functions, the gradient of the output of the function with respect to the function's input approaches $0$ (\cite{Murphy:2022}). The vanishing gradient problem can be solved using the ReLU activation function. Activation functions that have expected values higher than $1$ cause the exploding gradient problem (\cite{Aggarwal:2018}). To minimize the exploding and vanishing gradient problem, batch normalization is used (\cite{Aggarwal:2018}). Batch normalization normalizes the output values to have a mean of zero and a unit variance after each mini-batch consisting of a specific number of training samples (\cite{Szegedy:2015:2}). Batch normalization also solves the problem of the internal covariate shift (\cite{Aggarwal:2018}). The internal covariate shift describes a change of distribution of output values in a neural network (\cite{Szegedy:2015:2}). The output values change because of the change in the network parameters during the training process (\cite{Szegedy:2015:2}).
 
@@ -377,7 +380,7 @@ urlseen = {Accessed on}
         \subsubsection{Convolutional Neural Networks (CNNs)}
         \label{subsub:convolutional-neural-networks}
 
-        Convolutional neural networks are based on the cat's visual cortex (\cite{Aggarwal:2018}). The visual cortes is a part of the brain responsible for processing visual information. Researchers studying visual cortex of cats discovered that different parts of the visual cortex are sensitive to different elements or features of the visual field (\cite{Aggarwal:2018}). The visual cortex of a cat has a layered structure (\cite{Aggarwal:2018}). Layers of biological neurons are stacked upon each other to extract different features and elements of the visual field (\cite{Aggarwal:2018}). For example, when a cat perceives a square object, a different group of cells in the visual cortex is excited than when it perceives a round object (\cite{Aggarwal:2018}).
+        Convolutional neural networks are based on the cat's visual cortex (\cite{Aggarwal:2018}). The visual cortex is a part of the brain responsible for processing visual information. Researchers studying visual cortex of cats discovered that different parts of the visual cortex are sensitive to different elements or features of the visual field (\cite{Aggarwal:2018}). The visual cortex of a cat has a layered structure (\cite{Aggarwal:2018}). Layers of biological neurons are stacked upon each other to extract different features and elements of the visual field (\cite{Aggarwal:2018}). For example, when a cat perceives a square object, a different group of cells in the visual cortex is excited than when it perceives a round object (\cite{Aggarwal:2018}).
 
         The layered structure of the cat's visual cortex with its feature extraction ability by different visual cortex regions was the primary inspiration to develop convolutional neural networks. From the machine learning perspective, the cat's visual cortex hierarchically extracts and combines simpler abstractions of the visual input into more complex ones (\cite{Aggarwal:2018}). This way, the visual cortex extracts complex features of the visual field, for example objects in the visual input (\cite{Aggarwal:2018}). Convolutional neural networks achieve similar hierarchical feature extraction by combining primitive shapes like horizontal lines from earlier layers into complex features at later layers (\cite{Aggarwal:2018}). Convolutional neural networks work on grid-structured input data (\cite{Aggarwal:2018}). Grid-structured input data such as images contain spatial dependencies (\cite{Aggarwal:2018}). The pixels in close proximity have highly correlated values (\cite{Bishop:2024}). In case of images, the spatial dependencies are, for example: horizontal and vertical lines, edges, textures, and objects. To simulate the activation of different regions of cat's visual cortex, convolutional neural networks detect the spatial dependencies of the input data by applying the convolution operation (\cite{Aggarwal:2018}). A convolution operation uses various grid-structured filters to extract different features from a grid-structured input data or its abstractions at later layers of a network (\cite{Aggarwal:2018}).
 
@@ -389,7 +392,7 @@ urlseen = {Accessed on}
 
                 As stated previously, convolutional neural networks process grid-structured data. The input data has not only spatial dimensions (width and height) but also depth. For example, a color picture has width and height and three color channels. The output of convolutional layers or pooling layers also has a three-dimensional structure. The depth of an output consists of various layers of features extracted from the input (\cite{Aggarwal:2018}). Convolutional layers apply kernels or filters to their inputs (\cite{Aggarwal:2018}). A filter is a three-dimensional structural unit containing real values as parameters (\cite{Aggarwal:2018}). Spatial dimensionality of a filter is smaller than the spatial dimensionality of its input (\cite{Aggarwal:2018}). On the other hand, a filter has the same depth as its input (\cite{Aggarwal:2018}). A convolutional layer may contain several of these filters. All filters have the same spatial dimensionality and depth. The number of filters used by a convolutional layer gives the depth of the layer's output (\cite{Aggarwal:2018}). Usually, the width and height dimensions of filters or inputs are also equal (\cite{Aggarwal:2018}). For example, an input may have the size $16 \times 16 \times 5$ and a filter may have spatial dimensions of $3 \times 3$ and a matching depth of $5$.
 
-                Let's assume that an input of a convolutional layer with index $q$ is of dimensions $I_{q} \times I_{q} \times d_q$. This layer uses $N$ different filters of dimensions $F_{q} \times F_{q} \times d_q$. The convolutional operation places the filter at all possible spatial positions and performs dot product between the region of the input and the filter (\cite{Aggarwal:2018}). The input region and the filter are treated as vectors with the size $F_{q} \times F_{q} \times d_q$. Applying a filter to the input of a layer results in a feature map (\cite{Aggarwal:2018}). The resulting width and height of the layer's output are computed as $O_{q} = I_{q} - F_{q} + 1$. This represents the number of different placements of the filter in the horizontal or vertical axis of the input grid. The filter does not exceed the input grid boundaries. The resulting output of the layer is of dimensions $O_{q} \times O_{q} \times d_N$. Convolution operation reduces spatial dimensionality of the output when compared to the input. To not lose the information around the borders of the input grid, padding is used (\cite{Aggarwal:2018}). To reduce the level of granularity of the convolution operation, the stride of a filter is used (\cite{Aggarwal:2018}). Commonly, the stride is of value $1$ (\cite{Aggarwal:2018}). This means that a filter moves by one grid cell along both horizontal and vertical axes. By increasing the stride value, a filter will move by that number of cells along the spatial dimensions.
+                Let's assume that an input of a convolutional layer with index $q$ is of dimensions $I_{q} \times I_{q} \times d_q$, also referred to as tensor. This layer uses $N$ different filters of dimensions $F_{q} \times F_{q} \times d_q$. The convolutional operation places the filter at all possible spatial positions and performs dot product between the region of the input and the filter (\cite{Aggarwal:2018}). The input region and the filter are treated as vectors with the size $F_{q} \times F_{q} \times d_q$. Applying a filter to the input of a layer results in a feature map (\cite{Aggarwal:2018}). The resulting width and height of the layer's output are computed as $O_{q} = I_{q} - F_{q} + 1$. This represents the number of different placements of the filter in the horizontal or vertical axis of the input grid. The filter does not exceed the input grid boundaries. The resulting output of the layer is of dimensions $O_{q} \times O_{q} \times d_N$. Convolution operation reduces spatial dimensionality of the output when compared to the input. To not lose the information around the borders of the input grid, padding is used (\cite{Aggarwal:2018}). To reduce the level of granularity of the convolution operation, the stride of a filter is used (\cite{Aggarwal:2018}). Commonly, the stride is of value $1$ (\cite{Aggarwal:2018}). This means that a filter moves by one grid cell along both horizontal and vertical axes. By increasing the stride value, a filter will move by that number of cells along the spatial dimensions.
 
                 For all $O_{q} \times O_{q} \times d_N$ output values of a convolutional layer, the ReLU activation function is applied. Applying the ReLU activation function to the input does not change its dimensionality (\cite{Aggarwal:2018}). The pooling layer performs operations on small regions of size $P_{q} \times P_{q}$ on all $d_{q}$ feature maps of an input (\cite{Aggarwal:2018}). The pooling operation goes through all the possible regions of $P_{q} \times P_{q}$ size in a feature map and selects the maximum value from a region that is in focus. This is also called the max-pooling. The notion of stride also applies in a pooling operation (\cite{Aggarwal:2018}). The stride defines where the next region that the max-pooling will be performed on is located. Pooling layer does not change the depth of the input because the pooling operations are performed on all its feature maps (\cite{Aggarwal:2018}). However, pooling layer significantly changes the spatial dimensionality of the input (\cite{Aggarwal:2018}). For example, performing a pooling operation with a region size of $2 \times 2$ with stride of $2$ on a single feature map of size $4 \times 4$ reduces the spatial dimensionality of the output to $2 \times 2$.
 
@@ -399,7 +402,7 @@ urlseen = {Accessed on}
                 \begin{figure}[h]
                     \centering
                     \includegraphics[width=\textwidth]{lenet5_architecture.png}
-                    \caption{LeNet-5 architecture (Source: \cite{LeCun:1998})}
+                    \caption{\centering LeNet-5 architecture (\cite{LeCun:1998})}
                     \label{fig:lenet5-architecture}
                 \end{figure}
 
@@ -411,9 +414,9 @@ urlseen = {Accessed on}
 
         The overall accuracies over all the experiment settings varied from 85.53\% to 99.43\%. The accuracy at the low interval border was achieved by an AlexNet model trained from scratch using 80\% of the gray-scale dataset version for training and the remaining part for testing. The accuracy on the interval border was achieved by a GoogLeNet model trained using transfer learning method. In this case, 80\% of the dataset were used for training and the remaining 20\% of the dataset were used for testing. The authors stated that the overall accuracy of the models decreases when the train subset to test subset ratio is increased. Furthermore, the authors stated that among all trained models, models with GoogLeNet architecture achieved higher average accuracies than those with AlexNet architecture. Also, models trained using transfer learning method performed better than those trained from scratch. Among all three dataset versions, models trained on the color version of the PlantVillage dataset outperformed all other models. Moreover, models trained using transfer learning method with the fine-tuning step converged after significantly lower number of epochs than models trained from scratch. An epoch describes a full pass through the training dataset.
 
-        The authors also validated the performance of the model with the highest achieved average accuracy on two datasets containing images from other sources. The model achieved an average accuracy of 31.40\% and 31.69\% on these datasets. This inability of the model to generalize on different images was caused by the lack of variety of images in the PlantVillage dataset. The authors of the PlantVillage dataset took the images under controlled conditions. All images have neutral backgrounds and uniform lighting. Complex backgrounds containing other objects, different lighting conditions, and different leaf orientations in the images would increase the generalization ability of the models. Eventually, the authors stated that the models could not be used in practice, for example in a mobile application, at that point.
+        The authors also validated the performance of the model with the highest achieved average accuracy on two datasets containing images from other sources. The model achieved an average accuracy of 31.40\% and 31.69\% on these datasets. This inability of the model to generalize on different images was caused by the lack of variability of images in the PlantVillage dataset. The authors of the PlantVillage dataset took the images under controlled conditions. All images have neutral backgrounds and uniform lighting. Complex backgrounds containing other objects, different lighting conditions, and different leaf orientations in the images would increase the generalization ability of the models. Eventually, the authors stated that the models could not be used in practice, for example in a mobile application, at that point.
 
-        \textcite{Ferentinos:2018} trained five different CNN architectures --- AlexNet, AlexNetOWTBn, GoogLeNet, Overfeat, and VGG --- on an extended PlantVillage dataset. The author did not state if the models were already pre-trained or were trained from scratch with random parameter values. The extended dataset contained 87,848 images and 58 classes of plant--disease pairs or healthy plants. \textcite{Ferentinos:2018} recognized the limited variety of the dataset used by \textcite{Mohanty:2016}. More than 1/3 of the images in the dataset used by \textcite{Ferentinos:2018} were taken under field conditions. These images had, for example, complex backgrounds containing irrelevant object or other plant parts and were taken under different lighting conditions. The author used 80\% of the dataset to train the models and remaining 20\% to test these models. In both training and testing subsets, the authors left the ratio between images taken under laboratory condition and images taken under field conditions the same as in the full dataset.
+        \textcite{Ferentinos:2018} trained five different CNN architectures --- AlexNet, AlexNetOWTBn, GoogLeNet, Overfeat, and VGG --- on an extended PlantVillage dataset. The author did not state if the models were already pre-trained or were trained from scratch with random parameter values. The extended dataset contained 87,848 images and 58 classes of plant--disease pairs or healthy plants. \textcite{Ferentinos:2018} recognized the limited variability of the dataset used by \textcite{Mohanty:2016}. More than 1/3 of the images in the dataset used by \textcite{Ferentinos:2018} were taken under field conditions. These images had, for example, complex backgrounds containing irrelevant object or other plant parts and were taken under different lighting conditions. The author used 80\% of the dataset to train the models and remaining 20\% to test these models. In both training and testing subsets, the authors left the ratio between images taken under laboratory condition and images taken under field conditions the same as in the full dataset.
 
         Under this experiment setting, all five models achieved average accuracy of over 97\%. The best performing CNN models were AlexNetOWTBn with the average accuracy of 99.44\% and the VGG model with 99.48\%. Training the models using resized images to $256 \times 256$ pixels did not affect the average accuracy of the models. Using these two best performing models, the author investigated the impact of images taken under field conditions in the training dataset to the model performance. The author selected 12 classes from the initial dataset that either had only images taken under field or under laboratory conditions. The author then trained both of the best performing architectures on the images taken under field conditions and tested on images taken under laboratory conditions. Then, the author switched the training and testing subsets. As in (\cite{Mohanty:2016}), the average accuracy of the models decreased significantly. In the case of images taken under laboratory conditions used as a training dataset and images taken under field conditions as a testing dataset, the AlexNetOWTBn model achieved an average accuracy of 32.32\% and the VGG model an average accuracy of 33.27\%. In the reversed experiment setting, the AlexNetOWTBn model achieved an average accuracy of 62.57\% and the VGG model an average accuracy of 65.69\%. Images taken under field conditions indeed greatly impact the ability of a model to generalize on new images.
 
@@ -421,27 +424,27 @@ urlseen = {Accessed on}
 
         % similar research papers with more modern approaches
 
-        \textcite{Barbedo:2018:1} investigated the impact of datasets with limited size and variety on the accuracy of a CNN model to classify diseases from plant images. The author stated that datasets containing only images taken under laboratory conditions did not contain the symptom variety found under field conditions. The symptoms may also manifest on other plant parts than leaves. He also stated that the symptoms progress and change depending on several environmental factors, such as humidity and temperature. According to the author, the lack of variety in datasets not containing images taken under field conditions greatly influenced the generalizability of trained models. As an example, the author named the research by \textcite{Mohanty:2016}, where the accuracy of the models fell by 2/3 when tested on new unseen images. In (\cite{Mohanty:2016}), the models were trained using the PlantVillage dataset containing only images taken under controlled conditions.
+        \textcite{Barbedo:2018:1} investigated the impact of datasets with limited size and variability on the accuracy of a CNN model to classify diseases from plant images. The author stated that datasets containing only images taken under laboratory conditions did not contain the symptom variety found under field conditions. The symptoms may also manifest on other plant parts than leaves. He also stated that the symptoms progress and change depending on several environmental factors, such as humidity and temperature. According to the author, the lack of variability in datasets not containing images taken under field conditions greatly influenced the generalizability of trained models. As an example, the author named the research by \textcite{Mohanty:2016}, where the accuracy of the models fell by 2/3 when tested on new unseen images. In (\cite{Mohanty:2016}), the models were trained using the PlantVillage dataset containing only images taken under controlled conditions.
 
-        \textcite{Barbedo:2018:1} created a small dataset that contained a high variety of images. The dataset contained 1,383 images divided into 56 classes representing plant--disease pairs. The majority of images, about 85\%, were taken under field conditions. The rest was taken under controlled conditions. The number of images in each class varied from 5 to 77. When training a pre-trained GoogLeNet model, the author explicitly focused on the influence of background on the accuracy of the trained models. For this purpose, the author created a second version of the dataset containing images with removed background. The author removed the image backgrounds manually. Both dataset versions were augmented using affine transformations, random brightness increase and decrease, contrast enhancement and reduction, sharpness enhancement, and random Gaussian noise. The author used 80\% of the dataset for training and the remaining 20\% for testing. To obtain the final results, \textcite{Barbedo:2018:1} used the 10-fold cross validation method. The model trained on the original dataset achieved accuracies ranging from 65\% in case of wheat and common bean to 100\% in case of cotton. The model trained on the dataset containing images with removed background achieved accuracies ranging from 50\% in case of wheat to 100\% in case of cassava and sugarcane.
+        \textcite{Barbedo:2018:1} created a small dataset that contained a high variability of images. The dataset contained 1,383 images divided into 56 classes representing plant--disease pairs. The majority of images, about 85\%, were taken under field conditions. The rest was taken under controlled conditions. The number of images in each class varied from 5 to 77. When training a pre-trained GoogLeNet model, the author explicitly focused on the influence of background on the accuracy of the trained models. For this purpose, the author created a second version of the dataset containing images with removed background. The author removed the image backgrounds manually. Both dataset versions were augmented using affine transformations, random brightness increase and decrease, contrast enhancement and reduction, sharpness enhancement, and random Gaussian noise. The author used 80\% of the dataset for training and the remaining 20\% for testing. To obtain the final results, \textcite{Barbedo:2018:1} used the 10-fold cross validation method. The model trained on the original dataset achieved accuracies ranging from 65\% in case of wheat and common bean to 100\% in case of cotton. The model trained on the dataset containing images with removed background achieved accuracies ranging from 50\% in case of wheat to 100\% in case of cassava and sugarcane.
 
         The author then summarized the impact of background removal on the accuracies achieved by the model trained on the dataset containing images without background. Background removal had a positive effect in cases when the images had very busy backgrounds occupying a large portion of the images. The author observed a negative impact on image classes that had very similar symptom manifestation. This explains the decreased accuracy of the model in the case of wheat diseases. Very similar symptoms of wheat diseases led to the inability of the model to distinguish between them. For some crops, negative and positive effects were observed at the same time. \textcite{Barbedo:2018:1} observed no effect of background removal in the case of crops building at most three plant--disease classes and their diseases having distinctive symptom manifestations. The author noted that diseases that are rare or uncommon or have varied symptoms will always be classified with low accuracy.
 
-        \textcite{Barbedo:2018:1} concluded that limiting the scope to only some small number of classes enables the collection of a very comprehensive dataset with a high variety of images.
+        \textcite{Barbedo:2018:1} concluded that limiting the scope to only some small number of classes enables the collection of a very comprehensive dataset with a high variability of images.
 
-        \textcite{Barbedo:2018:2} stated that many papers at that time, such as papers by \textcite{Mohanty:2016} or \textcite{Ferentinos:2018}, reported high accuracies of the trained models but these models were not applicable in the real world. Although reporting high accuracies on the training dataset, the model generalized poorly on unseen images. Like in (\cite{Barbedo:2018:1}), \textcite{Barbedo:2018:2} named the PlantVillage dataset as the main cause because it was not representative and robust enough. The author analyzed different factors influencing the performance of CNN models. These factors were: dataset of insufficient size and variety, symptoms representation, covariate shift, image background, image capture conditions, symptom segmentation, symptom variations, multiple diseases on a single leaf, and diseases with similar symptoms.
+        \textcite{Barbedo:2018:2} stated that many papers at that time, such as papers by \textcite{Mohanty:2016} or \textcite{Ferentinos:2018}, reported high accuracies of the trained models, but these models were not applicable in the real world. Although reporting high accuracies on the training dataset, the model generalized poorly on unseen images. Like in (\cite{Barbedo:2018:1}), \textcite{Barbedo:2018:2} named the PlantVillage dataset as the main cause because it was not representative and robust enough. The author analyzed different factors influencing the performance of CNN models. These factors were: dataset of insufficient size and variety/variability, symptoms representation, covariate shift, image background, image capture conditions, symptom segmentation, symptom variations, multiple diseases on a single leaf, and diseases with similar symptoms.
 
         When analyzing the factors, \textcite{Barbedo:2018:2} summed up their impacts on the generalization ability of a trained model. Models trained on datasets containing very few images or having images with very busy backgrounds may rely more on the background information. Additionally, if certain objects or elements appear throughout the images in the dataset, these may disturb the learning process. Further, the absence of symptom variety or different development stages in the dataset weakens models' ability to generalize. Using the training and testing images from the same dataset leads to very high accuracies of the models. As shown by \textcite{Sladojevic:2016}, \textcite{Mohanty:2016}, and \textcite{Ferentinos:2018}, validating the performance of trained models on images from other sources than the original dataset leads to a significant decrease in accuracy. In order for a dataset to be representative, it has to contain images taken under various conditions. These conditions may include different lighting conditions, different weather conditions, different objects present, or different leaf orientations. Extending a dataset by segmenting the diseased regions of leaves increases models' ability to generalize. At different stages of a disease, the symptoms may have very different characteristics. A robust dataset has to include leaf images with diseases at different stages. In case of leaves that are diseased by various diseases, the solution is to segment each diseased region and label it accordingly. When diseases show similar symptom characteristics, a model relies heavily on background information. This may lead to high misclassification rates. The author did not present a solution to this problem.
 
         \textcite{Barbedo:2019} investigated the impact of images of individual diseased regions on model's classification accuracy. For this research, the author created a base dataset containing 1,567 images of plant leaves divided into 79 classes representing plant--disease pairs. Images in the dataset were captured under various conditions and included varied symptom characteristics for each class. About 60\% of the images in the dataset were taken under controlled conditions and the rest of the images was taken under field conditions. Further, the author created two other versions. One version contained only images of segmented leaf masks and the other version contained also images of segmented diseased regions. The dataset version including images of diseased regions contained 46,409 images. The author segmented the individual diseased leaf regions manually.
 
-        \textcite{Barbedo:2019} used all three dataset versions to train a GoogLeNet model using the transfer-learning method. To validate the models, the author used the 10-fold cross validation technique. The average accuracy of the model trained on the original dataset was 82\%. The same accuracy was reported by the model trained on the dataset version containing images of segmented leaf mask. The model trained on the extended dataset containing also images of diseased leaf regions achieved the average accuracy of 94\%. Even though the original dataset contained high variety of images, it was relatively small and thus not robust enough. Nevertheless looking at the absolute percentages, the model trained on the dataset version containing images of diseased leaf regions achieved superior results. Due to the images of individual diseased regions, the dataset contained more homogenous characteristics of the symptoms. This positively influenced the learning process and the model was able to learn the disease characteristics more effectively.
+        \textcite{Barbedo:2019} used all three dataset versions to train a GoogLeNet model using the transfer-learning method. To validate the models, the author used the 10-fold cross validation technique. The average accuracy of the model trained on the original dataset was 82\%. The same accuracy was reported by the model trained on the dataset version containing images of segmented leaf mask. The model trained on the extended dataset containing also images of diseased leaf regions achieved the average accuracy of 94\%. Even though the original dataset contained high variety of images, it was relatively small and thus not robust enough. Nevertheless, looking at the absolute percentages, the model trained on the dataset version containing images of diseased leaf regions achieved superior results. Due to the images of individual diseased regions, the dataset contained more homogenous characteristics of the symptoms. This positively influenced the learning process and the model was able to learn the disease characteristics more effectively.
 
         Unfortunately, the author concluded that the dataset was still a limiting factor of the training process because it was not representative enough. However, the author showed that extending the dataset by images of individual diseased regions makes the dataset more robust.
 
         \textcite{Picon:2019} also recognized the drawbacks of approaches done by \textcite{Mohanty:2016} or \textcite{Sladojevic:2016}. These approaches were limited by their datasets. The datasets contained images with late state diseases and were taken under controlled conditions. Moreover, the algorithms were unable to classify more than one disease on a single leaf. \textcite{Picon:2019} trained a deep residual neural network capable of detecting multiple plant diseases on a single plant leaf. The authors embedded the trained model into a mobile application that they tested under field conditions.
 
-        \textcite{Picon:2019} used a dataset containing 8,178 wheat leaf images. The images were taken over three years under field conditions. The images contained three diseases: septoria, tan spot, and rust. In total, the dataset contained 56 classes. The authors created three base versions of this dataset based on a preprocessing technique. \textcite{Picon:2019} wanted to examine the loss of information when dowsampling the images on the trained model. The first version was the original unchanged dataset. The second dataset version extended the first version by containing segmented leaf masks. The third dataset version also extended the first by containing diseased leaf regions. In the original dataset, the images were resized to the $224 \times 224$ pixels. Further, some of the images in all three datasets were augmented with an artificial background. In total, there were six dataset versions.
+        \textcite{Picon:2019} used a dataset containing 8,178 wheat leaf images. The images were taken over three years under field conditions. The images contained three diseases: septoria, tan spot, and rust. In total, the dataset contained 56 classes. The authors created three base versions of this dataset based on a preprocessing technique. \textcite{Picon:2019} wanted to examine the loss of information when dowsampling the images on the trained model. The first version was the original unchanged dataset. The second dataset version extended the first version by containing segmented leaf masks. The third dataset version also extended the first by containing diseased leaf regions. In the original dataset, the images were resized to the $224 \times 224$ pixels. Further, some images in all three datasets were augmented with an artificial background. In total, there were six dataset versions.
 
         A residual neural network is a type of convolutional neural network. The network contains so-called skip connections between layers (\cite{Aggarwal:2018}). This means that a residual architecture does not only contain connections to an immediate layer but also to a deeper layer. Skip connections help to cope with the phenomenon called shattered gradients by propagating the gradient backwards through them (\cite{Bishop:2024}). Shattered gradients are the result of discontinuities in loss functions and limit the training effectiveness of a deep CNN (\cite{Bishop:2024}). \textcite{Picon:2019} used the ResNet50 architecture, a residual network architecture containing 50 layers.
 
@@ -457,43 +460,415 @@ urlseen = {Accessed on}
 
         Inception V4, ResNet models, and DenseNet models reported overall accuracies of over 98\%. After only 10 epochs, the models reported average accuracies of over 97\%. The VGG-16 model achieved an average accuracy of 81.83\%. Deeper networks in this experiment performed better than the fairly shallow VGG-16 net with 16 weight layers. The cause for this was that the deeper layers had a smaller number of weights compared to the VGG-16 model. The VGG-16 architecture has 138 million trainable parameters (\cite{Simonyan:2015}). The DenseNet model with 121 layers contains only approximately 8 million parameters (\cite{Huang:2017}). This is also the least number of parameters among all trained models. The DenseNet model with 121 was also the best performing model in the research.
 
-        \cite{Too:2019} concluded that the low number of trainable parameters together with the ability of the model to converge after a small number of epochs make the model suitable for the task of disease classification from leaf images. Like \textcite{Mohanty:2016}, \textcite{Too:2019} concluded that transfer learning with the fine-tuning step is an effective method of training a CNN model.
+        \cite{Too:2019} concluded that the low number of trainable parameters together with the ability of the model to converge after a few epochs make the model suitable for the task of disease classification from leaf images. Like \textcite{Mohanty:2016}, \textcite{Too:2019} concluded that transfer learning with the fine-tuning step is an effective method of training a CNN model.
 
         The results of \textcite{Too:2019} should be considered in the context of the work done by \textcite{Barbedo:2018:1} and \textcite{Barbedo:2018:2}. \textcite{Too:2019} used the PlantVillage dataset in its original version for training and testing the models. The PlantVillage dataset is not representative and robust enough to train a CNN model that could be used in practice under field conditions. \textcite{Chen:2020} conducted a very similar experiment and like \textcite{Too:2019} focused on training CNN models using the transfer-learning method with the fine-tuning step. Also, \textcite{Chen:2020} proposed a modified VGG-19 architecture. The authors trained a DenseNet architecture with 201 layers, ResNet architecture with 50 layers, Inception V3 architecture, VGG-19 architecture with 19 weighted layers, and the modified VGG-19 architecture on the original PlantVillage dataset. Moreover, the authors trained the modified VGG-19 architecture on a custom dataset with images taken under field conditions. The modified VGG-19 model achieved an average accuracy of 86\% on the custom dataset.  \textcite{Chen:2020} demonstrated that the transfer learning method with the fine-tuning step is also very efficient on datasets that have high variety of images.The fine-tuning step does not have to always provide more accuracy as \textcite{Sladojevic:2016} showed.
 
-        This review of related research on plant disease classification from leaf images summarizes the training process of CNN models and the factors influencing the accuracy of trained models. The training process of a CNN for plant disease classification from leaf images is very straightforward. CNN architectures that were already pre-trained on big datasets, such as ImageNet, can be used and trained using transfer learning with the fine-tuning step. A key factor influencing accuracy of models is the dataset. This means that the dataset has to capture the variety of symptoms, backgrounds or lighting conditions that are found in the real world. Otherwise the trained models are not able to generalize well on new images that were not in the training and testing dataset.
+        This review of related research on plant disease classification from leaf images summarizes the training process of CNN models and the factors influencing the accuracy of trained models. The training process of a CNN for plant disease classification from leaf images is very straightforward. CNN architectures that were already pre-trained on big datasets, such as ImageNet, can be used and trained using transfer learning with the fine-tuning step. A key factor influencing accuracy of models is the dataset. This means that the dataset has to capture the variety of symptoms, backgrounds or lighting conditions that are found in the real world. Otherwise, the trained models are not able to generalize well on new images that were not in the training and testing dataset.
 
 \section{Design}
+\label{sec:design}
+    This section explains the design of the whole process from the dataset and CNN architecture used, to the training and validation of the trained model. The review of the related research presented valuable information about what is important when training a CNN model for image classification. The transfer learning method can speed up the training process, use less resources, and even result in better model performance. When designing a dataset, the variety of images and their variability in the dataset affects the model's ability to generalize. Overfitting and underfitting are also very important factors that play a role when designing the dataset and CNN architecture. A trade-off has to be done between the number of images in the dataset and the number of parameters in the model. The dataset has to be expressive and varied enough for the model to generalize well. It also has to contain enough images for the model to learn. CNN models trained on datasets that are too small will overfit. CNN models trained on datasets that are too large compared to the number of the parameters will underfit. There are other problems that may arise during the training process, such as the exploding and vanishing gradients. However, there are several methods to minimize the negative impact of different factors on the training process and the model's performance. These techniques include normalization and regularization methods, and optimizations of the gradient descent.
+
     \subsection{Dataset}
-    % There are not many free datasets available on the Internet. Only Mohanty and Barbedo. As of today barbedo barbedo's dataset is relatively small small
-    % using color and segmented versions of the Mohanty dataset based on the PlantVillage dataset and then crating a dataset with artificial background from the segmented dataset
-    % dividing the dataset into training/validation and testing dataset using hold-out method and then dividing the trainig/validation dataset into training and validation datasets using the 10-fold cross validation technique
-    % using augmentation:
-    \subsection{CNN Model} % EfficientB0 (from pretrained models in Keras)
-    % A good rule of thumb is that the total number of training data points should be at least 2 to 3 times larger than the number of parameters in the neural network, although the precise number of data instances depends on the specific model at hand. In general, models with a larger number of parameters are said to have high capacity, and they require a larger amount of data in order to gain generalization power to unseen test data. The notion of overfitting is often understood in the trade-off between bias and variance in machine learning. (\cite{Aggarwal:2018})
-                % when talking about the CNN model and the way to train it, I have to be talking about solver type, base learning rate, learning rate policy, Nesterov momentum, weight decay, gamma and batch size: \textcite{Mohanty:2016} \cite{Ferentinos:2018}
-                % I can really test in on barbedo images even when training on plant village
-                % \cite{Barbedo:2018:1}: parameters to train -> base learning rate, momentum, mini batch size, number of epochs,
-        %\subsubsection{Model Architecture}
+    \label{sub:dataset}
+
+        During the review of related research only two datasets were identified as promising for training a CNN model to classify plant diseases from leaf images. The first dataset was created during the research done by \textcite{Mohanty:2016}. The second dataset was created by \textcite{Barbedo:2018:1}. The dataset provided by \textcite{Barbedo:2018:2} contains almost 50,000 images of 171 plant diseases affecting 21 plants. \textcite{Barbedo:2018:2} created the dataset with the focus on variety of symptoms and conditions. However, the number of images in individual classes is very low and varies from only 2 images to at most several tens of images. This makes the dataset unsuitable for the training of a CNN model that should generalize well. Any augmentation technique would not introduce enough variability into the dataset (\cite{Barbedo:2018:2}). The dataset provided by \textcite{Mohanty:2016} contains over 160,000 diseased and healthy plant leaf images. The images are divided into three subsets: color, gray-scale, and segmented. Each of the subsets contains 38 classes. The classes are the same over all three subsets. The color subset contains 54,306 images. The classes of the color subset contain from 152 to 5,090 images. The other two are derived from the color one and contain the same number of images in each class and in total. One drawback of this dataset is that the images in the color dataset were taken under laboratory conditions and have insufficient variability. However, the dataset contains reasonable number of images in each of the subset classes. Using different augmentation techniques, the variability in the dataset could be increased. Eventually, the dataset provided by \textcite{Mohanty:2016} was chosen for the training of a CNN model to classify plant diseases from leaf images. The gray-scale subset was excluded from the original dataset.
+
+        To introduce greater variability and complexity into the dataset, the images of segmented leaves were augmented using artificial backgrounds. The variety, variability, and complexity of images should force the CNN model to learn from the leaf surface and not from the image background. In case of uniform or similar image backgrounds and similar disease symptoms, the CNN model tends to rely on information from the background (\cite{Barbedo:2018:1}). This leads to misclassifications of images because the CNN model is not able to distinguish the images based on the disease symptoms. Artificial background images resembling conditions that would be found and observed in the field were chosen. The background images contain multiple leaves, other plant parts, or capture very busy natural environments. All images were acquired from the Wikipedia Commons dataset. The black background of the segmented images was changed for an artificial background. This way, a third artificial background subset was created. \autoref{fig:artificial-backgrounds} shows the artificial backgrounds that were used to augment the dataset.
+
+        \begin{figure}[!h]
+            \centering
+            \begin{tabular}{ccc}
+                \begin{subfigure}{0.25\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{1_artificial_background.jpg}
+                    \caption{\centering(\cite{1_artificial_background:2021})}
+                \end{subfigure} &
+                \begin{subfigure}{0.40\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{2_artificial_background.jpg}
+                    \caption{\centering (\cite{2_artificial_background:2019})}
+                \end{subfigure} &
+                \begin{subfigure}{0.25\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{3_artificial_background.jpg}
+                    \caption{\centering (\cite{3_artificial_background:2022})}
+                \end{subfigure} \\
+            \end{tabular}
+            \begin{tabular}{ccc}
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{4_artificial_background.jpg}
+                    \caption{\centering (\cite{4_artificial_background:2023})}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{5_artificial_background.jpg}
+                    \caption{\centering (\cite{5_artificial_background:2022})}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{6_artificial_background.jpg}
+                    \caption{\centering (\cite{6_artificial_background:2017})}
+                \end{subfigure} \\
+            \end{tabular}
+            \begin{tabular}{ccc}
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{7_artificial_background.jpg}
+                    \caption{\centering (\cite{7_artificial_background:2019})}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{8_artificial_background.jpg}
+                    \caption{\centering (\cite{8_artificial_background:2009})}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{9_artificial_background.jpg}
+                    \caption{\centering (\cite{9_artificial_background:2016})}
+                \end{subfigure} \\
+            \end{tabular}
+            \begin{tabular}{c}
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{10_artificial_background.jpg}
+                    \caption{\centering (\cite{10_artificial_background:2009})}
+                \end{subfigure} \\
+            \end{tabular}
+            \caption{\centering Artificial background images used to augment the dataset}
+            \label{fig:artificial-backgrounds}
+        \end{figure}
+
+        The initial dataset used for training a CNN model contained three subsets: color, segmented and artificial background. Because of computing resources constrains, the number of images per class in each subset of the initial dataset was limited to 400 images. \autoref{fig:dataset-image-examples} shows examples of images from each of the three subsets of the initial dataset.
+
+        \begin{figure}[!h]
+            \centering
+            \begin{tabular}{ccc}
+                \begin{subfigure}[t]{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{color_strawberry_leaf_scorch.JPG}
+                    \caption{\centering Color subset}
+                \end{subfigure} &
+                \begin{subfigure}[t]{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{segmented_strawberry_leaf_scorch.jpg}
+                    \caption{\centering Segmented subset}
+                \end{subfigure} &
+                \begin{subfigure}[t]{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{artificial_strawberry_leaf_scorch.jpg}
+                    \caption{\centering Artificial background subset}
+                \end{subfigure} \\
+            \end{tabular}
+            \caption{\centering Examples of images from color, segmented, and artificial background subsets}
+            \label{fig:dataset-image-examples}
+        \end{figure}
+
+        \autoref{tab:dataset-overview} gives an overview of the initial dataset that was used to train and validate the CNN model. Each of the three subsets contains 14,731 images. In total, the whole initial dataset contains 44,193 images. Not limiting the size of the original dataset without the gray-scale subset, the dataset would contain almost 200,000 images.
+
+        \begin{table}[!h]
+            \centering
+            \resizebox{\textwidth}{!}{
+                \begin{tabular}{c|c|c|c|c|c}
+                    \hline
+                    \multirow{2}{*}{Plant species} & \multirow{2}{*}{Plant disease} & \multicolumn{3}{c|}{Number of images} & \multirow{2}{*}{Total} \\ \cline{3-5}
+                    &  & Color & Segmented & Artificial &  \\ \hline
+                    \multirow{4}{*}{Apple} & Scab & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Black rot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Cedar apple rust & 275 & 275 & 275 & 825 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    Blueberry & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{2}{*}{Cherry} & Powdery mildew & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{4}{*}{Corn} & Cercospora leaf spot and Gray leaf spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Common rust & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Northern leaf blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{4}{*}{Grape} & Black rot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Esca (Black measles) & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Leaf blight (Isariopsis leaf spot) & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    Orange & Haunglongbing (Citrus greening) & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{2}{*}{Peach} & Bacterial spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 360 & 360 & 360 & 1,080 \\ \hline
+                    \multirow{2}{*}{Pepper} & Bacterial spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{3}{*}{Potato} & Early blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Late blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 152 & 152 & 152 & 456 \\ \hline
+                    Raspberry & Healthy & 371 & 371 & 371 & 1,113 \\ \hline
+                    Soybean & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    Squash & Powdery mildew & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{2}{*}{Strawberry} & Leaf scorch & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    \multirow{9}{*}{Tomato} & Bacterial spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Early blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Late blight & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Leaf mold & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Septoria leaf spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Spider mite and Two-spotted spider mite & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Target spot & 400 & 400 & 400 & 1,200 \\ \cline{2-6}
+                    & Tomato yellow leaf curl virus & 373 & 373 & 373 & 1,200 \\ \cline{2-6}
+                    & Healthy & 400 & 400 & 400 & 1,200 \\ \hline
+                    Total &  & 14,731 & 14,731 & 14,731 & 44,193 \\ \hline
+                \end{tabular}
+            }
+            \caption{\centering Overview of the initial dataset}
+            \label{tab:dataset-overview}
+        \end{table}
+
+        The images in the original dataset had the size of $256 \times 256$ pixels. Prior to the training process, the images of the initial dataset were divided into the train, test and validation datasets. To divide the initial dataset, the hold-out method was used. From the initial dataset, 80\% of the images were used in the training process. The train subset contained 35,349 images. The remaining 20\% of the images were used to validate the CNN model. The validation subset contained 8,844 images. Out of the images used for the training process, 80\% of the images were used for the actual training of the CNN and the rest of the images was used as test dataset. This test dataset was used to evaluate model's performance after each epoch. Furthermore, the images were resized to the input size of the CNN model trained. The input size of the CNN model trained was $224 \times 224$ pixels. To introduce more variability during the training process, the subset used for training of the CNN model was augmented using four different augmentation operations. These operations were: random horizontal and/or vertical flip, random rotation, random contrast increase or decrease, and random brightness increase or decrease. \autoref{fig:augmentation-pipeline} shows an image of a healthy Pepper leaf with artificial background and its different versions after applying the augmentation pipeline.
+
+        \begin{figure}[!h]
+            \centering
+            \begin{tabular}{ccc}
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{original_image.jpg}
+                    \caption{\centering Original image}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{1_pipeline.png}
+                    \caption{\centering Augmented image}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{2_pipeline.png}
+                    \caption{\centering Augmented image}
+                \end{subfigure} \\
+            \end{tabular}
+            \begin{tabular}{ccc}
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{3_pipeline.png}
+                    \caption{\centering Augmented image}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{4_pipeline.png}
+                    \caption{\centering Augmented image}
+                \end{subfigure} &
+                \begin{subfigure}{0.30\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{5_pipeline.png}
+                    \caption{\centering Augmented image}
+                \end{subfigure} \\
+            \end{tabular}
+            \caption{\centering Original image (Pepper healthy) and its different augmented versions}
+            \label{fig:augmentation-pipeline}
+        \end{figure}
+
+        The various augmentation steps used in the dataset preprocessing introduce greater variability and complexity into the dataset used for the CNN model training and validation. However, the created dataset is significantly smaller than the dataset used by \textcite{Mohanty:2016}. Thus, it is very important to choose a CNN architecture that performs well enough when trained on the created dataset.
+
+    \subsection{CNN Architecture}
+    \label{sub:cnn-architecture}
+
+    For the training process, the EfficientNetB0 CNN architecture was selected. The EfficientNetB0 architecture belongs to the EfficientNet family of convolutional neural networks introduced by \textcite{Tan:2019}. In their paper, \textcite{Tan:2019} researched the architecture scaling in other CNN architecture families, such as the ResNet, the Inception, and the DenseNet families. The authors focused on the resolution, width, and depth balancing of an architecture when scaling up the architecture to contain more trainable parameters. The authors introduced a process of architecture scaling. This scaling process should result in accurate and efficient architectures. As a result, the authors introduced the EfficientNet family containing the architectures EfficientNetB0 to EfficientNetB7. The base EfficientNetB0 architecture has 5.3 million and the EfficientNetB7 has 66.7 million trainable parameters. \autoref{fig:efficientnet-family-comparison} shows the comparison of the architecture size and accuracy of the trained models between EfficientNet and other CNN architecture families.
+
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width=0.60\textwidth]{efficientnet_architectures.png}
+        \caption{\centering Comparison of the architecture size and accuracy of the trained models between EfficientNet and other CNN architecture families (\cite{Tan:2019})}
+        \label{fig:efficientnet-family-comparison}
+    \end{figure}
+
+    Each model in \autoref{fig:efficientnet-family-comparison} was trained on the ImageNet dataset. EfficientNet models achieved higher accuracies than other comparable models in terms of number of trainable parameters the architecture has. For example, the EfficientNetB0 model outperformed the Res-Net50 model or Inception v2 model. The EfficientNetB0 model slightly underperformed the DenseNet-201, ResNet-152, or the Xception models. In comparison, the ResNet50 has 26.5 million parameters, the ResNet-152 has 60.4 million parameters, and the DenseNet-121 has 8.2 million parameters (\cite{keras_applications:2024}). \autoref{fig:efficientnet-family-comparison} also shows that the architecture scaling process is very effective and small increase in trainable parameters of the architecture leads to relatively high increase in accuracy when compared to other architectures.
+
+    \autoref{fig:efficientb0-architecture} shows the EfficientNetB0 architecture introduced by \textcite{Tan:2019}. It does not specify the number of output neurons in the fully connected layer. The main building block of the EfficientNetB0 architecture is the module called mobile inverted bottleneck (MBConv) (\cite{Tan:2019}). The MBConv is also referred to as the inverted residual with linear bottleneck (\cite{Sandler:2019}). The MBConv module takes a tensor, expands the depth of the tensor, performs depthwise separable convolution operations, and finally decreases the depth of the tensor (\cite{Sandler:2019}). The expansion is done using $1 \times 1$ pointwise convolution operations. The decrease of the depth is performed also using a $1 \times 1$ pointwise convolution operation. The depthwise separable convolution consists of a depthwise and pointwise convolution operation (\cite{Chollet:2017}). The depthwise convolution operation performs convolutions over each channel of the input tensor separately (\cite{Chollet:2017}). It can use filters of different resolutions. These filters have a depth of 1. The pointwise convolution operation uses $1 \times 1$ kernels with the depth being the number of channels in the input tensor (\cite{Chollet:2017}). The MBConv modules also contain residual (skip) connections. For example, the module MBConv6 (k$3\times3$) at the stage 5 in \autoref{fig:efficientb0-architecture} uses kernels of size $3 \times 3$ in the depthwise convolution operations and the initial expansion ratio is 6. This means that the depth of the input tensor is expanded six times at the start of the MBConv module (\cite{Sandler:2019}). The three layers in this stage stand for the number of depthwise separable convolution operations. The MBConv module can also be very efficiently implemented (\cite{Sandler:2019}). This means that the EfficientNetB0 may also be used in edge or mobile devices, and embedded software because of the MBConv modules (\cite{Sandler:2019}). Additionally, the CNN architectures from the EfficientNet family use the SiLU activation function.
+
+    \begin{table}[!h]
+        \centering
+        \resizebox{\textwidth}{!}{
+            \begin{tabular}{c|c|c|c|c}
+                \hline
+                Stage & Operator & Input Resolution & Output Channels & Layers \\
+                \hline
+                1 & Conv$3\times3$ & $224 \times 224$ & 32 & 1 \\
+                2 & MBConv1, k$3\times3$ & $112 \times 112$ & 16 & 1 \\
+                3 & MBConv6, k$3\times3$ & $112 \times 112$ & 24 & 2 \\
+                4 & MBConv6, k$5\times5$ & $56 \times 56$ & 40 & 2 \\
+                5 & MBConv6, k$3\times3$ & $28 \times 28$ & 80 & 3 \\
+                6 & MBConv6, k$5\times5$ & $14 \times 14$ & 112 & 3 \\
+                7 & MBConv6, k$5\times5$ & $14 \times 14$ & 192 & 4 \\
+                8 & MBConv6, k$3\times3$ & $7 \times 7$ & 320 & 1 \\
+                9 & Conv$1\times1$, Pooling, Fully Connected & $7 \times 7$ & 1280 & 1 \\
+                \hline
+            \end{tabular}
+        }
+        \caption{\centering EfficientNetB0 architecture (Adapted from: \cite{Tan:2019})}
+        \label{fig:efficientb0-architecture}
+    \end{table}
+
+    \textcite{Tan:2019} also added the squeeze-and-excitation optimization to each MBConv. A squeeze-and-excitation block is an architectural unit allowing the model to learn from useful features and suppress features that are not useful (\cite{Hu:2019}). At first, a squeeze-and-excitation block squeezes the input tensor of size $H \times W \times d$ to the size $1 \times 1 \times d$ (\cite{Hu:2019}). The depth of the tensor is retained. The following excitation operation scales the tensor of size $1 \times 1 \times d$ to the original size $H \times W \times d$ (\cite{Hu:2019}). This means that values within each feature map are the same.
+
+    The EfficientNetB0 architecture was chosen because it achieves considerably high accuracies with low number of parameters when compared to other CNN architectures, such as ResNet-152, ResNet-50, or Inception v2 (\cite{Tan:2019}). The architecture also uses batch normalization layers. This means that the EfficientNetB0 architecture can be trained on datasets containing smaller number of images compared to datasets needed to train for example a ResNet-152 architecture with 60 million parameters. Furthermore, because of a lower number of trainable parameters and the efficient implementation of the MBConv module, it can be trained using constrained computational resources.
+
     \subsection{Training and Validation}
-                % Instead, a widely adopted method known as n-fold cross-validation is used to exploit the labeled data both for model selection and for training. \cite{Mohri:2018} p 71
-                % 4.3 Generalization Issues in Model Tuning and Evaluation (\cite{Aggarwal:2018}) -> Hold-Out vs. Cross-Validation
-    \subsection{Web-based Application Design}
-        \subsubsection{Frontend Design}
-        \subsubsection{Backend Design}
+    \label{sub:training-and-validation}
+    As already discussed in \autoref{sub:dataset}, the segmented and color subsets from the original dataset provided by \textcite{Mohanty:2016} were used to create the initial dataset. Furthermore, additional subset of images with artificial backgrounds created from the segmented subset was added. From the initial dataset, 80\% of the images were used as train and the remaining 20\% of the images were used as validation dataset. From the train dataset, 80\% of the images were used for the actual training of the EfficientNetB0 architecture and the remaining 20\% of the images for testing after each epoch. The validation dataset was used to evaluate the model. In each class of both the train and validation subsets of the final dataset, the ratio between images from color, segmented and artificial background was equal. Images from each subset made up one-third of images in each class of train or validation datasets. The train and validation dataset created the final subset. Images in the final dataset were resized to the resolution of $224 \times 224$ pixels. This was the input size of the EfficientNetB0 architecture. Moreover, each image was preprocessed using an augmentation pipeline. This pipeline applied  random horizontal and/or vertical flip, random rotation, random contrast increase or decrease, and random brightness increase or decrease.
+
+    For the training process, an EfficientNetB0 model pre-trained on the ImageNet dataset was used. The last dense classifier layer with 1,000 outputs was removed and a new dense classifier layer with 38 outputs with the softmax activation function was added to the network. The training configuration for the EfficientNetB0 model in this thesis is inspired by the configuration used by \textcite{Tan:2019}. However, the authors apply learning approach creating rather very high loss values at the beginning of the training process. This approach is more suitable for trainings with large datasets, such as the ImageNet, and higher numbers of epochs. Considering the considerably smaller dataset and constrained computational resources, the RMSProp optimizer with momentum of 0.9 and $\rho = 0.9$ was used. Next, weight decay of $1 \times 10^{-5}$ was applied. The learning rate schedule used the initial learning rate of 0.001 that decayed by 0.9 every 2 epochs. The model was trained in 8 epochs in two training cycles applying the transfer learning method without and with fine-tuning step.
+
+    Initially, only the final classifier layer was trained. Other layers were kept frozen. Finally, fine-tuning was applied, and the whole architecture was trained.
 
 \section{Development}
-    \subsection{Dataset Augmentation Script}
-    \subsection{CNN Model Training and Validation Scrip}
-    \subsection{Web-based Application Development}
-        \subsubsection{Frontend Development}
-        \subsubsection{Backend Development}
+\label{sec:development}
 
-\section{Web-based Application Walkthrough}
+    The development process was divided into two phases. In the first phase, the dataset preprocessing scripts had been created. In the second phase, a package used as a command line tool was created to train and validate an EfficientNetB0 module. The programming language of choice in this thesis was Python. The training and validation package was created using the Keras and TensorFlow libraries. Keras is essentially an API using TensorFlow as a backend framework (\cite{tensorflow:2024, keras:2024}). However, Keras provides a higher level of abstraction to the TensorFlow library. Next, the dataset preprocessing scripts and the model training and validation package will be described in greater detail.
+    % To maintain high code quality and to comply with python standards a pre-commit hook locally and as GitHub Action has been set up.
+    \subsection{Dataset Preprocessing Pipeline}
+
+        \autoref{fig:dataset-preprocessing-github} shows the structure of the folder with Python modules used for the preprocessing of the original dataset provided by \textcite{Mohanty:2016}. The \verb|/src| folder is in the root folder of the repository. The Python modules were created as scripts that are successively applied to the dataset by a wrapper module. The wrapper and the modules create a dataset preprocessing pipeline. The modules may be also executed as standalone scripts.
+
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=0.4\textwidth]{dataset_preprocessing_github.png}
+            \caption{\centering Folder structure of Python modules used for dataset preprocessing}
+            \label{fig:dataset-preprocessing-github}
+        \end{figure}
+
+        The \verb|dataset_limiter.py| is applied to the original dataset provided by \textcite{Mohanty:2016} without the gray-scale subset. The module limits the number of images in each class of each subset to a pre-defined limit. The function defined in the \verb|dataset_limiter.py| module has the signature shown in \autoref{lst:dataset-limiter-function}.
+        \begin{lstlisting}[caption={\centering Signature of the function defined in dataset\_limiter.py}, label={lst:dataset-limiter-function}, captionpos=b]
+        def limit_dataset(
+            color_path: Path,
+            segmented_path: Path,
+            destination_path: Path,
+            limit: int
+        ) -> Literal[0, 1]:
+        \end{lstlisting}
+        The \verb|limit_dataset(...)| function takes the paths to the color and segmented subsets of the original dataset, to the destination folder, and the limit as arguments. It creates a copy of the original dataset with classes that contain at most the count of images given in the \verb|limit| parameter. The function returns 0 on success and 1 on failure.
+
+        The \verb|artificial_background_adder.py| module is applied to the limited dataset created by the \verb|dataset_limiter.py| module. It adds artificial backgrounds to the leaf images from the segmented subset and creates a new \verb|artificial_background| subset within the folder given in destination path. The function defined in \verb|artificial_background_adder.py| module has the signature shown by \autoref{lst:artificial-backgorund-adder-function}.
+        \begin{lstlisting}[caption={\centering Signature of the function defined in artificial\_background\_adder.py}, label={lst:artificial-backgorund-adder-function}, captionpos=b]
+        def add_artificial_background(
+            artificial_backgrounds_path: Path,
+            segmented_path: Path,
+            destination_path: Path
+        ) -> Literal[0, 1]:
+        \end{lstlisting}
+        The \verb|add_artificial_background(...)| function takes the paths to the artificial background images, to the segmented images, and to the destination folder as arguments. It returns 0 on success and 1 on failure. The \verb|dataset_limiter.py| and \verb|artificial_background_adder.py| modules create the initial dataset with three subsets: color, segmented, and artificial background.
+
+        The \verb|dataset_divider.py| divides this initial dataset into a train and validation subsets and creates the final dataset. The function \verb|divide_dataset(...)| from \autoref{lst:dataset-divider-function} takes the paths to the color, segmented, and artificial background subsets of the initial dataset, the path to final folder and the train-validation split ratio. It creates the final dataset with train and validation subsets at a destination given by \verb|final_dataset_path| function parameter. In each class of both test and validation subsets, the ratio of images from color, segmented and artificial background subsets is the same. This function also returns 0 on success and 1 on failure.
+        \begin{lstlisting}[caption={\centering Signature of the function defined in dataset\_divider.py}, label={lst:dataset-divider-function}, captionpos=b]
+        def divide_dataset(
+            train_validation_ratio: float,
+            color_path: Path,
+            segmented_path: Path,
+            artificial_path: Path,
+            final_dataset_path: Path,
+        ) -> Literal[0, 1]:
+        \end{lstlisting}
+
+        The \verb|dataset_preprocessing_wrapper(...)| calls the functions in succession and creates a dataset preprocessing pipeline. At the end of this preprocessing pipeline, a final dataset with train and validation subsets that can be used to train the CNN model is created.
+
+    \subsection{CNN Model Training and Validation Package}
+
+        \autoref{fig:model-trainer-package-github} shows the structure of the \verb|model_trainer| package. The \verb|/model_training| folder is a child folder of the \verb|/src| folder. Within the \verb|/model_training| folder, there is a \verb|pyproject.toml| file and the package \verb|model_trainer| itself. The \verb|pyproject.toml| is used to build the package. \autoref{fig:classs-diagram-model-trainer-package} shows the class diagram of the \verb|model_trainer| package. The core functionality of the package is created using four classes: \verb|ModelTrainer|, \verb|CLI|, \verb|AccuracyPerClassMetric|, and \verb|CustomHistory|.
+
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=0.35\textwidth]{model_trainer_package_github.png}
+            \caption{\centering Structure of the model\_trainer package}
+            \label{fig:model-trainer-package-github}
+        \end{figure}
+
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=\textwidth]{class_diagram_model_trainer.png}
+            \caption{\centering Class diagram of the model\_trainer package}
+            \label{fig:classs-diagram-model-trainer-package}
+        \end{figure}
+
+        The \verb|CLI| class is a singleton class and provides command line parsing functionality. It is defined in the \verb|cli.py| module. The \verb|AccuracyPerClassMetric| class extends the \verb|Metric| class from the \verb|keras.metric| package and computes the accuracy per class during the training process. It is defined in the \verb|accuracy_per_class.py| module. The \verb|CustomHistory| class extends the \verb|History| class from the \verb|keras.callbacks| package and logs the duration of an epoch in seconds. This class is defined in the \verb|custom_history_callback.py| module. The \verb|ModelTrainer| class provides model training, validation, and evaluation functionalities. It loads the train and validation datasets, it loads and compiles the model, it modifies the layers of the model for transfer learning with and without the fine-tuning, it trains the model, and evaluates it eventually. The \verb|ModelTrainer| class is defined in the \verb|model_trainer.py| module. The \verb|exceptions.py| defines a custom exception. The \verb|utils.py| module provides utility functions to generate and save plots or JSON files from the recorded metrics and history.
+
+        Additionally, the image augmentation of the train dataset shown in \autoref{fig:augmentation-pipeline} is done by the \verb|ModelTrainer| class when loading the train dataset. The main function of the package is in the \verb|model_trainer.py| module. It contains the logic for transfer learning of the loaded model without and with the fine-tuning step and for saving the recorded metrics or history either as plots or JSON files.
+
+        \autoref{lst:model-trainer-usage} shows the result of running the \verb|model_trainer| package with the \verb|-h| option. The \verb|model_trainer| package takes the training batch size, epochs and output path as optional arguments. The paths to the train and validation subsets are positional arguments. The options and optional arguments are not required, the package will use default values instead.
+
+        \begin{lstlisting}[language=bash, caption={\centering The usage of the model-trainer package}, label={lst:model-trainer-usage}, captionpos=b]
+        (thesis_env) ... % model-trainer -h
+        Usage: model_trainer [-h] [-b BATCH_SIZE] [-e EPOCHS] [-o OUTPUT] train_dataset_path validation_dataset_path
+        \end{lstlisting}
+
+        Keras makes the training process easier by providing high level customizable functions for loading a dataset, for loading a model, for compiling a model, for training a model, and for example for evaluating a model.
 
 \section{Discussion}
+\label{sec:discussion}
+    In this section, the performance of the trained EfficientNetB0 model during the training process will be evaluated. Furthermore, the future work and the possible applications of the trained model will be discussed.
+
+    \subsection{CNN Model Performance Review}
+        The training process was divided into two cycles: the initial and the final training cycles. During the initial cycle, only the last dense classifier layer of the model with 38 outputs was trained. Other layers or trainable parameters were kept frozen. In the final cycle, all trainable parameters of the model were trained. Each of these two training cycles had 8 epochs. After each epoch, the model was tested using 20\% of the train subset of the final dataset. After the whole training cycle, the model was evaluated using the validation subset of the final dataset. Moreover, after each training cycle, the average train and test accuracy and loss and the train and test accuracy per class were saved as plots. The train and test accuracy per class metrics were averaged over all epochs of the training cycle for each class. The train and test accuracy metrics were averaged over all classes in one epoch. Additionally, the evaluation data and the whole training history for a training cycle were saved as JSON files. The whole training process was done on a personal computer and took 4 hours and 10 minutes to complete. There was also an attempt made to train the model using Google Colab. Unfortunately, because of network limitations, this approach was impractical and would have taken substantially longer.
+
+        \autoref{fig:initial-accuracy-and-loss} shows the accuracy and loss metrics of the model during the whole initial training cycle. The model achieved a train accuracy of 85.5\% and a test accuracy of almost 90\% in the last epoch. The train loss was 0.56 and the test loss was 0.35 in the last epoch.
+
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{initial_accuracy_and_loss_2024-11-25_07.55.35.png}
+            \caption{\centering Initial model accuracy and loss during training and testing}
+            \label{fig:initial-accuracy-and-loss}
+        \end{figure}
+
+        \autoref{fig:initial-train-accuracy-per-class} shows accuracies of each class averaged over all 8 epochs during the actual training in the initial cycle. The model reached 83\% average accuracy over all classes. The model reported an accuracy of at least 80\% in 71\% of the classes. In 34\% of the classes, the model reached an accuracy of at least 90\%. \autoref{fig:initial-train-accuracy-per-class} also shows that the model reported lower accuracies in tomato disease classes. Looking at the average per class metric in each epoch, the model struggled to correctly predict the tomato disease classes in early epochs. In the last epoch, the model achieved an accuracy of at least 62\% for each tomato disease class during the actual training. The average accuracy of the model in tomato disease classes was 70.2\%. The revision of the images in the tomato disease classes showed that these images were very similar in terms of disease symptoms. The model would need more images to learn to distinguish between the different tomato leaf diseases and classify these reliably when compared to other dataset classes.
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{initial_train_accuracy_per_class_2024-11-25_07.55.35.png}
+            \caption{\centering Initial model accuracy per class averaged over all epochs during training}
+            \label{fig:initial-train-accuracy-per-class}
+        \end{figure}
+
+        \autoref{fig:initial-test-accuracy-per-class} shows accuracies of each class averages over all 8 epochs during testing in the initial cycle. The average accuracy over all classes was 88\%. The model reported very similar accuracies to those achieved during the training. Same as in the training phase, the model reported lower accuracies in the case of tomato disease classes. Unfortunately, the model struggled in the last epoch and could not reliably predict certain tomato disease classes. The average accuracy of tomato disease classes was 76\%. After the initial training cycle, the model was evaluated and reported an average accuracy of 89.7\% and a loss of 0.37.
+
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{initial_test_accuracy_per_class_2024-11-25_07.55.35.png}
+            \caption{\centering Initial model accuracy per class averaged over all epochs during testing}
+            \label{fig:initial-test-accuracy-per-class}
+        \end{figure}
+
+        \autoref{fig:final-accuracy-and-loss} shows the accuracy and loss of the model during the final training cycle. The model achieved a train accuracy of 92.8\% and a test accuracy of 88.5\% in the last epoch. The train loss was 0.22 and the test loss was 0.39. \autoref{fig:final-accuracy-and-loss} also shows a very interesting decrease of the model's accuracy and increase of the loss in the fourth epoch.
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{final_accuracy_and_loss_2024-11-25_11.16.13.png}
+            \caption{\centering Final model accuracy and loss during training and testing}
+            \label{fig:final-accuracy-and-loss}
+        \end{figure}
+
+        The final training cycle applied the fine-tuning step. That is why the \autoref{fig:final-train-accuracy-per-class} and \autoref{fig:final-test-accuracy-per-class} report slightly worse results as the \autoref{fig:initial-test-accuracy-per-class} and \autoref{fig:final-accuracy-and-loss}. \autoref{fig:final-train-accuracy-per-class} and \autoref{fig:final-test-accuracy-per-class} show that the model struggled to correctly predict the tomato disease classes as in the initial cycle. Moreover, the \autoref{fig:final-test-accuracy-per-class} shows that the model's performance during the testing was not optimal.
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{final_train_accuracy_per_class_2024-11-25_11.16.13.png}
+            \caption{\centering Final model accuracy per class averaged over all epochs during training}
+            \label{fig:final-train-accuracy-per-class}
+        \end{figure}
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{final_test_accuracy_per_class_2024-11-25_11.16.14.png}
+            \caption{\centering Final model accuracy per class averaged over all epochs during testing}
+            \label{fig:final-test-accuracy-per-class}
+        \end{figure}
+        The evaluation of the final model after the final training cycle reported an accuracy of 89\% and a loss of 0.38.
+
+        The validation accuracies and losses of the model after each training cycle are considerably high. But after looking at the accuracy per class metric either as averaged value over all epochs or within single epoch, the model struggled to reliably predict the tomato disease classes. The average accuracy per class metric does not express the actual performance of the model because it also takes the accuracies from earlier epochs. In these epochs, the model will be always less accurate than in the later epochs. The metric also depends on the number of epochs done. However, the average accuracy per class metric shows the model's consistency in each class. In this case, the metric clearly shows that the model is not consistent over all classes and cannot classify tomato disease classes with such high accuracy as the other classes. Using a dataset that would contain more images in the tomato disease classes would have helped the model to learn to distinguish between the classes. Moreover, to achieve even higher accuracies, the model would need more images to learn from. However, given the dataset and computing limitations, the model reported considerably high accuracies. This is highlighted by the fact that \textcite{Tan:2019} trained the EfficientNetB0 on ImageNet dataset and reported the average accuracy of 77.1\%.
+
+    \subsection{Future Work}
+
+        The review of model's performance during the training process shows that the model struggled to accurately classify tomato disease images. It also shows that the model's overall performance can be increased. The next step would be to extend the dataset and apply more epochs. \autoref{fig:initial-accuracy-and-loss} and \autoref{fig:final-accuracy-and-loss} show that the losses of the model converged rather quickly and stayed relatively high. This also shows that the dataset has to contain more images. Moreover, using the same dataset for training, testing and validation may result in inflated accuracies as shown by \textcite{Mohanty:2016}. The next step would be to evaluate the model on new and unseen images. The obvious limitation of the dataset is that it does not contain images taken under complex field conditions. To make the model generalizable, the dataset would have to contain even grater variety and variability of images.
+
+        Despite the dataset limitations, the EfficientNetB0 architecture is efficient and contains rather small number of parameters. It can be trained very easily on a personal computer with high number of images. It was explicitly designed for edge devices and mobile phones that have limited computational resources. An EfficientNetB0 model that would generalize sufficiently can be embedded into a mobile application or a drone. Using a drone to examine crops on the field and search for potential diseases could considerably lower expenses. Large fields could be checked and an emerging disease could be spot early on. This would lower the use of pesticides or insecticides and eliminate potential losses.
 
 \section{Conclusion}
+\label{sec:conclusion}
+
+    During this bachelor's thesis, plant disease classification using convolutional neural networks is explored. At the beginning, the thesis gives general information about machine learning and different machine learning approaches. Further it focuses on deep neural networks and especially on convolutional neural networks. It gives insights into the architecture of deep neural networks and how they learn. It also explores different factors that may negatively influence the training process and the performance of a deep neural network. Furthermore, the thesis explores and reviews related and influential research papers done in the field of plant disease classification using CNNs. The review of the related research focuses on the impact of the dataset size, its variety and variability to model's performance. This review gives also insights into the training process of a CNN architecture. Building on the information about deep neural networks and especially CNNs and on the information gained from the related research, an approach to train a CNN model was done. This thesis describes how the training process was designed and how the needed code to train a CNN model was developed. Eventually, the thesis reviews the performance of the trained model.
+
+    The biggest limitation of the training process was the dataset used. There are no freely available datasets that could be used to train a robust CNN model that could be used in field conditions. The dataset used in this thesis lacks the variability in the images. To introduce more variability into the dataset, the training process uses an augmentation step and adds artificial backgrounds to segmented leaf images. Additionally, it uses a preprocessing that for example randomly rotates or flips the images. The trained model reported very optimistic results. However, larger dataset would be required to increase mode's accuracy. To make the model generalize well, the dataset would also need images form field conditions.
+
+    It is very hard to train a CNN model that could generalize well on new and unseen plant leaf images. It requires a robust dataset that contains images taken under various conditions in the field. Images taken in the field are very complex. The images may contain other plants, different plant parts, or different lighting conditions. Leaves may also have different orientations. The images may be taken during different seasons. Moreover, plant diseases may show different symptoms during the different developmental stages. All this makes the task of plant disease classification using convolutional neural networks difficult. However, different preprocessing techniques could be applied to make the dataset more robust. Additionally, the prediction pipeline could contain more steps. It could recognize leaves on images, crop these, and preprocess the color before making the prediction.
+
+    In conclusion, this bachelor's thesis gives great insights into the field of plant disease classification using convolutional neural networks. It makes an overview of machine learning and reviews related research in plant disease classification using CNNs. Moreover, the information gained from the theoretical part of this thesis is used to train a CNN to classify plant diseases from leaf images.
 
 %----------------------------------------------------------------------------------------
 % References
