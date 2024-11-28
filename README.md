@@ -7,3 +7,8 @@ To set up the the environment and download required dependencies, following comm
 # pip install -r requirements.txt
 ```
 Any environment manager may be used, this example uses conda.
+
+The trainig package in the `src/model_training` folder may be installed runnig following command in the folder:
+```shell
+pip install -e .
+```
